@@ -13,6 +13,7 @@
 
 參考資料:
 https://grouplens.org/datasets/movielens/latest/
+
 https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/751750/
 
 先從網路抓資料集，嘗試建立知識庫，先對各項資料抽取屬性建圖，考慮是否需要另外爬蟲抓取其他資料，如IMDB等
