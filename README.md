@@ -41,3 +41,5 @@ https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/751750/
 110/1/27 16:10
 
 TMDB 網站有API https://www.themoviedb.org/documentation/api/wrappers-libraries
+
+先嘗試mysql和python的連接和把圖建完，找尋合適的使用方式與應用
