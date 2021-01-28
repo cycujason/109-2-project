@@ -12,6 +12,7 @@
 110/1/23  22:20
 
 參考資料:
+
 https://grouplens.org/datasets/movielens/latest/
 
 https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/751750/
@@ -26,11 +27,13 @@ https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/751750/
 
 110/1/24  17:34
 
+
 決定點與點關係，整理movielens的資料，用程式的辦法整理匯入資料(資料量大，先大略瀏覽資料屬性)
 
 嘗試使用其他資料庫看看其效能或結果是否會比neo4j更合適(試驗)
 
 110/1/25  22:30
+
 
 建立初步嘗試雛形
 
@@ -40,6 +43,9 @@ https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/751750/
 
 110/1/27 16:10
 
+
 TMDB 網站有API https://www.themoviedb.org/documentation/api/wrappers-libraries
 
 先嘗試mysql和python的連接和把圖建完，找尋合適的使用方式與應用
+
+110/1/28 17:38
