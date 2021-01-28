@@ -49,3 +49,15 @@ TMDB 網站有API https://www.themoviedb.org/documentation/api/wrappers-librarie
 先嘗試mysql和python的連接和把圖建完，找尋合適的使用方式與應用
 
 110/1/28 17:38
+
+
+MySQL
+遇到的問題：MySQL的建置，發生無法匯入CSV的問題。
+解決辨法：
+先改ProgramData\MySQL\MySQL Server 8.0\my.ini中的參數。
+加上secure_file_priv=''
+後將CSV放入同目錄下的Data\test\ test為資料庫的名稱，即可解決。
+
+問題：MySQL沒有建立連線。
+解法：打開服務，找到MySQL80，右鍵打開就可以建立連線。
+01/29/2021 02:12
