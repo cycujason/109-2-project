@@ -137,3 +137,5 @@ https://developer.spotify.com/documentation/general/guides/scopes/
 其中也有參考:  
 https://medium.com/%E6%B5%B7%E5%A4%A7-ios-app-%E7%A8%8B%E5%BC%8F%E8%A8%AD%E8%A8%88/%E4%B8%B2%E6%8E%A5%E5%A4%9A%E7%A8%AE-api-%E8%A3%BD%E4%BD%9Clady-gaga-app-spotify%E7%AF%87-2d39c52da7e4  
 
+
+2021/2/10 22:10
