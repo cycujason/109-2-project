@@ -64,6 +64,7 @@ MySQL
 
 Netflix部分的研究:
 官方API已下架
+
 https://partnerhelp.netflixstudios.com/hc/en-us/sections/205641408-API-Developer-s-Toolkit
 有另外找到一個有netflix影視較大量且有較新的資料的網站:
 https://unogs.com/
