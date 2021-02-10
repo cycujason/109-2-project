@@ -121,19 +121,19 @@ data harvesting.....
 -->利用wiki來獲取資料  
 
 
-維基部分的研究:
-我們簡單試過api，主要是以網址後面加上action、format等參數來得到相關資訊。弄得跟爬蟲有點像
-https://ithelp.ithome.com.tw/articles/10196319
-https://www.mediawiki.org/wiki/API:Search
+維基部分的研究:  
+我們簡單試過api，主要是以網址後面加上action、format等參數來得到相關資訊。弄得跟爬蟲有點像  
+https://ithelp.ithome.com.tw/articles/10196319  
+https://www.mediawiki.org/wiki/API:Search  
 
 
-spotify部分的研究:
-官方有developer的社群，在使用過程中感覺比起netflix友善許多
-目前嘗試使用的是python的方式:
-https://spotipy.readthedocs.io/en/2.16.1/#api-reference(github:https://github.com/plamere/spotipy)
-利用其套件加上官方developer社群中dashboard可建立一個應用資料庫，取得api的key，進而使用spotipy
-能透過設定scope設定存取權
-https://developer.spotify.com/documentation/general/guides/scopes/
-其中也有參考:
-https://medium.com/%E6%B5%B7%E5%A4%A7-ios-app-%E7%A8%8B%E5%BC%8F%E8%A8%AD%E8%A8%88/%E4%B8%B2%E6%8E%A5%E5%A4%9A%E7%A8%AE-api-%E8%A3%BD%E4%BD%9Clady-gaga-app-spotify%E7%AF%87-2d39c52da7e4
+spotify部分的研究:  
+官方有developer的社群，在使用過程中感覺比起netflix友善許多  
+目前嘗試使用的是python的方式:  
+https://spotipy.readthedocs.io/en/2.16.1/#api-reference(github:https://github.com/plamere/spotipy)  
+利用其套件加上官方developer社群中dashboard可建立一個應用資料庫，取得api的key，進而使用spotipy  
+能透過設定scope設定存取權  
+https://developer.spotify.com/documentation/general/guides/scopes/  
+其中也有參考:  
+https://medium.com/%E6%B5%B7%E5%A4%A7-ios-app-%E7%A8%8B%E5%BC%8F%E8%A8%AD%E8%A8%88/%E4%B8%B2%E6%8E%A5%E5%A4%9A%E7%A8%AE-api-%E8%A3%BD%E4%BD%9Clady-gaga-app-spotify%E7%AF%87-2d39c52da7e4  
 
