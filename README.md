@@ -190,3 +190,8 @@ https://medium.com/%E6%B5%B7%E5%A4%A7-ios-app-%E7%A8%8B%E5%BC%8F%E8%A8%AD%E8%A8%
 目前構想:  
 分類管理是能對各種不同的檔案進行系統化處理，使使用者能快速對想要的筆記做分類與歸納  
 搜尋是希望能導入語言處理，產生摘要或關鍵字，實現日常對話式搜尋問答與產生標籤提供搜尋
+
+---
+### 2021/3/19
+* 使用issues提問或整理討論內容，不只大家可以一起參與討論，透過自動發信通知，也可以直接回信。https://github.com/cycujason/neo4j-recommendation-system/issues
+* CodiMD看起來是首要目標，盡快(1-2週內)整理一份簡介，廣泛優先於深入，以供三位進一步討論可用素材及分工。 https://hackmd.io/@docs/hackmd-vs-codimd
