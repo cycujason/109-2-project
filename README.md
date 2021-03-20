@@ -195,3 +195,25 @@ https://medium.com/%E6%B5%B7%E5%A4%A7-ios-app-%E7%A8%8B%E5%BC%8F%E8%A8%AD%E8%A8%
 ### 2021/3/19
 * 使用issues提問或整理討論內容，不只大家可以一起參與討論，透過自動發信通知，也可以直接回信。https://github.com/cycujason/neo4j-recommendation-system/issues
 * CodiMD看起來是首要目標，盡快(1-2週內)整理一份簡介，廣泛優先於深入，以供三位進一步討論可用素材及分工。 https://hackmd.io/@docs/hackmd-vs-codimd
+
+(3/20) 周六
+非常簡單ver的分析CodiMD之結構---
+bin => heroku連接及部署資料
+contribute => developer certificate of origin
+deployments => docker build
+lib =>偏後端與後臺運作的功能
+locales =>語言參數檔(純粹是各種語言的切換)
+public => 看起來是前端功能及介面設定
+test =>猜測是對功能做測試
+utils => string.js，字串正則表達式替換(目前不太確定用途)
+
+
+app.js有建立連線及開始使用的內容
+底下是參數檔，及使用webpack對前端進行封裝的程式
+
+CodiMD使用的是socket.io的realtime功能(open source資源)
+使用的是Node.js的環境
+根據內部檔案和內容，有用到"docker"(研究重點)且部署是用到heroku
+看來我們要去學學javascript及CSS，HTML的語法(應該不難)
+
+
