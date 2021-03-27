@@ -217,3 +217,17 @@ CodiMD使用的是socket.io的realtime功能(open source資源)
 看來我們要去學學javascript及CSS，HTML的語法(應該不難)  
 
 
+(3/27) 週六  
+研究部署所需環境變數，嘗試一次部署致heroku(失敗)  
+以及研究slug size問題  
+需要調整內部的參數與內容  
+考慮移除GOOGLE，DROPBOX，FACEBOOK，TWITTER，MATTERMAOST的API接口  
+保留GITHUB，GITLAB接口  
+希望能保留GITHUB部分的功能  
+登入方式希望單純而暫時不提供過多登入選項  
+先暫時不更動CODI語法功能  
+修改程式時可從修改cofig.json對初步修改  
+
+heroku部分的application error待解決  
+可能的錯誤點，state changed from starting to crashed  
+解決的可能辦法，在Config Vars填上GITHUB、GITLAB接口  
