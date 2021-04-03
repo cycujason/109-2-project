@@ -231,3 +231,29 @@ CodiMD使用的是socket.io的realtime功能(open source資源)
 heroku部分的application error待解決  
 可能的錯誤點，state changed from starting to crashed  
 解決的可能辦法，在Config Vars填上GITHUB、GITLAB接口  
+
+
+(4/2)周五 (4/3) 週六  
+基本上Codimd的功能包含之前談過的圖表與數學式  
+及留言區塊(可改製作成超連結分類)  
+但閹割掉了一些Markdown語法的功能  
+像是Tag，但這部分應該影響不大(跟筆記撰寫方式與格式有關)  
+Codi本身原本是HackMD的社群版本  
+所以保有許多Hack有的功能  
+但沒有共同管理，分類管理，及一個比較好的檢索查找方式(應該可以是內文分析的切入點)  
+也沒有團隊管理的部分  
+版本控管也只看的到變更內容而看不到變更者  
+變成非常簡單的單純共筆功能  
+官方好像有說codi是建議在3-5人的共同編輯(果真是小型社群版本)  
+其他在config中的許多API是登入方式的接口  
+到時看要不要單純留下EMAIL登入(或留著也不一定。增加itouch?客製?)  
+其中bitbucket不是登入方式是一個"代碼控管庫"(git的位置?)  
+確定codi開發是用socket .io(應該會沿用，若pusher沒有比較好或修改接口太繁複就沿用)  
+題外話:(codi 的 document 不負責的部分沿用hack的 document 要自己切換視角，雖然本是同根生的東西)  
+
+這兩周有嘗試架起原版的codi，想說順便認識一下heroku平台(官方有預設弄好的heroku build的 method)，但遇到了一些問題:  
+若用官方之辦法能建立成功但appliction error，可能是程式設定的問題  
+若用線下自己推的方式會有lost模組發生  
+看過一些stack overflow論壇和教學目前還沒找到真正的解決辦法  
+還在多方嘗試中，有想過先試試本地docker和mysql架，但還是想先用heroku試試  
+這文章包含上面那張圖  
