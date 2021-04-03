@@ -249,7 +249,7 @@ Codi本身原本是HackMD的社群版本
 到時看要不要單純留下EMAIL登入(或留著也不一定。增加itouch?客製?)  
 其中bitbucket不是登入方式是一個"代碼控管庫"(git的位置?)  
 確定codi開發是用socket .io(應該會沿用，若pusher沒有比較好或修改接口太繁複就沿用)  
-題外話:(codi 的 document 不負責的部分沿用hack的 document 要自己切換視角，雖然本是同根生的東西)  
+題外話:(codi 的 document 部分沿用hack的 document 要自己切換視角，雖然本是同根生的東西)  
 
 這兩周有嘗試架起原版的codi，想說順便認識一下heroku平台(官方有預設弄好的heroku build的 method)，但遇到了一些問題:  
 若用官方之辦法能建立成功但appliction error，可能是程式設定的問題  
