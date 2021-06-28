@@ -4,13 +4,22 @@ var ctx = document.getElementById('layer_pict').getContext('2d');
 var drawing =false;
 var img = new Image();
 var str_link = 'https://cdn.discordapp.com/attachments/791521808985358367/848939833762381934/Screenshot_20210524-182109928_1.jpg'
+img.src = str_link ;
 
+var img_width = img.width;
+var img_height = img.height;
 
+document.getElementById( 'layer_pict' ).width = img_width;
+document.getElementById( 'layer_pict' ).height = img_height;
+document.getElementById( 'layer_draw' ).width = img_width;
+document.getElementById( 'layer_draw' ).height = img_height;
+
+// console.log(img_width,img_height);
 
 img.onload = function(){     // 載入圖片
    ctx.drawImage(img,0,0);
 };
-img.src = str_link ;
+
 
 document.getElementById('0').style.display = "none";
 document.getElementById('10').style.display = "none";
@@ -59,7 +68,7 @@ function DisplayAndHiddenBtn() {
 
 function clearb (){  //清除畫布功能
 
-    cvs.clearRect(0,0,800,800);
+    cvs.clearRect(0,0,img_width,img_height);
 
 }
 
@@ -165,8 +174,3 @@ function saveAsLocalImage () {
   window.location.href=image;
 
 }
-
-
-  
-
-
