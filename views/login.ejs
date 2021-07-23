@@ -1,0 +1,59 @@
+<div class="text-center">
+  <link href="/css/login.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tourney:wght@600&display=swap" rel="stylesheet">
+  <img
+    class="mb-4 rounded-circle"
+    src="/images/img.png"
+    alt=""
+    width="72"
+    height="72"
+  />
+  <form class="form-signin" action="/users/login" method="POST">
+    <h1 class="h3 mb-3 font-weight-normal">Log In</h1>
+
+  <p >
+    <% if(messages.success_msg) { %>
+    <p class="help-block  mb-3 text-muted"><%= messages.success_msg %></p>
+    <% } %>
+  </p>
+  <p>
+    <% if (messages.error) { %>
+    <p class="help-block  mb-3 text-muted"><%= messages.error %></p>
+    <% } %>
+  </p>
+    <div>
+    <label for="name" class="sr-only">User name</label>
+    <input
+      type="text"
+      id="inputName"
+      name="name"
+      class="form-control"
+      placeholder="Your Name"
+      required
+      autofocus
+    />
+    </div>
+
+    <div>
+    <label for="password" class="sr-only">Password</label>
+    <input
+      type="password"
+      id="inputPassword"
+      name="password"
+      class="form-control"
+      placeholder="Password"
+      required
+    />
+    </div>
+    <br />
+    <input type="submit" id="userclick" value="Login"  style="width:90px;height:30px;" class="btn btn-lg btn-primary btn-block">
+     
+    </input>
+    <p id= "lasttext" class="help-block mt-5 mb-3 text-muted">
+      Don't have an account?
+      <a id="linkR" href="/users/register"> Register </a>
+    </p>
+  </form>
+</div>

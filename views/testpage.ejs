@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--script type = "text/javascript" src="note.js"></script-->  
+        <meta charset="utf-8">
+        <title>my test page</title>
+        <meta name="author" content="marvin">
+        <meta name="discription" content="for testing module">
+        <script src="/js/socket.io.js"></script>
+        <script src="/js/showdown.min.js"></script>
+        <!--script src="/public/javascripts/socket-test.js"></script-->
+    </head>
+    <style type="text/css">
+        * {margin: 0; padding: 0;}
+        #container {height: 100%; width:100%; font-size: 0;}
+        #left, #middle, #right {display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 12px;}
+        #left {width: 522px; background: rgb(44, 96, 165);}
+        #middle {width: 522px; background: white;}
+        #right {width: 300px; background: orange;}
+    </style>
+    <body>
+        <div id="container">
+            
+            <div id="left" className="col-md-6">
+                <h2>user input</h2>
+                <div className="mark-input">
+                    <textarea className="input" id="userIn" placeholder="input your note here" style="width: 500px;height: 50vh;margin-left: 0px;margin-right: 0px;padding: 10px;background-color: whitesmoke;"></textarea>
+                </div>;
+            </div>
+          
+            <div id="middle" className="col-md-6">
+                <h2>markdown preview</h2>
+                <div className="mark-output" id="preview">
+            
+                    <!--script src="/public/javascripts/showMarkdown.js"></script-->
+                    <!--script type = "module" src="markdown.js">  
+                       document.getElementById('preview').innerHTML = parse2markdown();
+                    </script>  
+                    <textarea className="input" id="preview" style="width: 500px;height: 50vh;margin-left: 0px;margin-right: 0px;padding: 10px;background-color: honeydew;"> </textarea-->
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .ck-editor__editable_inline {
+                min-height: 200px;
+            }
+        </style>
+        <div id="test-ckeditor" className="col-md-6">
+            <h2>tool bar temp</h2>
+            <div classname="editor" id="testarea"></div>
+            <button id="submit">Submit</button>
+            <script src="/js/buildtest/ckeditor.js"></script>
+            <script src="/js/buildtest/translations/zh.js"></script>
+            <script src="/js/editor-block.js"></script>
+        </div>
+
+    </body>
+    
+</html>
+                    
