@@ -13,6 +13,8 @@ function initialize(passport) {
         if (err) {
           throw err;
         } // if
+        
+        /*
         console.log('START here ============');
         console.log("length: " + results.rows.length) ;
         
@@ -21,7 +23,8 @@ function initialize(passport) {
         data.forEach(row => console.log(row));
         console.log(data[0].user_password);
         console.log('END here ============');
-
+        */
+        
         if (results.rows.length > 0) {
           const user = results.rows[0];
           bcrypt.compare(password, data[0].user_password, (err, isMatch) => {
