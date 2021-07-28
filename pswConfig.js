@@ -13,10 +13,7 @@ function initialize(passport) {
         if (err) {
           throw err;
         } // if
-<<<<<<< HEAD
-=======
         
->>>>>>> 34fc025a8b46ed0ebd971e1b23289c03ff59bba3
         /*
         console.log('START here ============');
         console.log("length: " + results.rows.length) ;
@@ -27,10 +24,7 @@ function initialize(passport) {
         console.log(data[0].user_password);
         console.log('END here ============');
         */
-<<<<<<< HEAD
-=======
         
->>>>>>> 34fc025a8b46ed0ebd971e1b23289c03ff59bba3
         if (results.rows.length > 0) {
           const user = results.rows[0];
           bcrypt.compare(password, data[0].user_password, (err, isMatch) => {
