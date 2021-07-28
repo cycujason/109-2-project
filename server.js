@@ -3,6 +3,8 @@ var app = require('./app');
 var debug = require('debug')('TESTING-PROJECT-FUCK:server');
 var http = require('http');
 var socketIO = require('socket.io')  // socket.io server
+var { pool } = require('../config');
+require('dotenv').config();
 
 /**
  * Get port from environment and store in Express.
@@ -23,11 +25,16 @@ var socketIO = require('socket.io')  // socket.io server
  const io  =socketIO(server);
  io.on("connection",socket => {
    console.log("connected:"+socket.id);
-   socket.on("note-text",(editorData)=>{
-     socket.broadcast.emit("recieve-note", editorData);
-     console.log(editorData);
-     console.log("send :"+socket.id);
-   })
+   socket.on("getdoc", textid=>{
+     const data = "";
+     socket.join(textid);
+     socket.emit("loadin",data);
+     socket.on("note-text",(editorData)=>{
+      socket.broadcast.to(textid).emit("recieve-note", editorData);
+      console.log(editorData);
+      console.log("send :"+socket.id);
+    });
+   });
  });
  
 
@@ -90,4 +97,10 @@ function normalizePort(val) {
       ? 'pipe ' + addr
       : 'port ' + addr.port;
     debug('Listening on ' + bind);
+  }
+
+
+  async function findDocumentOrCreate(id){
+    if(id == null)return
+
   }

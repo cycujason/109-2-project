@@ -9,6 +9,9 @@ require('dotenv').config();
 var passport = require('passport');
 var initializePassport = require('../pswConfig');
 initializePassport(passport);
+var { v4: uuidv4 } = require('uuid');
+
+
 
 router.use(
     session({
@@ -29,18 +32,11 @@ router.get('/dashboard', Auth.checkNotAuthenticated, (req, res) => {
 });
 
 
-router.get('/edit', Auth.checkNotAuthenticated, (req, res) => {
-    res.render('testpage');
-});
-
-
 router.get('/login', Auth.checkAuthenticated, (req, res) => {
     res.render('login');
 });
 
-router.post(
-    '/login',
-    passport.authenticate('local', {
+router.post('/login',passport.authenticate('local', {
       successRedirect: '/users/dashboard',
       failureRedirect: '/users/login',
       failureFlash: true,
@@ -99,7 +95,7 @@ router.post('/register', async (req, res) => {
           if (err) {
             console.log("err from app.js: " + err);
           } // if
-  
+
         console.log("results.rows from app.js 1: " + results.command);
         console.log("results.rows from app.js 1: " + results.rowCount);
         console.log("results.rows from app.js 1: " + results.oid);
@@ -109,7 +105,7 @@ router.post('/register', async (req, res) => {
         console.log("results.rows from app.js 1: " + results._types);
         console.log("results.rows from app.js 1: " + results.RowCtor);
         console.log("results.rows from app.js 1: " + results.rowAsArray);
-  
+        
           if (results.rows.length > 0) { // registered before
       //      console.log("results.rows.length: " + results.rows.length); 
             errors.push({ message: 'You are already registered!' });
@@ -132,6 +128,17 @@ router.post('/register', async (req, res) => {
         }
       ); // pool.query()
     } // else
+});
+//Auth.checkNotAuthenticated,
+
+router.get('/edit', (req, res) => {
+  res.redirect(`/users/edit/${uuidv4()}`);
+});
+
+
+router.get('/edit/:id', (req, res) => {
+  console.log("open doc uuid: " + req.params.id);
+  res.render('testpage' ,{ textid:req.params.id });
 });
 
 

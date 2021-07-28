@@ -4,6 +4,8 @@ using module markdown-it to-markdown jquery  quill socket.io
 //var converter = new showdown.Converter();  //markdown preview module, preview will use
 const fileUploader = document.querySelector('#file-uploader');
 
+var textid = document.getElementById('textid').innerText;
+
 var md = window.markdownit();
 md.set({
   html: true
@@ -74,6 +76,11 @@ function imageHandler() {
     })
 };
 
+
+quill.disable();
+quill.setText("loading............");
+
+
 function send(){
     if (socket == null || quill == null) return
     const handler = (delta, oldDelta, source) => {
@@ -108,6 +115,16 @@ function recieve(){
     }
 };
 
+function socketRoom(){
+    if (socket == null || quill == null) return
+    socket.once("loadin", document=>{
+       quill.setContents(document);
+       quill.enable();
+    });
+    socket.emit("getdoc",textid);
+};
+
 
 send();
 recieve();
+socketRoom();
