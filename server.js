@@ -3,7 +3,7 @@ var app = require('./app');
 var debug = require('debug')('TESTING-PROJECT-FUCK:server');
 var http = require('http');
 var socketIO = require('socket.io')  // socket.io server
-var { pool } = require('../config');
+var { pool } = require('./config');
 require('dotenv').config();
 
 /**
