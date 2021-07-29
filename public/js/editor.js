@@ -3,7 +3,7 @@ using module markdown-it to-markdown jquery  quill socket.io
 */
 //var converter = new showdown.Converter();  //markdown preview module, preview will use
 const fileUploader = document.querySelector('#file-uploader');
-
+const Save_Interval = 5000;
 var textid = document.getElementById('textid').innerText;
 
 var md = window.markdownit();
@@ -13,7 +13,7 @@ md.set({
 
 const socket = io();
 socket.on("connect",()=>{
-    console.log(socket.id);
+    console.log('in editor\'s output'+socket.id);
 })
 
 var toolbarOptions = [
@@ -35,7 +35,7 @@ var toolbarOptions = [
 
     ['clean'],                                         // remove formatting button
     ['image' , 'video', 'link']
-];
+]; //quill toolbar set
 
 var quill = new Quill('#editor', {
     theme: 'snow',
@@ -48,7 +48,8 @@ var quill = new Quill('#editor', {
             }
         }
     },
-});
+    placeholder:'The great start from here....!'
+})//quillsets
 
 function videoHandler() {
     var range = this.quill.getSelection();
@@ -56,7 +57,7 @@ function videoHandler() {
     if(value){
         this.quill.insertText(range.index, '?[] '+value , 'user' );
     }
-}
+}//videoHandler
 
 function imageHandler() {
     var range = this.quill.getSelection();
@@ -74,11 +75,11 @@ function imageHandler() {
            this.quill.insertText(range.index, '![] '+ data.data.link, 'user' );
         })
     })
-};
+}//imageHandler
 
 
 quill.disable();
-quill.setText("loading............");
+quill.setText("Loading............");
 
 
 function send(){
@@ -97,7 +98,7 @@ function send(){
     return () => {
         quill.off("text-change", handler)
     }
-};
+}//send
 
 function recieve(){
     if (socket == null || quill == null) return
@@ -113,7 +114,7 @@ function recieve(){
     return () => {
         socket.off("recieve-note", handler)
     }
-};
+}//recieve
 
 function socketRoom(){
     if (socket == null || quill == null) return
@@ -122,9 +123,22 @@ function socketRoom(){
        quill.enable();
     });
     socket.emit("getdoc",textid);
-};
+}//SocketRoom
+
+function saveContent(){
+    if (socket == null || quill == null) return
+
+    const interval = setInterval(() => {
+      socket.emit("save-document", quill.getContents(),quill.getText(0,quill.getLength()))
+    }, Save_Interval)
+
+    return () => {
+      clearInterval(interval)
+    }
+}//saveContent
 
 
 send();
 recieve();
 socketRoom();
+saveContent();
