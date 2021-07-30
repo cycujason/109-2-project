@@ -5,6 +5,7 @@ using module markdown-it to-markdown jquery  quill socket.io
 const fileUploader = document.querySelector('#file-uploader');
 const Save_Interval = 5000;
 var textid = document.getElementById('textid').innerText;
+var user = document.getElementById('user').innerText;
 
 var md = window.markdownit();
 md.set({
@@ -122,14 +123,14 @@ function socketRoom(){
        quill.setContents(document);
        quill.enable();
     });
-    socket.emit("getdoc",textid);
+    socket.emit("getdoc",textid,user);
 }//SocketRoom
 
 function saveContent(){
     if (socket == null || quill == null) return
 
     const interval = setInterval(() => {
-      socket.emit("save-document", quill.getContents(),quill.getText(0,quill.getLength()))
+      socket.emit("save-document", quill.getContents(), quill.getText(0,quill.getLength()) , user)
     }, Save_Interval)
 
     return () => {

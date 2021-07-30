@@ -5,7 +5,6 @@ var http = require('http');
 var socketIO = require('socket.io')  // socket.io server
 var { pool } = require('./config');
 require('dotenv').config();
-const {createAdapter} = require('@socket.io/postgres-adapter')
 
 /**
  * Get port from environment and store in Express.
@@ -27,18 +26,18 @@ const {createAdapter} = require('@socket.io/postgres-adapter')
  //io.adapter(createAdapter(pool));
  io.on("connection",socket => {
    console.log("connected:"+socket.id);
-   socket.on("getdoc", async textid=>{
-     const data = await findDocumentOrCreate(textid);
+   socket.on("getdoc", async (textid,user)=>{
+     const data = await findDocumentOrCreate(textid,user);
      socket.join(textid);
      socket.emit("loadin",data);
      socket.on("note-text",(editorData)=>{
       socket.broadcast.to(textid).emit("recieve-note", editorData);
       console.log(editorData);
     });
-    socket.on("save-document", async (data,text) => {
+    socket.on("save-document", async (data,text,user) => {
       await pool.query(`UPDATE note_content 
-      SET note_paragraph= $1, note_delta_content= $2 , update_at= $3
-      WHERE note_id=$4`,[text,data,new Date(Date.now()),textid]);
+      SET note_paragraph= $1, note_delta_content= $2 , update_at= $3 , update_user=$4
+      WHERE note_id=$5`,[text,data,new Date(Date.now()),user,textid]);
     });
    });
  });
@@ -106,14 +105,18 @@ function normalizePort(val) {
   }
 
 
-  async function findDocumentOrCreate(id){
+  async function findDocumentOrCreate(id,user){
     if(id == null)return
-    const {rows} = await pool.query(`SELECT note_id FROM note_content
+    const {rows} = await pool.query(`SELECT note_delta_content FROM note_content
     WHERE note_id = $1`,[id]);
-    if(rows.length > 0 ) return rows[0].note_delta_content;
+    //console.log(rows.length);
+    //console.log(rows[0]);
+    if(rows.length > 0 ) {
+        return rows[0].note_delta_content;
+    }//if
     else{
-      await pool.query( `INSERT INTO note_content (note_id, multi_user,created_at,update_at,connection_count)
-      VALUES ($1, $2, $3, $4, $5)`,[id,false,new Date(Date.now()),new Date(Date.now()),1])
+      await pool.query( `INSERT INTO note_content (note_id, multi_user,created_at,update_at,connection_count,create_user)
+      VALUES ($1, $2, $3, $4, $5, $6)`,[id,false,new Date(Date.now()),new Date(Date.now()),1,user])
       return "";
     }//else
 

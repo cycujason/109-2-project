@@ -28,7 +28,7 @@ router.use(passport.session());
 
 
 router.get('/dashboard', Auth.checkNotAuthenticated, (req, res) => {
-    res.render('dashboard', { user: req.user.name });
+    res.render('dashboard', { user: req.user.user_name });
 });
 
 
@@ -131,14 +131,26 @@ router.post('/register', async (req, res) => {
 });
 //Auth.checkNotAuthenticated,
 
+
+
 router.get('/edit', (req, res) => {
   res.redirect(`/users/edit/${uuidv4()}`);
 });
 
 
-router.get('/edit/:id', (req, res) => {
+router.get('/edit/:id',Auth.checkNotAuthenticated, (req, res) => {
   console.log("open doc uuid: " + req.params.id);
-  res.render('testpage' ,{ textid:req.params.id });
+  res.render('testpage' ,{ textid:req.params.id ,user:req.user.user_name});
+});
+
+router.get('/guest', (req, res) => {
+  res.redirect(`/users/guest/${uuidv4()}`);
+});
+
+
+router.get('/guest/:id', (req, res) => {
+  console.log("open doc uuid: " + req.params.id);
+  res.render('testpage' ,{ textid:req.params.id ,user:'guest'});
 });
 
 
