@@ -52,7 +52,7 @@ router.post('/login',passport.authenticate('local', {
 
 router.get('/logout', (req, res) => {
     req.logout();
-    res.render('index', { message: 'You have logged out successfully!' });
+    res.render('indexT', { message: 'You have logged out successfully!' });
 });
 
 
