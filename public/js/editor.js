@@ -73,7 +73,7 @@ function imageHandler() {
             },
             body: formdata
         }).then(data => data.json()).then(data => {
-           this.quill.insertText(range.index, '![] '+ data.data.link, 'user' );
+           this.quill.insertText(range.index, `![](${data.data.link})`, 'user' );
         })
     })
 }//imageHandler
@@ -121,6 +121,9 @@ function socketRoom(){
     if (socket == null || quill == null) return
     socket.once("loadin", document=>{
        quill.setContents(document);
+       var markdown = toMarkdown(html);
+       var rendered_markdown = md.render(markdown);
+       $("#preview").html(rendered_markdown);
        quill.enable();
     });
     socket.emit("getdoc",textid,user);

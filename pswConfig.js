@@ -36,11 +36,11 @@ function initialize(passport) {
             if (isMatch) {
               return done(null, user);
             } else {
-              return done(null, false, { message: 'Password is not correct!' });
+              return done(null, false, { message: '密碼不正確!' });
             } // else
           }); // bcrypt
         } else {
-          return done(null, false, { message: 'You are not registered yet!' });
+          return done(null, false, { message: '您尚未註冊!' });
         } // else
       }
     ); // pool.query()

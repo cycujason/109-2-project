@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <title> Login and Registration</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- Fontawesome CDN Link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <a hidden href="https://www.freepik.com/vectors/background">Background vector created by coolvector - www.freepik.com</a>
+   </head>
+<body>
+    <label hidden id="changeP" for="flip">changeP</label>
+  <div class="container">
+    <input type="checkbox" id="flip">
+    <div class="cover">
+      <div class="front">
+        <img src="/images/login.jpg" alt="">
+        <div class="text">
+          <span class="text-1"> 歡迎來到我們的專題! <br> 110-1 project</span>
+          <span class="text-2">Let's get connected</span>
+        </div>
+      </div>
+      <div class="back">
+        <img class="backImg" src="/images/register.jpg" alt="">
+        <div class="text">
+          <span class="text-1"> 註冊一個帳號吧! <br> 探索更多功能 </span>
+          <span class="text-2">Let's get started</span>
+        </div>
+      </div>
+    </div>
+    <div class="forms">
+        <div class="form-content">
+          <div class="login-form">
+            <div class="title">登入</div>
+          <form action="/users/login" method="POST">
+            <div class="input-boxes">
+              <div class="input-box">
+                <i class="fas fa-envelope"></i>
+                <input type="text" name = "name" id ="inputName" placeholder="請輸入帳號" required autofocus>
+              </div>
+              <div class="input-box">
+                <i class="fas fa-lock"></i>
+                <input type="password" name ="password" id ="inputPassword" placeholder="請輸入密碼" required>
+              </div>
+              <!-- login error message-->
+              <p >
+                <% if(messages.success_msg) { %>
+                <p class="help-block  mb-3 text-muted"><%= messages.success_msg %></p>
+                <% } %>
+              </p>
+              <p>
+                <% if (messages.error) { %>
+                <p class="help-block  mb-3 text-muted"><%= messages.error %></p>
+                <% } %>
+              </p>
+
+              <div class="button input-box">
+                <input type="submit" value="登入">
+              </div>
+              <div class="text sign-up-text">沒有帳號嗎? <label for="flip">註冊</label></div>
+            </div>
+        </form>
+      </div>
+        <div class="signup-form">
+          <div class="title">註冊</div>
+        <form action="/users/register" method="POST">
+            <div class="input-boxes">
+              <div class="input-box">
+                <i class="fas fa-user"></i>
+                <input type="text" name="name" id="name" placeholder="輸入帳號名" required >
+              </div>
+              <div class="input-box">
+                <i class="fas fa-lock"></i>
+                <input type="password" name="password" id="password" placeholder="輸入密碼" required>
+              </div>
+              <div class="input-box">
+                <i class="fas fa-lock"></i>
+                <input type="password" name="password_confirm" id ="password_confirm" placeholder="再次輸入密碼" required>
+              </div>
+
+              <!-- input error message-->
+              <p class="help-block mb-3 text-muted">
+
+                <% if (typeof errors != 'undefined') { %><% errors.forEach(error => { %>
+          
+                <p class="help-block  mb-3 text-muted">*<%= error.message %></p>
+                <script>document.getElementById("changeP").click();</script>
+                <script>document.getElementById("name").focus();</script>
+          
+                <% }) %> <% } %>
+          
+              </p>
+
+              <div class="button input-box">
+                <input type="submit" value="註冊">
+              </div>
+              <div class="text sign-up-text">已經有帳號? <label for="flip">登入</label></div>
+            </div>
+      </form>
+    </div>
+    </div>
+    </div>
+  </div>
+</body>
+</html>
