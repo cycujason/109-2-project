@@ -6,6 +6,17 @@
     <a href="/users/logout">LogOut</a>
   </p>
   <p>
-    <a href="/users/edit">editpage</a>
+    <a href="/users/edit">Create-editpage</a>
+  </p>
+  <table>
+    <% for(var i=0; i < allnotes.length; i++) { %>
+      <% var link = "/users/edit/"+allnotes[i].note_id; %> 
+      <tr>
+         <td><a href="<%= link %>" ><%= allnotes[i].note_id %></a></td>
+      </tr>
+    <% } %>
+    </table>
+  <p>
+    
   </p>
 </main>
