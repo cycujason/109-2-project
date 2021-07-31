@@ -150,6 +150,7 @@ router.get('/edit/:id',Auth.checkNotAuthenticated, (req, res) => {
   res.render('testpage' ,{ textid:req.params.id ,user:req.user.user_name});
 });
 
+/*  this area is for my guest test
 router.get('/guest', (req, res) => {
   res.redirect(`/users/guest/${uuidv4()}`);
 });
@@ -159,6 +160,7 @@ router.get('/guest/:id', (req, res) => {
   console.log("open doc uuid: " + req.params.id);
   res.render('testpage' ,{ textid:req.params.id ,user:'guest'});
 });
+*/
 
 
 module.exports = router;
