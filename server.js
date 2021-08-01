@@ -34,10 +34,10 @@ require('dotenv').config();
       socket.broadcast.to(textid).emit("recieve-note", editorData);
       console.log(editorData);
     });
-    socket.on("save-document", async (data,text,user) => {
+    socket.on("save-document", async (data,text,user,title) => {
       await pool.query(`UPDATE note_content 
-      SET note_paragraph= $1, note_delta_content= $2 , update_at= $3 , update_user=$4
-      WHERE note_id=$5`,[text,data,new Date(Date.now()),user,textid]);
+      SET note_paragraph= $1, note_delta_content= $2 , update_at= $3 , update_user=$4, note_title= $6
+      WHERE note_id=$5`,[text,data,new Date(Date.now()),user,textid,title]);
     });
    });
  });
@@ -111,12 +111,13 @@ function normalizePort(val) {
     WHERE note_id = $1`,[id]);
     //console.log(rows.length);
     //console.log(rows[0]);
-    if(rows.length > 0 ) {
+    const data_num= rows.length;
+    if(data_num > 0 ) {
         return rows[0].note_delta_content;
     }//if
     else{
-      await pool.query( `INSERT INTO note_content (note_id, multi_user,created_at,update_at,connection_count,create_user)
-      VALUES ($1, $2, $3, $4, $5, $6)`,[id,false,new Date(Date.now()),new Date(Date.now()),1,user])
+      await pool.query( `INSERT INTO note_content (note_id, multi_user,created_at,update_at,create_user,note_title)
+      VALUES ($1, $2, $3, $4, $5, $6)`,[id,false,new Date(Date.now()),new Date(Date.now()),user,'Untitled'])
       return "";
     }//else
 

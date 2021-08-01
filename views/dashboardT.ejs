@@ -22,7 +22,7 @@
          <span class="tooltip">搜尋</span>
       </li>
       <li>
-        <a href="#">
+        <a href="/users/edit">
             <i class='bx bx-book-add' ></i>
           <span class="links_name">新增筆記</span>
         </a>
@@ -31,14 +31,14 @@
       <li>
        <a href="https://github.com/kikoflame">
          <i class='bx bx-user' ></i>
-         <span class="links_name">個人</span>
+         <span class="links_name">個人筆記</span>
        </a>
        <span class="tooltip">個人筆記</span>
      </li>
      <li>
         <a href="#">
           <i class='bx bx-group'></i>
-          <span class="links_name">多人</span>
+          <span class="links_name">多人筆記</span>
         </a>
         <span class="tooltip">多人筆記</span>
       </li>
@@ -74,11 +74,17 @@
   <section class="home-section">
       <div class="text">ALL Notes</div>
       <div class="note_list">
-        <table>
+        <div class="overview-card">
+            <a class="note-linker" href="https://github.com/cycujason/109-2-project"></a>
+            <div class="item">
+
+            </div>
+        </div>
+        <table class="list-note">
             <% for(var i=0; i < allnotes.length; i++) { %>
               <% var link = "/users/edit/"+allnotes[i].note_id; %> 
               <tr>
-                 <td><a href="<%= link %>" ><%= allnotes[i].note_id %></a></td>
+                 <td><a href="<%= link %>" ><%= allnotes[i].note_title %></a></td>
               </tr>
             <% } %>
             </table>

@@ -224,7 +224,7 @@
 }
 .home-section{
   position: relative;
-  background: #E4E9F7;
+  background: #3d3f47;
   min-height: 100vh;
   top: 0;
   left: 78px;
@@ -238,11 +238,44 @@
 }
 .home-section .text{
   display: inline-block;
-  color: #11101d;
+  color: whitesmoke;
   font-size: 25px;
   font-weight: 500;
   margin: 18px
 }
+
+.home-section .overview-card{
+  display: inline-block;
+  color: #11101d;
+  font-size: 15px;
+  font-weight: normal;
+  margin: 18px
+}
+
+.overview-card {
+  background-color: #e7e7e7; /* Green */
+  border: none;
+  color: black;
+  padding: 50px 120px;
+  border-radius: 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.overview-card :hover {
+  background-color: #942929; /* Green */
+ 
+}
+
+
+
+
+
 @media (max-width: 420px) {
   .sidebar li .tooltip{
     display: none;

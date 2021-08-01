@@ -121,6 +121,7 @@ function socketRoom(){
     if (socket == null || quill == null) return
     socket.once("loadin", document=>{
        quill.setContents(document);
+       var html = quill.container.firstChild.innerHTML;
        var markdown = toMarkdown(html);
        var rendered_markdown = md.render(markdown);
        $("#preview").html(rendered_markdown);
@@ -133,7 +134,8 @@ function saveContent(){
     if (socket == null || quill == null) return
 
     const interval = setInterval(() => {
-      socket.emit("save-document", quill.getContents(), quill.getText(0,quill.getLength()) , user)
+      socket.emit("save-document", quill.getContents(), quill.getText(0,quill.getLength()) , 
+      user, document.getElementsByTagName('h1')[0].innerText);
     }, Save_Interval)
 
     return () => {
