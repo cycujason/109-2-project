@@ -254,6 +254,7 @@
 
 .overview-card {
   background-color: #e7e7e7; /* Green */
+  position: relative;
   border: none;
   color: black;
   padding: 50px 120px;
@@ -267,11 +268,24 @@
   cursor: pointer;
 }
 
-.overview-card :hover {
-  background-color: #942929; /* Green */
- 
+.item1{
+  position:absolute;
+  left: 5px;
+  top: 5px;
+  font-size: 25px;
+  font-weight: bold;
+  text-align: left;
+  word-break: break-all;
+  white-space: normal;
+  overflow: hidden;
 }
-
+.item2{
+  position:absolute;
+  right:10px;
+  bottom:7px;
+  font-size: 3px;
+  text-align: right;
+}
 
 
 

@@ -29,7 +29,7 @@ router.use(passport.session());
 
 router.get('/dashboard', Auth.checkNotAuthenticated, (req, res) => {
     const user = req.user.user_name;
-    pool.query(`select note_title,note_id from note_content
+    pool.query(`select note_title,note_id,created_at from note_content
     where create_user=$1 `,[user],(err,results)=>{
       res.render('dashboardT', { user: user, allnotes : results.rows });
     });//not consider the query fail 

@@ -73,23 +73,35 @@
   </div>
   <section class="home-section">
       <div class="text">ALL Notes</div>
-      <div class="note_list">
-        <div class="overview-card">
-            <a class="note-linker" href="https://github.com/cycujason/109-2-project"></a>
-            <div class="item">
-
-            </div>
+      <div>
+      <table class="list-note">
+        <% for(var i=0; i < allnotes.length; i++) { %>
+          <% var link = "/users/edit/"+allnotes[i].note_id; %> 
+          <tr>
+              <div class="overview-card" onclick="location.href='<%= link %>';">
+                <!--a class="note-linker" href="link" ></a-->
+                <div class="item1">
+                  <%= allnotes[i].note_title %>
+                </div>
+                <div class="item2">
+                  created at: <%= allnotes[i].created_at%>
+                </div>
+                <!--/a-->
+              </div>
+          </tr>
+         <% } %>
+        </table>
         </div>
-        <table class="list-note">
-            <% for(var i=0; i < allnotes.length; i++) { %>
-              <% var link = "/users/edit/"+allnotes[i].note_id; %> 
-              <tr>
-                 <td><a href="<%= link %>" ><%= allnotes[i].note_title %></a></td>
-              </tr>
-            <% } %>
-            </table>
-      </div>
   </section>
   <script src="/js/sidebar.js"></script>
 </body>
 </html>
+
+
+<!--<a class="note-linker" href="https://github.com/cycujason/109-2-project"></a>
+            <div class="item1">
+             12345612345
+            </div>
+            <div class="item2">
+              456
+            </div>-->
