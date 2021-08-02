@@ -20,8 +20,10 @@
         <!--script src="/public/javascripts/socket-test.js"></script-->
     </head>
     <body>           
-          <div hidden id="textid"><%= textid %></div>       
+          <div hidden id="textid"><%= textid %></div>
+          <div hidden id="user"><%= user %></div>       
           <input hidden type="file" id="file-uploader" data-target="file-uploader" accept="image/*"/>
+          <h2 class="mt-5">Welcome to edit ! &nbsp;<i class="far fa-smile"></i> <%= user %></h2>
           <div id="editor"></div>
           <script src="/js/editor.js"></script>
 

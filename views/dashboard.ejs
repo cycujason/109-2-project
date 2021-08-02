@@ -1,3 +1,7 @@
+<head>
+  <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
 <main role="main" class="container">
   <h1 class="mt-5">Welcome &nbsp;&nbsp;&nbsp;&nbsp;<i class="far fa-smile"></i> <%= user %></h1>
 
@@ -6,6 +10,21 @@
     <a href="/users/logout">LogOut</a>
   </p>
   <p>
-    <a href="/users/edit">editpage</a>
+    <a href="/users/edit">Create-editpage</a>
+  </p>
+  <table>
+    <% for(var i=0; i < allnotes.length; i++) { %>
+      <% var link = "/users/edit/"+allnotes[i].note_id; %> 
+      <tr>
+         <td><a href="<%= link %>" ><%= allnotes[i].note_id %></a></td>
+      </tr>
+    <% } %>
+    </table>
+  <p>
+    
   </p>
 </main>
+
+<body>
+  
+</body>
