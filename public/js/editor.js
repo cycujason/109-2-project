@@ -77,7 +77,7 @@ var toolbarOptions = [
 var quill = new Quill('#editor', {
     theme: 'snow',
     modules: {
-        /*
+        
         toolbar: {
             container: toolbarOptions,
             handlers: {
@@ -85,7 +85,7 @@ var quill = new Quill('#editor', {
                 video: videoHandler
             }
         },
-        */
+        
         lineNumber: {
             container: '#lineNumber',
         },
