@@ -17,16 +17,52 @@ socket.on("connect",()=>{
     console.log('in editor\'s output'+socket.id);
 })
 
+class LineNumber {
+	constructor(quill, options) {
+		this.quill = quill;   
+		this.options = options;
+		this.container = document.querySelector(options.container);
+		quill.on('text-change', this.update.bind(this));
+		this.update(); // Account for initial contents
+	}
+
+	update() {    
+		// Clear old nodes
+		while (this.container.firstChild) {
+			this.container.removeChild(this.container.firstChild);
+		}
+    
+    const lines = this.quill.getLines();
+    
+		// Add new nodes
+		for (let i = 1; i < lines.length +1; i++) {
+			const height = lines[i - 1].domNode.offsetHeight;
+      
+			const node = document.createElement('div');
+
+      // showcase - empty lines
+      if(lines[i - 1].domNode.innerHTML == '<br>')
+      node.style.color = 'red';
+      
+      node.style.lineHeight = `${height}px`;
+			node.innerHTML = i;
+			this.container.appendChild(node);
+		}
+	}
+}
+
+Quill.register('modules/lineNumber', LineNumber, true);
+
 var toolbarOptions = [
     ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
     ['blockquote', 'code-block'],
-
+     
     [{ 'header': 1 }, { 'header': 2 }],               // custom button values
     [{ 'list': 'ordered' }, { 'list': 'bullet' }],
     [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
     [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
     [{ 'direction': 'rtl' }],                         // text direction
-
+     
     [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
     [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
 
@@ -41,15 +77,20 @@ var toolbarOptions = [
 var quill = new Quill('#editor', {
     theme: 'snow',
     modules: {
+        /*
         toolbar: {
             container: toolbarOptions,
             handlers: {
                 image: imageHandler,
                 video: videoHandler
             }
-        }
+        },
+        */
+        lineNumber: {
+            container: '#lineNumber',
+        },
     },
-    placeholder:'The great start from here....!'
+    placeholder:'The great start from here....!',
 })//quillsets
 
 function videoHandler() {

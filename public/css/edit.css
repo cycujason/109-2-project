@@ -1,0 +1,26 @@
+body {
+    padding: 25px;
+    font-size:20px;
+  }
+  #container{
+    position: relative;
+  }
+  
+  #editor {
+    border: 1px solid #ccc;
+    width:500px;
+  }
+  
+  
+  #lineNumber {
+    position: absolute;
+    text-align: end;
+    top: 45px;
+    
+    left: -30px;
+    font-size: 13px;
+    padding: 12px 5px;
+    line-height: 1.42;
+    vertical-align: middle;
+}
+  
