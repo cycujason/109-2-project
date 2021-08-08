@@ -39,7 +39,7 @@ router.get('/dashboard', Auth.checkNotAuthenticated, (req, res) => {
     else{
       keyword = '%'+keyword+'%';
       pool.query(`select note_title,note_id,created_at from note_content
-      where create_user=$1 and note_title like $2 `,[user,keyword],(err,results)=>{
+      where create_user=$1 and (note_title like $2 OR note_paragraph like $2)`,[user,keyword],(err,results)=>{
       res.render('dashboardT', { user: user, allnotes : results.rows });
       });//not consider the query fail
     }//else
