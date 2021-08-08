@@ -17,9 +17,11 @@
     </div>
     <ul class="nav-list">
       <li>
+        <form action="/users/dashboard?key=keyword" method="GET">
           <i class='bx bx-search' ></i>
-         <input type="text" placeholder="請輸入關鍵字...">
+         <input type="text" name="keyword" placeholder="請輸入關鍵字..." >
          <span class="tooltip">搜尋</span>
+         </form>
       </li>
       <li>
         <a href="/users/edit">

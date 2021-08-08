@@ -189,12 +189,12 @@ function saveContent(){
 function getTitle(){
     if (socket == null || quill == null) return
 
-    const title = document.getElementsByTagName('h1')[0].innerText;
-    if(title === undefined){
+    const title = document.getElementsByTagName('h1');
+    if(typeof title[0] === 'undefined'){
         return 'Untitled';
     }//if
     else{
-        return title;
+        return title[0].innerText;
     }//else
 
 }//getTitle

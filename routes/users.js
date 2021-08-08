@@ -29,12 +29,23 @@ router.use(passport.session());
 
 router.get('/dashboard', Auth.checkNotAuthenticated, (req, res) => {
     const user = req.user.user_name;
-    pool.query(`select note_title,note_id,created_at from note_content
-    where create_user=$1 `,[user],(err,results)=>{
+    var keyword = req.query.keyword;
+    if(typeof keyword === 'undefined'){
+      pool.query(`select note_title,note_id,created_at from note_content
+      where create_user=$1 `,[user],(err,results)=>{
       res.render('dashboardT', { user: user, allnotes : results.rows });
-    });//not consider the query fail 
+      });//not consider the query fail 
+    }//if
+    else{
+      keyword = '%'+keyword+'%';
+      pool.query(`select note_title,note_id,created_at from note_content
+      where create_user=$1 and note_title like $2 `,[user,keyword],(err,results)=>{
+      res.render('dashboardT', { user: user, allnotes : results.rows });
+      });//not consider the query fail
+    }//else
     
 });
+
 
 
 router.get('/login', Auth.checkAuthenticated, (req, res) => {
