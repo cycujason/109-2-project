@@ -244,6 +244,14 @@
   margin: 18px
 }
 
+.home-section .text-search{
+  display: inline-block;
+  color: whitesmoke;
+  font-size: 18px;
+  font-weight: 500;
+  margin: 18px
+}
+
 .home-section .overview-card{
   display: inline-block;
   color: #11101d;
