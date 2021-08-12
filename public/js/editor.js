@@ -3,7 +3,7 @@ using module markdown-it to-markdown jquery  quill socket.io
 */
 //var converter = new showdown.Converter();  //markdown preview module, preview will use
 const fileUploader = document.querySelector('#file-uploader');
-const Save_Interval = 5000;
+const Save_Interval = 2500;
 var textid = document.getElementById('textid').innerText;
 var user = document.getElementById('user').innerText;
 
@@ -77,7 +77,7 @@ var toolbarOptions = [
 var quill = new Quill('#editor', {
     theme: 'snow',
     modules: {
-        /*
+        
         toolbar: {
             container: toolbarOptions,
             handlers: {
@@ -85,7 +85,7 @@ var quill = new Quill('#editor', {
                 video: videoHandler
             }
         },
-        */
+        
         lineNumber: {
             container: '#lineNumber',
         },
@@ -149,6 +149,7 @@ function recieve(){
         var html = quill.container.firstChild.innerHTML;
         var markdown = toMarkdown(html);
         var rendered_markdown = md.render(markdown);
+        console.log(rendered_markdown);
         $("#preview").html(rendered_markdown);
     }
     socket.on("recieve-note", handler)
@@ -176,13 +177,27 @@ function saveContent(){
 
     const interval = setInterval(() => {
       socket.emit("save-document", quill.getContents(), quill.getText(0,quill.getLength()) , 
-      user, document.getElementsByTagName('h1')[0].innerText);
+      user, getTitle());
     }, Save_Interval)
 
     return () => {
       clearInterval(interval)
     }
 }//saveContent
+
+
+function getTitle(){
+    if (socket == null || quill == null) return
+
+    const title = document.getElementsByTagName('h1');
+    if(typeof title[0] === 'undefined'){
+        return 'Untitled';
+    }//if
+    else{
+        return title[0].innerText;
+    }//else
+
+}//getTitle
 
 
 send();

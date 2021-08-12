@@ -16,10 +16,13 @@
         <i class='bx bx-menu' id="btn" ></i>
     </div>
     <ul class="nav-list">
+     
       <li>
+        <form action="/users/dashboard" method="GET" id="search">
           <i class='bx bx-search' ></i>
-         <input type="text" placeholder="請輸入關鍵字...">
+         <input type="text" name="keyword" placeholder="請輸入關鍵字..." <% if(keyword !== 'undefined') { %> value=<%= keyword %> <% } %>   >
          <span class="tooltip">搜尋</span>
+         </form>
       </li>
       <li>
         <a href="/users/edit">
@@ -72,7 +75,18 @@
     </ul>
   </div>
   <section class="home-section">
+    <div class="text"><%= keyword %></div>
       <div class="text">ALL Notes</div>
+      <% if(limit == true) { %>
+      <div>
+        <label class="text-search" for="range">搜尋範圍:</label>
+        <select id="range" name="range" form="search" onchange="this.form.submit()">
+          <option value="all" <% if (nav=="all") { %> selected="selected" <% } %> >全部</option>
+          <option value="content" <% if (nav=="content") { %> selected="selected" <% } %> >內文</option>
+          <option value="title" <% if (nav=="title") { %> selected="selected" <% } %> >標題</option>
+        </select>
+      </div>
+      <% } %>
       <div>
       <table class="list-note">
         <% for(var i=0; i < allnotes.length; i++) { %>
