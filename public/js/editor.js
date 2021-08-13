@@ -149,7 +149,6 @@ function recieve(){
         var html = quill.container.firstChild.innerHTML;
         var markdown = toMarkdown(html);
         var rendered_markdown = md.render(markdown);
-        console.log(rendered_markdown);
         $("#preview").html(rendered_markdown);
     }
     socket.on("recieve-note", handler)
@@ -204,3 +203,4 @@ send();
 recieve();
 socketRoom();
 saveContent();
+
