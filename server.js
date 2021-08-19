@@ -1,4 +1,4 @@
-
+let { PythonShell } = require('python-shell');
 var app = require('./app');
 var debug = require('debug')('TESTING-PROJECT-FUCK:server');
 var http = require('http');
@@ -38,6 +38,9 @@ require('dotenv').config();
       await pool.query(`UPDATE note_content 
       SET note_paragraph= $1, note_delta_content= $2 , update_at= $3 , update_user=$4, note_title= $6
       WHERE note_id=$5`,[text,data,new Date(Date.now()),user,textid,title]);
+    });
+    socket.on("Tagscompute", async (text, id) => {
+       TagsAnalyse(text,id);
     });
    });
  });
@@ -123,5 +126,30 @@ function normalizePort(val) {
 
 
   }
+
+  function TagsAnalyse(textContent,id) {
+  
+    //pool.query(`SELECT note_paragraph FROM note_content WHERE note_id=$1`,[id],(err,result)=>{
+     //var textContent = result.rows[0].note_paragraph;
+     let options = {
+      mode:'text',
+      encoding:'utf-8',
+      pythonPath:'C:\\Users\\kikoflame\\anaconda3\\envs\\grad_project\\python.exe', // if heroku then this config no need to set
+      args:
+        [
+          textContent,
+        ]
+      }
+    
+      PythonShell.run('./public/py/wordAnalysis.py', options, (err, data) => {
+        if (err) return//res.send(err)
+        const parsedString = JSON.parse(data);
+        console.log(`first: ${parsedString.key1}, second: ${parsedString.key2}, third: ${parsedString.key3}, fourth: ${parsedString.key4}, fifth: ${parsedString.key5}`)
+        pool.query(`UPDATE note_content SET tags= $1  WHERE note_id=$2`,[parsedString,id]);
+      })
+    //})
+    
+  
+  }//pythonprocess
 
   

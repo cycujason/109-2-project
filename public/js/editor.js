@@ -182,8 +182,20 @@ function saveContent(){
     return () => {
       clearInterval(interval)
     }
-}//saveContent
+}//saveContent  save the content to server (json data type)
 
+function computeTag(){
+    if (socket == null || quill == null) return
+
+    const interval = setInterval(() => {
+      socket.emit("Tagscompute", quill.getText(0,quill.getLength()) , textid);
+    }, 10000)
+
+    return () => {
+      clearInterval(interval)
+    }
+
+}//computeTag
 
 function getTitle(){
     if (socket == null || quill == null) return
@@ -203,4 +215,5 @@ send();
 recieve();
 socketRoom();
 saveContent();
+computeTag();
 

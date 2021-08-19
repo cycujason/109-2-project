@@ -22,6 +22,7 @@ router.get('/test1', (req, res) => {
 
 */
 
+/* 
 router.get('/call/python', pythonProcess);
 
 function pythonProcess(req, res) {
@@ -31,7 +32,7 @@ function pythonProcess(req, res) {
    let options = {
     mode:'text',
     encoding:'utf-8',
-    pythonPath:'C:\\Users\\kikoflame\\anaconda3\\envs\\grad_project\\python.exe',
+    pythonPath:'C:\\Users\\kikoflame\\anaconda3\\envs\\grad_project\\python.exe', // if heroku then this config no need to set
     args:
       [
         textContent,
@@ -39,21 +40,21 @@ function pythonProcess(req, res) {
     }
   
     PythonShell.run('./public/py/wordAnalysis.py', options, (err, data) => {
-      if (err) res.send(err)
+      if (err) return//res.send(err)
       const parsedString = JSON.parse(data);
-      //console.log(`name: ${parsedString.Name}, from: ${parsedString.From}`)
+      console.log(`first: ${parsedString.key1}, second: ${parsedString.key2}, third: ${parsedString.key3}, fourth: ${parsedString.key4}, fifth: ${parsedString.key5}`)
       //console.log(parsedString.text);
-      takeData = Object.values(parsedString);
-      res.send(takeData);
-      //console.log(data)
-      //res.send(data)
-      //res.json(parsedString);
+      //takeData = Object.values(parsedString);
+      //res.send(takeData);
+      console.log(parsedString)
+      //res.send(parsedString)
+      res.json(parsedString);
     })
   })
   
 
 }//pythonprocess
 
-
+*/
 
 module.exports = router;
