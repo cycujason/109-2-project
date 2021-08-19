@@ -54,6 +54,13 @@ router.get('/dashboard', Auth.checkNotAuthenticated, (req, res) => {
       res.render('dashboardT', { user: user, allnotes : results.rows ,limit:showSelect,nav:range, keyword:key});
       });//not consider the query fail
     }//else if
+    else if(range === "tags"){
+      keyword = '%'+keyword+'%';
+      pool.query(`select * from note_content where create_user = $1 and (tags->>'key1' like $2 or tags->>'key2' like $2 or tags->>'key3' like $2 or tags->>'key4' like $2 or tags->>'key5' like $2)`,
+      [user,keyword],(err,results)=>{
+      res.render('dashboardT', { user: user, allnotes : results.rows ,limit:showSelect,nav:range, keyword:key});
+      });//not consider the query fail
+    }//else if
     else {
       keyword = '%'+keyword+'%';
       pool.query(`select note_title,note_id,created_at from note_content

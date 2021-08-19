@@ -22,7 +22,7 @@ router.get('/test1', (req, res) => {
 
 */
 
-/* 
+
 router.get('/call/python', pythonProcess);
 
 function pythonProcess(req, res) {
@@ -55,6 +55,6 @@ function pythonProcess(req, res) {
 
 }//pythonprocess
 
-*/
+
 
 module.exports = router;

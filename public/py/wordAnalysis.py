@@ -24,10 +24,20 @@ result = {
     'text': seg_list,
 }
 '''
+#tags =  jieba.analyse.textrank(origin , topK=5, withWeight=False, allowPOS=('ns','n','vn','v'))
 
-tags = jieba.analyse.extract_tags(origin, topK=5)  
+tags = jieba.analyse.extract_tags(origin, topK=5) 
+i=0
 for tag in tags:
   output.append(tag)
+  i+=1
+  if i ==5:
+      break
+
+i = len(tags)
+while i < 5:
+    output.append(output[len(tags)-1])
+    i+=1
 
 result ={
     'key1':output[0],
