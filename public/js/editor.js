@@ -17,7 +17,7 @@ socket.on("connect",()=>{
     console.log('in editor\'s output'+socket.id);
 })
 
-class LineNumber {
+class LineNumber {                      // 行數顯示code
 	constructor(quill, options) {
 		this.quill = quill;   
 		this.options = options;
@@ -97,7 +97,7 @@ function videoHandler() {
     var range = this.quill.getSelection();
     var value = prompt('影片連結: ');
     if(value){
-        this.quill.insertText(range.index, '?[] '+value , 'user' );
+        this.quill.insertText(range.index, '?[] '+value , 'user' ); // 插入影片連結 
     }
 }//videoHandler
 
@@ -106,7 +106,7 @@ function imageHandler() {
     document.getElementById('file-uploader').click();
     fileUploader.addEventListener("change", ev => {
         const formdata = new FormData()
-        formdata.append("image", ev.target.files[0])
+        formdata.append("image", ev.target.files[0]) // 上傳圖片資料
         fetch("https://api.imgur.com/3/image/", {
             method: "post",
             headers: {
@@ -114,7 +114,7 @@ function imageHandler() {
             },
             body: formdata
         }).then(data => data.json()).then(data => {
-           this.quill.insertText(range.index, `![](${data.data.link})`, 'user' );
+           this.quill.insertText(range.index, `![](${data.data.link})`, 'user' );  // 插入圖片連結回編輯器
         })
     })
 }//imageHandler
@@ -132,7 +132,7 @@ function send(){
         var markdown = toMarkdown(html);
         var rendered_markdown = md.render(markdown);
         $("#preview").html(rendered_markdown);
-        socket.emit("note-text", delta)
+        socket.emit("note-text", delta)               // 船同步資訊給server
     }
 
     quill.on("text-change", handler)
@@ -151,7 +151,7 @@ function recieve(){
         var rendered_markdown = md.render(markdown);
         $("#preview").html(rendered_markdown);
     }
-    socket.on("recieve-note", handler)
+    socket.on("recieve-note", handler)             // 接收同步資並更新編輯器
 
     return () => {
         socket.off("recieve-note", handler)
@@ -166,7 +166,7 @@ function socketRoom(){
        var markdown = toMarkdown(html);
        var rendered_markdown = md.render(markdown);
        $("#preview").html(rendered_markdown);
-       quill.enable();
+       quill.enable();                                 // 起初登入畫面時載入筆記資訊和開啟使用者編輯權限
     });
     socket.emit("getdoc",textid,user);
 }//SocketRoom
@@ -180,7 +180,7 @@ function saveContent(){
     }, Save_Interval)
 
     return () => {
-      clearInterval(interval)
+      clearInterval(interval)                   // 每隔Save_interval時間就將筆記資訊傳上DB做同步更新(目前是2.5秒)
     }
 }//saveContent  save the content to server (json data type)
 
@@ -191,8 +191,8 @@ function computeTag(){
       socket.emit("Tagscompute", quill.getText(0,quill.getLength()) , textid);
     }, 10000)
 
-    return () => {
-      clearInterval(interval)
+    return () => { 
+      clearInterval(interval)              // 每隔10秒將筆記傳給python分析tag資訊
     }
 
 }//computeTag
@@ -205,7 +205,7 @@ function getTitle(){
         return 'Untitled';
     }//if
     else{
-        return title[0].innerText;
+        return title[0].innerText;          // 分析筆記的header(標題)
     }//else
 
 }//getTitle

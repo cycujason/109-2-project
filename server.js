@@ -127,8 +127,8 @@ function normalizePort(val) {
 
   }
 
-  function TagsAnalyse(textContent,id) {
-  
+  function TagsAnalyse(textContent,id) {           //分析tags的server端呼叫程式
+   
     //pool.query(`SELECT note_paragraph FROM note_content WHERE note_id=$1`,[id],(err,result)=>{
      //var textContent = result.rows[0].note_paragraph;
      let options = {

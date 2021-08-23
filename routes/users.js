@@ -31,6 +31,16 @@ router.get('/dashboard', Auth.checkNotAuthenticated, (req, res) => {
     const user = req.user.user_name;
     var keyword = req.query.keyword;
     const key = keyword;
+    keyword = key.split(" ");
+    const total_length = keyword.length
+    for(i = 0;i<total_length;i++ ){
+       if(keyword[i] == ""){
+         keyword.splice(i,1);
+       }//if
+       else{
+        keyword[i] = '%'+keyword[i]+'%';
+       }//else to make the keyword searchable
+    }//for to split users mutiple keyword
     var range = req.query.range;
     var showSelect = true;
     if(typeof range === 'undefined' && typeof keyword === 'undefined' ) showSelect=false;
