@@ -31,16 +31,18 @@ router.get('/dashboard', Auth.checkNotAuthenticated, (req, res) => {
     const user = req.user.user_name;
     var keyword = req.query.keyword;
     const key = keyword;
-    keyword = key.split(" ");
-    const total_length = keyword.length
-    for(i = 0;i<total_length;i++ ){
-       if(keyword[i] == ""){
-         keyword.splice(i,1);
-       }//if
-       else{
-        keyword[i] = '%'+keyword[i]+'%';
-       }//else to make the keyword searchable
-    }//for to split users mutiple keyword
+    if(typeof key !== 'undefined'){
+      keyword = key.split(" ");
+      const total_length = keyword.length;
+      for(i = 0;i<total_length;i++ ){
+        if(keyword[i] == ""){
+           keyword.splice(i,1);
+         }//if
+         else{
+           keyword[i] = '%'+keyword[i]+'%';
+         }//else to make the keyword searchable
+      }//for to split users mutiple keyword
+    }//if
     var range = req.query.range;
     var showSelect = true;
     if(typeof range === 'undefined' && typeof keyword === 'undefined' ) showSelect=false;
@@ -50,31 +52,54 @@ router.get('/dashboard', Auth.checkNotAuthenticated, (req, res) => {
       res.render('dashboardT', { user: user, allnotes : results.rows ,limit:showSelect,nav:range, keyword:'undefined'});
       });//not consider the query fail 
     }//if
-    else if( (range === "all" || typeof range === 'undefined') ){
-      keyword = '%'+keyword+'%';
+    else if( (range === "all" || typeof range === 'undefined') ){ // need concat the search keyword
+      var all_condi = "(";
+      for(num =0;num<keyword.length;num++){
+        var condi = "(note_title like '"+keyword[num]+"' OR note_paragraph like '"+keyword[num]+"' )";
+        all_condi = all_condi+condi;
+        if(num+1!=keyword.length) all_condi = all_condi+" OR ";
+      }//for concat the query string
+      all_condi = all_condi+")";
       pool.query(`select note_title,note_id,created_at from note_content
-      where create_user=$1 and (note_title like $2 OR note_paragraph like $2)`,[user,keyword],(err,results)=>{
+      where create_user=$1 and `+all_condi,[user],(err,results)=>{
       res.render('dashboardT', { user: user, allnotes : results.rows ,limit:showSelect,nav:range, keyword:key});
       });//not consider the query fail
     }//else if
-    else if(range === "content"){
-      keyword = '%'+keyword+'%';
+    else if(range === "content"){  // need concat the search keyword
+      var all_condi = "(";
+      for(num =0;num<keyword.length;num++){
+        var condi = "note_paragraph like '"+keyword[num]+"'";
+        all_condi = all_condi+condi;
+        if(num+1!=keyword.length) all_condi = all_condi+" OR ";
+      }//for concat the query string
+      all_condi = all_condi+")";
       pool.query(`select note_title,note_id,created_at from note_content
-      where create_user=$1 and note_paragraph like $2`,[user,keyword],(err,results)=>{
+      where create_user=$1 and `+all_condi,[user],(err,results)=>{
       res.render('dashboardT', { user: user, allnotes : results.rows ,limit:showSelect,nav:range, keyword:key});
       });//not consider the query fail
     }//else if
-    else if(range === "tags"){
-      keyword = '%'+keyword+'%';
+    else if(range === "tags"){  // need concat the search keyword(tag)
+      var all_condi = "";
+      for(num =0;num<keyword.length;num++){
+        var condi = "note_paragraph like "+keyword[i];
+        all_condi = all_condi+condi;
+        if(num+1!=keyword.length) all_condi = all_condi+" OR ";
+      }//for concat the query string
       pool.query(`select * from note_content where create_user = $1 and (tags->>'key1' like $2 or tags->>'key2' like $2 or tags->>'key3' like $2 or tags->>'key4' like $2 or tags->>'key5' like $2)`,
       [user,keyword],(err,results)=>{
       res.render('dashboardT', { user: user, allnotes : results.rows ,limit:showSelect,nav:range, keyword:key});
       });//not consider the query fail
     }//else if
-    else {
-      keyword = '%'+keyword+'%';
+    else {  // need concat the search keyword (title)
+      var all_condi = "(";
+      for(num =0;num<keyword.length;num++){
+        var condi = "note_title like '"+keyword[num]+"'";
+        all_condi = all_condi+condi;
+        if(num+1!=keyword.length) all_condi = all_condi+" OR ";
+      }//for concat the query string
+      all_condi = all_condi+")";
       pool.query(`select note_title,note_id,created_at from note_content
-      where create_user=$1 and note_title like $2 `,[user,keyword],(err,results)=>{
+      where create_user=$1 and `+all_condi,[user],(err,results)=>{
       res.render('dashboardT', { user: user, allnotes : results.rows ,limit:showSelect,nav:range, keyword:key});
       });//not consider the query fail
     }//else title search
