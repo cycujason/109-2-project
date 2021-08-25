@@ -34,10 +34,17 @@ require('dotenv').config();
       socket.broadcast.to(textid).emit("recieve-note", editorData);
       console.log(editorData);
     });
-    socket.on("save-document", async (data,text,user,title) => {
-      await pool.query(`UPDATE note_content 
-      SET note_paragraph= $1, note_delta_content= $2 , update_at= $3 , update_user=$4, note_title= $6
-      WHERE note_id=$5`,[text,data,new Date(Date.now()),user,textid,title]);
+    socket.on("save-document", async (data,text,user,title,tags) => {
+      if(typeof tags === 'undefined'){
+        await pool.query(`UPDATE note_content 
+        SET note_paragraph= $1, note_delta_content= $2 , update_at= $3 , update_user=$4, note_title= $6
+        WHERE note_id=$5`,[text,data,new Date(Date.now()),user,textid,title]);
+      }//if //if user have not set the tags imformation
+      else{
+        await pool.query(`UPDATE note_content 
+        SET note_paragraph= $1, note_delta_content= $2 , update_at= $3 , update_user=$4, note_title= $6, user_tags = $7
+        WHERE note_id=$5`,[text,data,new Date(Date.now()),user,textid,title,tags]);
+      }//else user have set user own tags imformation
     });
     socket.on("Tagscompute", async (text, id) => {
        TagsAnalyse(text,id);

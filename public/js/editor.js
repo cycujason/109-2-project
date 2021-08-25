@@ -176,7 +176,7 @@ function saveContent(){
 
     const interval = setInterval(() => {
       socket.emit("save-document", quill.getContents(), quill.getText(0,quill.getLength()) , 
-      user, getTitle());
+      user, getTitle(),getTags());
     }, Save_Interval)
 
     return () => {
@@ -197,6 +197,7 @@ function computeTag(){
 
 }//computeTag
 
+
 function getTitle(){
     if (socket == null || quill == null) return
 
@@ -206,6 +207,24 @@ function getTitle(){
     }//if
     else{
         return title[0].innerText;          // 分析筆記的header(標題)
+    }//else
+
+}//getTitle
+
+function getTags(){
+    if (socket == null || quill == null) return
+
+    const tags = document.getElementsByTagName('h6');
+    if(typeof tags[0] === 'undefined'){
+        return undefined;
+    }//if
+    else{
+        var output = [];
+        for(i=0;i<tags.length;i++){
+           console.log(tags[i].innerText);
+           output.push(tags[i].innerText);
+        }//for
+        return output;          // 分析筆記的tags 使用者自定義的標籤
     }//else
 
 }//getTitle
