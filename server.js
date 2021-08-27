@@ -126,8 +126,8 @@ function normalizePort(val) {
         return rows[0].note_delta_content;
     }//if
     else{
-      await pool.query( `INSERT INTO note_content (note_id, multi_user,created_at,update_at,create_user,note_title)
-      VALUES ($1, $2, $3, $4, $5, $6)`,[id,false,new Date(Date.now()),new Date(Date.now()),user,'Untitled'])
+      await pool.query( `INSERT INTO note_content (note_id,created_at,update_at,create_user,note_title)
+      VALUES ($1, $2, $3, $4, $5)`,[id,new Date(Date.now()),new Date(Date.now()),user,'Untitled'])
       return "";
     }//else
 
