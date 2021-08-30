@@ -117,12 +117,12 @@ function normalizePort(val) {
 
   async function findDocumentOrCreate(id,user){
     if(id == null)return
-    const {rows} = await pool.query(`SELECT note_delta_content FROM note_content
+    const {rows} = await pool.query(`SELECT note_delta_content,create_user FROM note_content
     WHERE note_id = $1`,[id]);
     //console.log(rows.length);
     //console.log(rows[0]);
     const data_num= rows.length;
-    if(data_num > 0 ) {
+    if(data_num > 0 && rows[0].create_user == user ) {
         return rows[0].note_delta_content;
     }//if
     else{
@@ -141,7 +141,7 @@ function normalizePort(val) {
      let options = {
       mode:'text',
       encoding:'utf-8',
-      pythonPath:'C:\\Users\\kikoflame\\anaconda3\\envs\\grad_project\\python.exe', // if heroku then this config no need to set
+      //pythonPath:'C:\\Users\\kikoflame\\anaconda3\\envs\\grad_project\\python.exe', // if heroku then this config no need to set
       args:
         [
           textContent,
