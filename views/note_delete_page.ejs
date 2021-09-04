@@ -3,7 +3,7 @@
 <html  dir="ltr">
   <head>
     <meta charset="UTF-8">
-    <title> Dashboard T</title>
+    <title> Dashboard </title>
     <link rel="stylesheet" href="/css/sidebar.css">
     <!-- Boxicons CDN Link -->
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
@@ -28,7 +28,7 @@
           <span class="links_name">新增筆記</span>
         </a>
         <span class="tooltip">新增筆記</span>
-      </li>
+    </li>
 
       <li>
        <a href="/users/dashboard">
@@ -44,7 +44,7 @@
           <span class="links_name">多人筆記</span>
         </a>
         <span class="tooltip">多人筆記</span>
-      </li>
+    </li>
 
      <li>
        <a href="/users/note_delete_page">
@@ -73,17 +73,17 @@
          <a href="/users/logout">
            <i class='bx bx-log-out' id="log_out" ></i>
         </a>
-        
      </li>
+
     </ul>
   </div>
 
   <section class="home-section">
-      <div class="text">ALL Notes</div>
+      <div class="text">Delete Notes?</div>
       <div>
       <table class="list-note">
         <% for(var i=0; i < allnotes.length; i++) { %>
-          <% var link = "/users/edit/"+allnotes[i].note_id; %> 
+          <% var link = "/users/note_delete/"+allnotes[i].note_id; %> 
           <tr>
               <div class="overview-card" onclick="location.href='<%= link %>';">
                 <!--a class="note-linker" href="link" ></a-->

@@ -120,8 +120,4 @@ function normalizePort(val) {
       VALUES ($1, $2, $3, $4, $5, $6)`,[id,false,new Date(Date.now()),new Date(Date.now()),user,'Untitled'])
       return "";
     }//else
-
-
   }
-
-  

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html dir="ltr">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Setting page</title> 
+    </head>
+
+    <body>
+        <div class="forms">
+            <div class="login-form">
+                <form action="/users/update_psw" method="POST">
+                    <div class="input-boxes">
+
+                        <div class="input-box">
+                            <i class="fas fa-lock"></i>
+                            <input type="password"
+                            name ="old_password"
+                            id ="old_password"
+                            placeholder="請輸入舊密碼"
+                            required>
+                            </div>
+
+                        <div class="input-box">
+                        <i class="fas fa-lock"></i>
+                        <input type="password"
+                        name ="new_password"
+                        id ="new_password"
+                        placeholder="請輸入新密碼"
+                        required>
+                        </div>
+
+                        <div class="input-box">
+                        <i class="fas fa-lock"></i>
+                        <input type="password"
+                        name ="password_confirm"
+                        id ="password_confirm"
+                        placeholder="請再次輸入新密碼"
+                        required>
+                        </div>             
+
+                        <div class="button input-box">
+                            <input type="submit" value="確認">
+                        </div>
+                        
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+
+</html>

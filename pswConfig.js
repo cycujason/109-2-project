@@ -14,17 +14,6 @@ function initialize(passport) {
           throw err;
         } // if
         
-        /*
-        console.log('START here ============');
-        console.log("length: " + results.rows.length) ;
-        
-        const data = results.rows;
-
-        data.forEach(row => console.log(row));
-        console.log(data[0].user_password);
-        console.log('END here ============');
-        */
-        
         const data = results.rows;
         if (results.rows.length > 0) {
           const user = results.rows[0];

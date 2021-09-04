@@ -73,25 +73,22 @@
          <a href="/users/logout">
            <i class='bx bx-log-out' id="log_out" ></i>
         </a>
-        
      </li>
+
     </ul>
   </div>
 
   <section class="home-section">
-      <div class="text">ALL Notes</div>
+      <div class="text">ALL Notes (multi-user)</div>
       <div>
       <table class="list-note">
-        <% for(var i=0; i < allnotes.length; i++) { %>
-          <% var link = "/users/edit/"+allnotes[i].note_id; %> 
+        <% for(var i=0; i < allnotes[0].note_id.length; i++) { %>
+          <% var link = "/users/edit/"+allnotes[0].note_id[i]; %> 
           <tr>
               <div class="overview-card" onclick="location.href='<%= link %>';">
                 <!--a class="note-linker" href="link" ></a-->
                 <div class="item1">
-                  <%= allnotes[i].note_title %>
-                </div>
-                <div class="item2">
-                  created at: <%= allnotes[i].created_at%>
+                  <%= allnotes[0].note_id[i] %>
                 </div>
                 <!--/a-->
               </div>
