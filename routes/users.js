@@ -281,10 +281,34 @@ router.get('/group_page_choose', Auth.checkNotAuthenticated, (req, res) => {
 });
 
 
-router.post('/serach_group', async (req, res) => {
+router.post('/search_group', async (req, res) => {
   const user = req.user.user_name;
   let { search_group } = req.body;
-  res.render('setting_page');
+
+  var temp = "" ;
+  pool.query(`select group_name from login_module
+  where user_name = $1`,[user], (err, results)=>{
+    temp = results.rows[0] ;
+  });
+
+  var found = false ;
+  for ( var i = 0 ; i < temp.group_name.length ; i++ ) {
+      if (search_group == temp.group_name[i] ) {
+        found = true ;
+        break ;
+      } // if
+
+  } // for
+
+  if ( found == true ) {
+    pool.query(`select * from group_module
+    where group_name = &1`, user], (err, results)=>{
+      res.render('dashboardT_multi', { user: user, allnotes : results.rows });
+    });
+  } else {
+    console.log("Search group not found!");
+  } // else
+
 });
 
 
@@ -292,9 +316,11 @@ router.post('/new_group', async (req, res) => {
   const user = req.user.user_name;
   let { new_group } = req.body;
 
+  pool.query(`insert into group_module
+  values ($1, $2, $3)`,[new_group, null, null], (err, results)=>{
+    res.render('dashboardT_multi', { user: user, allnotes : results.rows});
 
-
-  res.render('setting_page');
+  });
 });
 
 
