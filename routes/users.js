@@ -29,6 +29,7 @@ router.use(passport.session());
 
 router.get('/dashboard', Auth.checkNotAuthenticated, (req, res) => {
     const user = req.user.user_name;
+<<<<<<< HEAD
     var keyword = req.query.keyword;
     const key = keyword;
     if(typeof key !== 'undefined'){
@@ -106,14 +107,52 @@ router.get('/dashboard', Auth.checkNotAuthenticated, (req, res) => {
       });//not consider the query fail
     }//else title search
 
+=======
+    pool.query(`select note_title,note_id,created_at from note_content
+    where create_user=$1 and multi_user = false`,[user],(err,results)=>{
+      res.render('dashboardT', { user: user, allnotes: results.rows });
+    });//not consider the query fail 
+>>>>>>> 70a2879d244bd40961a89c3ce44e283c5ef1adaa
     
 });
 
 
+<<<<<<< HEAD
+=======
+router.get('/note_delete_page', Auth.checkNotAuthenticated, (req, res) => {
+  const user = req.user.user_name;
+  pool.query(`select note_title,note_id,created_at from note_content
+  where create_user=$1 and multi_user = false`,[user],(err,results)=>{
+    res.render('note_delete_page', { user: user, allnotes : results.rows });
+  });//not consider the query fail 
+  
+});
+
+
+// use for deleting a note in single mode
+router.get('/note_delete/:id', Auth.checkNotAuthenticated, (req, res) => {
+  const note = req.params.id;
+
+  pool.query(`delete from note_content
+  where note_id = $1`,[note],(err,results)=>{
+    // res.render('note_delete_page', { user: user, allnotes : results.rows });
+  });// delete one note
+
+  const user = req.user.user_name;
+  pool.query(`select note_title,note_id,created_at from note_content
+  where create_user=$1 and multi_user = false`,[user],(err,results)=>{
+    res.render('dashboardT', { user: user, allnotes : results.rows });
+  });//not consider the query fail 
+});
+
+
+>>>>>>> 70a2879d244bd40961a89c3ce44e283c5ef1adaa
 
 router.get('/login', Auth.checkAuthenticated, (req, res) => {
     res.render('loginT');
 });
+
+
 
 router.post('/login',passport.authenticate('local', {
       successRedirect: '/users/dashboard',
@@ -128,7 +167,6 @@ router.get('/logout', (req, res) => {
     req.logout();
     res.render('indexT', { message: 'You have logged out successfully!' });
 });
-
 
 
 /*
@@ -210,8 +248,6 @@ router.post('/register', async (req, res) => {
       ); // pool.query()
     } // else
 });
-//Auth.checkNotAuthenticated,
-
 
 
 router.get('/edit', (req, res) => {
@@ -224,17 +260,160 @@ router.get('/edit/:id',Auth.checkNotAuthenticated, (req, res) => {
   res.render('testpage' ,{ textid:req.params.id ,user:req.user.user_name});
 });
 
-/*  this area is for my guest test
-router.get('/guest', (req, res) => {
-  res.redirect(`/users/guest/${uuidv4()}`);
+
+router.get('/setting_page', Auth.checkNotAuthenticated, (req, res) => {
+  res.render('setting_page');
 });
 
+router.post('/update_psw', async (req, res) => {
+  const user = req.user.user_name;
+  let { old_password, new_password, password_confirm } = req.body;
+  console.log("old: " + old_password);
+  console.log("new: " + new_password);
 
-router.get('/guest/:id', (req, res) => {
-  console.log("open doc uuid: " + req.params.id);
-  res.render('testpage' ,{ textid:req.params.id ,user:'guest'});
-});
+  hashedPassword = await bcrypt.hash(new_password, 10);
+  console.log("hash_new: " + hashedPassword);
+
+  var errorlog = 0 ;
+  pool.query(
+    `SELECT * FROM login_module WHERE user_name = $1`,
+    [user],
+    (err, results) => {
+      if (err) {
+        throw err;
+      } // if
+
+      if (results.rows.length > 0) {
+        bcrypt.compare(old_password, results.rows[0].user_password, (err, isMatch) => {
+          if (err) {
+            // window.alert("密碼輸入錯誤!");
+            res.render('setting_page');
+          } // if
+
+          if (isMatch) {
+            if (new_password == password_confirm && new_password != "") {
+
+              pool.query(
+                `update login_module
+                set user_password = $1
+                where user_name = $2`,
+                [hashedPassword, user],
+                (err, results) => {
+                  if (err) {
+                    throw err;
+                  } // if
+                }
+              ); // pool
+    
+              console.log("密碼已更新!");
+              errorlog = 0;
+              
+            } else {
+              console.log("密碼確認時發生錯誤!");
+              errorlog = 1;
+
+              pool.query(`select note_title,note_id,created_at from note_content
+              where create_user=$1 and multi_user = false`,[user],(err,results)=>{
+                res.render('dashboardT', { user: user, allnotes: results.rows });
+              });//not consider the query fail
+            } // else
+
+          } else {
+            console.log("密碼確認時發生錯誤2!");
+            errorlog = 2;
+
+            pool.query(`select note_title,note_id,created_at from note_content
+            where create_user=$1 and multi_user = false`,[user],(err,results)=>{
+              res.render('dashboardT', { user: user, allnotes: results.rows });
+            });//not consider the query fail
+          } // else
+       }); // bcrypt.compare
+      } // if
+    }
+  ); // pool query
+  
+  /*
+  if (errorlog == 0)
+    alert('密碼已更新!請重新登入');
+  else if (errorlog == 1)
+    alert('密碼確認時發生錯誤!');
+  else if (errorlog == 2)
+    alert('原密碼輸入錯誤!');
+
+  */
+
+  req.logout();
+  res.render('indexT', { message: 'You have logged out successfully!' });
+}); // router
+
+
+router.get('/group_page_choose', Auth.checkNotAuthenticated, (req, res) => {
+  const user = req.user.user_name;
+  pool.query(`select group_name from login_module
+  where user_name=$1`,[user],(err,results)=>{
+
+
+/*
+    console.log(results.rows);
+    console.log(results.rows[0]);
+    console.log(results.rows[0].group_name);
+    console.log(results.rows[0].group_name[1]);
 */
+    res.render('group_page', { user: user, allgroups: results.rows });
+  });//not consider the query fail 
+});
 
+
+router.post('/search_group', async (req, res) => {
+  const user = req.user.user_name;
+  let { search_group } = req.body;
+
+  var temp = "" ;
+  pool.query(`select group_name from login_module
+  where user_name = $1`,[user], (err, results)=>{
+    temp = results.rows[0] ;
+  });
+
+  var found = false ;
+  for ( var i = 0 ; i < temp.group_name.length ; i++ ) {
+      if (search_group == temp.group_name[i] ) {
+        found = true ;
+        break ;
+      } // if
+
+  } // for
+
+  if ( found == true ) {
+    pool.query(`select * from group_module
+    where group_name = &1`, user], (err, results)=>{
+      res.render('dashboardT_multi', { user: user, allnotes : results.rows });
+    });
+  } else {
+    console.log("Search group not found!");
+  } // else
+
+});
+
+
+router.post('/new_group', async (req, res) => {
+  const user = req.user.user_name;
+  let { new_group } = req.body;
+
+  pool.query(`insert into group_module
+  values ($1, $2, $3)`,[new_group, null, null], (err, results)=>{
+    res.render('dashboardT_multi', { user: user, allnotes : results.rows});
+
+  });
+});
+
+
+router.get('/group_page/:name', Auth.checkNotAuthenticated, (req, res) => {
+  const name = req.params.id;
+  const user = req.user.user_name;
+  pool.query(`select * from group_module
+  where group_name = &1`, [name], (err, results)=>{
+    res.render('dashboardT_multi', { user: user, allnotes : results.rows });
+  });
+});
 
 module.exports = router;

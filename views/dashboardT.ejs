@@ -3,7 +3,7 @@
 <html  dir="ltr">
   <head>
     <meta charset="UTF-8">
-    <title> Dashboard </title>
+    <title> Dashboard T</title>
     <link rel="stylesheet" href="/css/sidebar.css">
     <!-- Boxicons CDN Link -->
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
@@ -24,6 +24,7 @@
          <span class="tooltip">搜尋</span>
          </form>
       </li>
+
       <li>
         <a href="/users/edit">
             <i class='bx bx-book-add' ></i>
@@ -31,34 +32,39 @@
         </a>
         <span class="tooltip">新增筆記</span>
       </li>
+
       <li>
-       <a href="https://github.com/kikoflame">
+       <a href="/users/dashboard">
          <i class='bx bx-user' ></i>
          <span class="links_name">個人筆記</span>
        </a>
        <span class="tooltip">個人筆記</span>
      </li>
+
      <li>
-        <a href="#">
+        <a href="/users/group_page_choose">
           <i class='bx bx-group'></i>
           <span class="links_name">多人筆記</span>
         </a>
         <span class="tooltip">多人筆記</span>
       </li>
+
      <li>
-       <a href="#">
+       <a href="/users/note_delete_page">
          <i class='bx bx-folder' ></i>
-         <span class="links_name">筆記管理</span>
+         <span class="links_name">筆記刪除</span>
        </a>
-       <span class="tooltip">筆記管理</span>
+       <span class="tooltip">筆記刪除</span>
      </li>
+
      <li>
-       <a href="#">
-         <i class='bx bx-cog' ></i>
-         <span class="links_name">設定</span>
-       </a>
-       <span class="tooltip">設定</span>
-     </li>
+      <a href="/users/setting_page">
+        <i class='bx bx-cog' ></i>
+        <span class="links_name">設定</span>
+      </a>
+      <span class="tooltip">設定</span>
+    </li>
+
      <li class="profile">
          <div class="profile-details">
            <div class="name_job">
@@ -74,6 +80,7 @@
      </li>
     </ul>
   </div>
+
   <section class="home-section">
     <div class="text"><%= keyword %></div>
       <div class="text">ALL Notes</div>
@@ -145,15 +152,7 @@
       <% } //if %>
      
   </section>
+
   <script src="/js/sidebar.js"></script>
 </body>
 </html>
-
-
-<!--<a class="note-linker" href="https://github.com/cycujason/109-2-project"></a>
-            <div class="item1">
-             12345612345
-            </div>
-            <div class="item2">
-              456
-            </div>-->
