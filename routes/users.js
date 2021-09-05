@@ -29,7 +29,7 @@ router.use(passport.session());
 
 router.get('/dashboard', Auth.checkNotAuthenticated, (req, res) => {
     const user = req.user.user_name;
-<<<<<<< HEAD
+
     var keyword = req.query.keyword;
     const key = keyword;
     if(typeof key !== 'undefined'){
@@ -107,18 +107,18 @@ router.get('/dashboard', Auth.checkNotAuthenticated, (req, res) => {
       });//not consider the query fail
     }//else title search
 
-=======
+
     pool.query(`select note_title,note_id,created_at from note_content
     where create_user=$1 and multi_user = false`,[user],(err,results)=>{
       res.render('dashboardT', { user: user, allnotes: results.rows });
     });//not consider the query fail 
->>>>>>> 70a2879d244bd40961a89c3ce44e283c5ef1adaa
+
     
 });
 
 
-<<<<<<< HEAD
-=======
+
+
 router.get('/note_delete_page', Auth.checkNotAuthenticated, (req, res) => {
   const user = req.user.user_name;
   pool.query(`select note_title,note_id,created_at from note_content
@@ -146,7 +146,7 @@ router.get('/note_delete/:id', Auth.checkNotAuthenticated, (req, res) => {
 });
 
 
->>>>>>> 70a2879d244bd40961a89c3ce44e283c5ef1adaa
+
 
 router.get('/login', Auth.checkAuthenticated, (req, res) => {
     res.render('loginT');
@@ -385,7 +385,7 @@ router.post('/search_group', async (req, res) => {
 
   if ( found == true ) {
     pool.query(`select * from group_module
-    where group_name = &1`, user], (err, results)=>{
+    where group_name = &1`, [user], (err, results)=>{
       res.render('dashboardT_multi', { user: user, allnotes : results.rows });
     });
   } else {

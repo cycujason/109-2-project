@@ -131,7 +131,7 @@ function normalizePort(val) {
       return "";
     }//else
   }
-<<<<<<< HEAD
+
 
   function TagsAnalyse(textContent,id) {           //分析tags的server端呼叫程式
    
@@ -159,5 +159,4 @@ function normalizePort(val) {
   }//pythonprocess
 
   
-=======
->>>>>>> 70a2879d244bd40961a89c3ce44e283c5ef1adaa
+
