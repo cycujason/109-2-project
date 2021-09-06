@@ -141,7 +141,7 @@ function normalizePort(val) {
      let options = {
       mode:'text',
       encoding:'utf-8',
-      pythonPath:'C:\\Users\\kikoflame\\anaconda3\\envs\\grad_project\\python.exe', // if heroku then this config no need to set
+      //pythonPath:'C:\\Users\\kikoflame\\anaconda3\\envs\\grad_project\\python.exe', // if heroku then this config no need to set
       args:
         [
           textContent,
