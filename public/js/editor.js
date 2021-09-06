@@ -120,6 +120,28 @@ function imageHandler() {
     })
 }//imageHandler
 
+function imageHandler2() {
+    console.log("imageHandler");
+    var url  = document.getElementById("url");
+    
+    var str = url.innerText;
+    str = str.slice(22);
+    console.log(str);
+        const formdata = new FormData()
+        formdata.append("image", str)
+        fetch("https://api.imgur.com/3/image/", {
+            method: "post",
+            headers: {
+                Authorization: "Client-ID 718b4512df0d2f5"
+            },
+            body: formdata
+        }).then(data => data.json()).then(data => {
+           this.quill.insertText(`![](${data.data.link})`, 'user' );
+        })
+    
+}//imageHandler
+
+
 
 quill.disable();
 quill.setText("Loading............");

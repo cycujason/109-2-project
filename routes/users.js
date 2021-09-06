@@ -367,19 +367,18 @@ router.post('/search_group', async (req, res) => {
   let { search_group } = req.body;
 
   var temp = "" ;
-  pool.query(`select group_name from login_module
-  where user_name = $1`,[user], (err, results)=>{
-    temp = results.rows[0] ;
+  pool.query(`select group_name from login_module`, (err, results)=>{
+    temp = results.rows ;
     var found = false ;
-    for ( var i = 0 ; temp != null && i < temp.group_name.length ; i++ ) {
-      if (search_group == temp.group_name[i] ) {
+    for ( var i = 0 ; temp != null && i < temp.length ; i++ ) {
+      if (search_group == temp[i].group_name ) {
         found = true ;
         break ;
       } // if
     } // for
     if ( found == true ) {
       pool.query(`select * from group_module
-      where group_name = &1`, [user], (err, results)=>{
+      where group_name = $1`, [req.body.search_group], (err, results)=>{
         res.render('dashboardT_multi', { user: user, allnotes : results.rows });
       });
     } else {
