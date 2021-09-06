@@ -121,6 +121,7 @@ function imageHandler() {
 }//imageHandler
 
 function imageHandler2() {
+
     console.log("imageHandler");
     var url  = document.getElementById("url");
     
