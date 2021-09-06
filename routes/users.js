@@ -29,12 +29,89 @@ router.use(passport.session());
 
 router.get('/dashboard', Auth.checkNotAuthenticated, (req, res) => {
     const user = req.user.user_name;
-    pool.query(`select note_title,note_id,created_at from note_content
-    where create_user=$1 and multi_user = false`,[user],(err,results)=>{
-      res.render('dashboardT', { user: user, allnotes: results.rows });
-    });//not consider the query fail 
+
+    var keyword = req.query.keyword;
+    const key = keyword;
+    if(typeof key !== 'undefined'){
+      keyword = key.split(" ");
+      const total_length = keyword.length;
+      for(i = 0;i<total_length;i++ ){
+        if(keyword[i] == ""){
+           keyword.splice(i,1);
+         }//if
+      }//for to split users mutiple keyword
+      if(keyword.length!=1) keyword.push('%'+key+"%");
+    }//if
+    var range = req.query.range;
+    var showSelect = true;
+    if(typeof range === 'undefined' && typeof keyword === 'undefined' ) showSelect=false;
+    if(typeof keyword === 'undefined' ){
+      pool.query(`select note_title,note_id,created_at,note_paragraph from note_content
+      where create_user=$1 `,[user],(err,results)=>{
+      res.render('dashboardT', { user: user, allnotes : results.rows ,limit:showSelect,nav:range, keyword:'undefined'});
+      });//not consider the query fail 
+    }//if
+    else if( (range === "all" || typeof range === 'undefined') ){ // need concat the search keyword
+      var all_condi = "(";
+      for(num =0;num<keyword.length;num++){
+        var condi = "(note_title like '%"+keyword[num]+"%' OR note_paragraph like '%"+keyword[num]+"%' )";
+        all_condi = all_condi+condi;
+        if(num+1!=keyword.length) all_condi = all_condi+" OR ";
+      }//for concat the query string
+      all_condi = all_condi+")";
+      pool.query(`select note_title,note_id,created_at,note_paragraph from note_content
+      where create_user=$1 and `+all_condi,[user],(err,results)=>{
+      res.render('dashboardT', { user: user, allnotes : results.rows ,limit:showSelect,nav:range, keyword:key, all_key:keyword});
+      });//not consider the query fail
+    }//else if
+    else if(range === "content"){  // need concat the search keyword
+      var all_condi = "(";
+      for(num =0;num<keyword.length;num++){
+        var condi = "note_paragraph like '%"+keyword[num]+"%'";
+        all_condi = all_condi+condi;
+        if(num+1!=keyword.length) all_condi = all_condi+" OR ";
+      }//for concat the query string
+      all_condi = all_condi+")";
+      pool.query(`select note_title,note_id,created_at,note_paragraph from note_content
+      where create_user=$1 and `+all_condi,[user],(err,results)=>{
+      res.render('dashboardT', { user: user, allnotes : results.rows ,limit:showSelect,nav:range, keyword:key, all_key:keyword});
+      });//not consider the query fail
+    }//else if
+    else if(range === "tags"){  // need concat the search keyword(tag)
+      var all_condi = "(";
+      var user_tags ="";
+      for(num =0;num<keyword.length;num++){
+        var condi = "(tags->>'key1' like '%"+keyword[num]+"%' or tags->>'key2' like '%"+keyword[num]+"%' or tags->>'key3' like '%"+keyword[num]+"%' or tags->>'key4' like '%"+keyword[num]+"%' or tags->>'key5' like '%"+keyword[num]+"%')"
+        all_condi = all_condi+condi;
+        user_tags = user_tags+" elem like '%"+keyword[num]+"%'";
+        if(num+1!=keyword.length) {all_condi = all_condi+" OR "; user_tags = user_tags + " OR "}//for
+      }//for concat the query string
+      all_condi = all_condi+") or";
+      all_condi = all_condi+"(    EXISTS (SELECT  FROM   unnest(user_tags) elem WHERE"+user_tags+"))"
+      pool.query(`select note_title,note_id,created_at,note_paragraph from note_content where create_user = $1 and `+all_condi,
+      [user],(err,results)=>{
+      res.render('dashboardT', { user: user, allnotes : results.rows ,limit:showSelect,nav:range, keyword:key, all_key:keyword});
+      });//not consider the query fail
+    }//else if
+    else {  // need concat the search keyword (title)
+      var all_condi = "(";
+      for(num =0;num<keyword.length;num++){
+        var condi = "note_title like '%"+keyword[num]+"%'";
+        all_condi = all_condi+condi;
+        if(num+1!=keyword.length) all_condi = all_condi+" OR ";
+      }//for concat the query string
+      all_condi = all_condi+")";
+      pool.query(`select note_title,note_id,created_at,note_paragraph from note_content
+      where create_user=$1 and `+all_condi,[user],(err,results)=>{
+      res.render('dashboardT', { user: user, allnotes : results.rows ,limit:showSelect,nav:range, keyword:key, all_key:keyword});
+      });//not consider the query fail
+    }//else title search
+
+
     
 });
+
+
 
 
 router.get('/note_delete_page', Auth.checkNotAuthenticated, (req, res) => {
@@ -62,6 +139,7 @@ router.get('/note_delete/:id', Auth.checkNotAuthenticated, (req, res) => {
     res.render('dashboardT', { user: user, allnotes : results.rows });
   });//not consider the query fail 
 });
+
 
 
 
@@ -174,7 +252,17 @@ router.get('/edit', (req, res) => {
 
 router.get('/edit/:id',Auth.checkNotAuthenticated, (req, res) => {
   console.log("open doc uuid: " + req.params.id);
-  res.render('testpage' ,{ textid:req.params.id ,user:req.user.user_name});
+  res.render('testpage' ,{ textid:req.params.id ,user:req.user.user_name,multiuser:'false'});
+});
+
+router.get('/edit_multi', (req, res) => {
+  res.redirect(`/users/edit_multi/${uuidv4()}`);
+});
+
+
+router.get('/edit_multi/:id',Auth.checkNotAuthenticated, (req, res) => {
+  console.log("open doc uuid: " + req.params.id);
+  res.render('testpage' ,{ textid:req.params.id ,user:req.user.user_name,multiuser:'true'});
 });
 
 
@@ -266,6 +354,7 @@ router.post('/update_psw', async (req, res) => {
 
 router.get('/group_page_choose', Auth.checkNotAuthenticated, (req, res) => {
   const user = req.user.user_name;
+  console.log(user);
   pool.query(`select group_name from login_module
   where user_name=$1`,[user],(err,results)=>{
 
@@ -340,6 +429,7 @@ router.get('/group_page/:id', Auth.checkNotAuthenticated, (req, res) => {
   const user = req.user.user_name;
   pool.query(`select * from group_module
   where group_name = $1`, [name], (err, results)=>{
+    console.log("rows: " + results.rows[0].group_name) ;
     res.render('dashboardT_multi', { user: user, allnotes : results.rows });
   });
 });
