@@ -47,7 +47,7 @@ router.get('/dashboard', Auth.checkNotAuthenticated, (req, res) => {
     if(typeof range === 'undefined' && typeof keyword === 'undefined' ) showSelect=false;
     if(typeof keyword === 'undefined' ){
       pool.query(`select note_title,note_id,created_at,note_paragraph from note_content
-      where create_user=$1 `,[user],(err,results)=>{
+      where create_user=$1 and multi_user = false `,[user],(err,results)=>{
       res.render('dashboardT', { user: user, allnotes : results.rows ,limit:showSelect,nav:range, keyword:'undefined'});
       });//not consider the query fail 
     }//if
@@ -60,7 +60,7 @@ router.get('/dashboard', Auth.checkNotAuthenticated, (req, res) => {
       }//for concat the query string
       all_condi = all_condi+")";
       pool.query(`select note_title,note_id,created_at,note_paragraph from note_content
-      where create_user=$1 and `+all_condi,[user],(err,results)=>{
+      where create_user=$1 and  multi_user = false and `+all_condi,[user],(err,results)=>{
       res.render('dashboardT', { user: user, allnotes : results.rows ,limit:showSelect,nav:range, keyword:key, all_key:keyword});
       });//not consider the query fail
     }//else if
@@ -73,7 +73,7 @@ router.get('/dashboard', Auth.checkNotAuthenticated, (req, res) => {
       }//for concat the query string
       all_condi = all_condi+")";
       pool.query(`select note_title,note_id,created_at,note_paragraph from note_content
-      where create_user=$1 and `+all_condi,[user],(err,results)=>{
+      where create_user=$1  and multi_user = false and `+all_condi,[user],(err,results)=>{
       res.render('dashboardT', { user: user, allnotes : results.rows ,limit:showSelect,nav:range, keyword:key, all_key:keyword});
       });//not consider the query fail
     }//else if
@@ -88,7 +88,7 @@ router.get('/dashboard', Auth.checkNotAuthenticated, (req, res) => {
       }//for concat the query string
       all_condi = all_condi+") or";
       all_condi = all_condi+"(    EXISTS (SELECT  FROM   unnest(user_tags) elem WHERE"+user_tags+"))"
-      pool.query(`select note_title,note_id,created_at,note_paragraph from note_content where create_user = $1 and `+all_condi,
+      pool.query(`select note_title,note_id,created_at,note_paragraph from note_content where create_user = $1  and multi_user = false and `+all_condi,
       [user],(err,results)=>{
       res.render('dashboardT', { user: user, allnotes : results.rows ,limit:showSelect,nav:range, keyword:key, all_key:keyword});
       });//not consider the query fail
@@ -102,7 +102,7 @@ router.get('/dashboard', Auth.checkNotAuthenticated, (req, res) => {
       }//for concat the query string
       all_condi = all_condi+")";
       pool.query(`select note_title,note_id,created_at,note_paragraph from note_content
-      where create_user=$1 and `+all_condi,[user],(err,results)=>{
+      where create_user=$1  and multi_user = false and `+all_condi,[user],(err,results)=>{
       res.render('dashboardT', { user: user, allnotes : results.rows ,limit:showSelect,nav:range, keyword:key, all_key:keyword});
       });//not consider the query fail
     }//else title search
@@ -354,18 +354,10 @@ router.post('/update_psw', async (req, res) => {
 
 router.get('/group_page_choose', Auth.checkNotAuthenticated, (req, res) => {
   const user = req.user.user_name;
-  console.log(user);
+  //console.log(user);
   pool.query(`select group_name from login_module
   where user_name=$1`,[user],(err,results)=>{
-
-
-/*
-    console.log(results.rows);
-    console.log(results.rows[0]);
-    console.log(results.rows[0].group_name);
-    console.log(results.rows[0].group_name[1]);
-*/
-    res.render('group_page', { user: user, allgroups: results.rows });
+    res.render('group_page', { user: user, allgroups: results.rows ,Alert:false});
   });//not consider the query fail 
 });
 
@@ -378,8 +370,27 @@ router.post('/search_group', async (req, res) => {
   pool.query(`select group_name from login_module
   where user_name = $1`,[user], (err, results)=>{
     temp = results.rows[0] ;
+    var found = false ;
+    for ( var i = 0 ; temp != null && i < temp.group_name.length ; i++ ) {
+      if (search_group == temp.group_name[i] ) {
+        found = true ;
+        break ;
+      } // if
+    } // for
+    if ( found == true ) {
+      pool.query(`select * from group_module
+      where group_name = &1`, [user], (err, results)=>{
+        res.render('dashboardT_multi', { user: user, allnotes : results.rows });
+      });
+    } else {
+      console.log("Search group not found!");
+      pool.query(`select group_name from login_module
+       where user_name=$1`,[user],(err,results)=>{
+        res.render('group_page', { user: user, allgroups: results.rows, Alert:true });
+      });//not consider the query fail 
+    } // else
   });
-
+  /*
   var found = false ;
   for ( var i = 0 ; i < temp.group_name.length ; i++ ) {
       if (search_group == temp.group_name[i] ) {
@@ -397,7 +408,7 @@ router.post('/search_group', async (req, res) => {
   } else {
     console.log("Search group not found!");
   } // else
-
+  */
 });
 
 
@@ -407,9 +418,19 @@ router.post('/new_group', async (req, res) => {
 
   pool.query(`insert into group_module
   values ($1, $2, $3)`,[new_group, null, null], (err, results)=>{
-      ;
+    pool.query(`UPDATE login_module
+    SET group_name = array_append(group_name, $1)
+    where user_name = $2`,[new_group, user], (err, results)=>{
+      const name = req.body.new_group;
+      pool.query(`select * from group_module
+      where group_name = $1`, [name], (err, results)=>{
+      res.render('dashboardT_multi', { user: user, allnotes : results.rows });
+      });
+      
+    });
+      
   });
-
+  /*
   pool.query(`UPDATE login_module
   SET group_name = array_append(group_name, $1)
   where user_name = $2`,[new_group, user], (err, results)=>{
@@ -421,6 +442,7 @@ router.post('/new_group', async (req, res) => {
   where group_name = $1`, [name], (err, results)=>{
     res.render('dashboardT_multi', { user: user, allnotes : results.rows });
   });
+  */
 });
 
 
