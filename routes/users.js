@@ -136,7 +136,7 @@ router.get('/note_delete/:id', Auth.checkNotAuthenticated, (req, res) => {
   const user = req.user.user_name;
   pool.query(`select note_title,note_id,created_at from note_content
   where create_user=$1 and multi_user = false`,[user],(err,results)=>{
-    res.render('dashboardT', { user: user, allnotes : results.rows, keyword:'' });
+    res.render('dashboardT', { user: user, allnotes : results.rows, keyword:'',limit:false });
   });//not consider the query fail 
 });
 
@@ -319,7 +319,7 @@ router.post('/update_psw', async (req, res) => {
 
               pool.query(`select note_title,note_id,created_at from note_content
               where create_user=$1 and multi_user = false`,[user],(err,results)=>{
-                res.render('dashboardT', { user: user, allnotes: results.rows ,keyword:''});
+                res.render('dashboardT', { user: user, allnotes: results.rows ,keyword:'',limit :false});
               });//not consider the query fail
             } // else
 
@@ -329,7 +329,7 @@ router.post('/update_psw', async (req, res) => {
 
             pool.query(`select note_title,note_id,created_at from note_content
             where create_user=$1 and multi_user = false`,[user],(err,results)=>{
-              res.render('dashboardT', { user: user, allnotes: results.rows ,keyword:''});
+              res.render('dashboardT', { user: user, allnotes: results.rows ,keyword:'',limit:false});
             });//not consider the query fail
           } // else
        }); // bcrypt.compare
