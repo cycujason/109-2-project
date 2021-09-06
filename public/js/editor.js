@@ -6,6 +6,7 @@ const fileUploader = document.querySelector('#file-uploader');
 const Save_Interval = 2500;
 var textid = document.getElementById('textid').innerText;
 var user = document.getElementById('user').innerText;
+var multiuser = document.getElementById('multi').innerText;
 
 var md = window.markdownit();
 md.set({
@@ -168,7 +169,7 @@ function socketRoom(){
        $("#preview").html(rendered_markdown);
        quill.enable();                                 // 起初登入畫面時載入筆記資訊和開啟使用者編輯權限
     });
-    socket.emit("getdoc",textid,user);
+    socket.emit("getdoc",textid,user,multiuser);
 }//SocketRoom
 
 function saveContent(){

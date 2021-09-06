@@ -108,11 +108,6 @@ router.get('/dashboard', Auth.checkNotAuthenticated, (req, res) => {
     }//else title search
 
 
-    pool.query(`select note_title,note_id,created_at from note_content
-    where create_user=$1 and multi_user = false`,[user],(err,results)=>{
-      res.render('dashboardT', { user: user, allnotes: results.rows });
-    });//not consider the query fail 
-
     
 });
 
@@ -257,7 +252,17 @@ router.get('/edit', (req, res) => {
 
 router.get('/edit/:id',Auth.checkNotAuthenticated, (req, res) => {
   console.log("open doc uuid: " + req.params.id);
-  res.render('testpage' ,{ textid:req.params.id ,user:req.user.user_name});
+  res.render('testpage' ,{ textid:req.params.id ,user:req.user.user_name,multiuser:'false'});
+});
+
+router.get('/edit_multi', (req, res) => {
+  res.redirect(`/users/edit_multi/${uuidv4()}`);
+});
+
+
+router.get('/edit_multi/:id',Auth.checkNotAuthenticated, (req, res) => {
+  console.log("open doc uuid: " + req.params.id);
+  res.render('testpage' ,{ textid:req.params.id ,user:req.user.user_name,multiuser:'true'});
 });
 
 
@@ -349,6 +354,7 @@ router.post('/update_psw', async (req, res) => {
 
 router.get('/group_page_choose', Auth.checkNotAuthenticated, (req, res) => {
   const user = req.user.user_name;
+  console.log(user);
   pool.query(`select group_name from login_module
   where user_name=$1`,[user],(err,results)=>{
 
@@ -412,7 +418,7 @@ router.post('/new_group', async (req, res) => {
 
   const name = req.params.id;
   pool.query(`select * from group_module
-  where group_name = &1`, [name], (err, results)=>{
+  where group_name = $1`, [name], (err, results)=>{
     res.render('dashboardT_multi', { user: user, allnotes : results.rows });
   });
 });
@@ -421,10 +427,9 @@ router.post('/new_group', async (req, res) => {
 router.get('/group_page/:id', Auth.checkNotAuthenticated, (req, res) => {
   const name = req.params.id;
   const user = req.user.user_name;
-  pool.query(`select group_name from group_module
-  where group_name = &1`, [name], (err, results)=>{
-    console.log("results: " + results) ;
-    console.log("rows: " + results.rows) ;
+  pool.query(`select * from group_module
+  where group_name = $1`, [name], (err, results)=>{
+    console.log("rows: " + results.rows[0].group_name) ;
     res.render('dashboardT_multi', { user: user, allnotes : results.rows });
   });
 });
