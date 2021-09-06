@@ -455,4 +455,10 @@ router.get('/group_page/:id', Auth.checkNotAuthenticated, (req, res) => {
   });
 });
 
+
+router.get('/pict_editor', Auth.checkNotAuthenticated, (req, res) => {
+  res.render('pict_editorT');
+});
+
+
 module.exports = router;
