@@ -302,7 +302,7 @@ router.post('/search_group', async (req, res) => {
 
   if ( found == true ) {
     pool.query(`select * from group_module
-    where group_name = &1`, [user], (err, results)=>{
+    where group_name = $1`, [user], (err, results)=>{
       res.render('dashboardT_multi', { user: user, allnotes : results.rows });
     });
   } else {
@@ -329,7 +329,7 @@ router.post('/new_group', async (req, res) => {
 
   const name = req.params.id;
   pool.query(`select * from group_module
-  where group_name = &1`, [name], (err, results)=>{
+  where group_name = $1`, [name], (err, results)=>{
     res.render('dashboardT_multi', { user: user, allnotes : results.rows });
   });
 });
@@ -338,10 +338,8 @@ router.post('/new_group', async (req, res) => {
 router.get('/group_page/:id', Auth.checkNotAuthenticated, (req, res) => {
   const name = req.params.id;
   const user = req.user.user_name;
-  pool.query(`select group_name from group_module
-  where group_name = &1`, [name], (err, results)=>{
-    console.log("results: " + results) ;
-    console.log("rows: " + results.rows) ;
+  pool.query(`select * from group_module
+  where group_name = $1`, [name], (err, results)=>{
     res.render('dashboardT_multi', { user: user, allnotes : results.rows });
   });
 });
