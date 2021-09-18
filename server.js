@@ -151,7 +151,7 @@ function normalizePort(val) {
       PythonShell.run('./public/py/wordAnalysis.py', options, (err, data) => {
         if (err) return//res.send(err)
         const parsedString = JSON.parse(data);
-        console.log(`first: ${parsedString.key1}, second: ${parsedString.key2}, third: ${parsedString.key3}, fourth: ${parsedString.key4}, fifth: ${parsedString.key5}`)
+        //console.log(`first: ${parsedString.key1}, second: ${parsedString.key2}, third: ${parsedString.key3}, fourth: ${parsedString.key4}, fifth: ${parsedString.key5}`)
         pool.query(`UPDATE note_content SET tags= $1  WHERE note_id=$2`,[parsedString,id]);
       })
     //})
