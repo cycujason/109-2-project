@@ -141,7 +141,7 @@ function normalizePort(val) {
      let options = {
       mode:'text',
       encoding:'utf-8',
-      //pythonPath:'C:\\Users\\kikoflame\\anaconda3\\envs\\grad_project\\python.exe', // if heroku then this config no need to set
+      pythonPath:'C:\\Users\\kikoflame\\anaconda3\\envs\\grad_project\\python.exe', // if heroku then this config no need to set
       args:
         [
           textContent,
@@ -151,8 +151,15 @@ function normalizePort(val) {
       PythonShell.run('./public/py/wordAnalysis.py', options, (err, data) => {
         if (err) return//res.send(err)
         const parsedString = JSON.parse(data);
+        var objArray = [];
+        var count = Object.keys(parsedString).length;
+        for(var k =0;k<count;k++){
+          objArray.push(Object.values(parsedString)[k]);
+        }//for
         //console.log(`first: ${parsedString.key1}, second: ${parsedString.key2}, third: ${parsedString.key3}, fourth: ${parsedString.key4}, fifth: ${parsedString.key5}`)
-        pool.query(`UPDATE note_content SET tags= $1  WHERE note_id=$2`,[parsedString,id]);
+        console.log(objArray);
+        console.log("finish Tag compute");
+        pool.query(`UPDATE note_content SET tags= $1  WHERE note_id=$2`,[objArray,id]);
       })
     //})
     
