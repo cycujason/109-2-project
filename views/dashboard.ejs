@@ -1,30 +1,69 @@
-<head>
-  <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
-</head>
-
-<main role="main" class="container">
-  <h1 class="mt-5">Welcome &nbsp;&nbsp;&nbsp;&nbsp;<i class="far fa-smile"></i> <%= user %></h1>
-
-  <p> Log in successfully! </p>
-  <p>
-    <a href="/users/logout">LogOut</a>
-  </p>
-  <p>
-    <a href="/users/edit">Create-editpage</a>
-  </p>
-  <table>
-    <% for(var i=0; i < allnotes.length; i++) { %>
-      <% var link = "/users/edit/"+allnotes[i].note_id; %> 
-      <tr>
-         <td><a href="<%= link %>" ><%= allnotes[i].note_id %></a></td>
-      </tr>
-    <% } %>
-    </table>
-  <p>
-    
-  </p>
-</main>
-
+<!DOCTYPE html>
+<!-- Created by CodingLab |www.youtube.com/CodingLabYT-->
+<html  dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <title> Dashboard T</title>
+    <link rel="stylesheet" href="/css/sidebar.css">
+    <!-- Boxicons CDN Link -->
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <script type="text/javascript" src="/js/dashboard.js"></script>
+   </head>
 <body>
+  <div class="sidebar">
+    <div class="logo-details">
+        <div class="logo_name">Project</div>
+        <i class='bx bx-menu' id="btn" ></i>
+    </div>
+    <ul class="nav-list">
+
+      <li hidden>
+        <form action="/users/dashboard" method="GET" id="search">
+          <i class='bx bx-search' ></i>
+         <input type="text" name="keyword" placeholder="請輸入關鍵字..." <% if(keyword !== 'undefined') { %> value='<%= keyword %>' <% } %>   >
+         <span class="tooltip">搜尋</span>
+         </form>
+      </li>
+
+     <li>
+        <a href="/users/group_page_choose">
+          <i class='bx bx-group'></i>
+          <span class="links_name">多人筆記</span>
+        </a>
+        <span class="tooltip">多人筆記</span>
+      </li>
+
+     <li>
+      <a href="/users/setting_page">
+        <i class='bx bx-cog' ></i>
+        <span class="links_name">設定</span>
+      </a>
+      <span class="tooltip">設定</span>
+    </li>
+
+     <li class="profile">
+         <div class="profile-details">
+           <div class="name_job">
+             <div class="name"><%= user %> </div>
+             <div class="job">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+             <div class="name">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+           </div>
+         </div>
+         <a href="/users/logout">
+           <i class='bx bx-log-out' id="log_out" ></i>
+        </a>
+        
+     </li>
+    </ul>
+  </div>
   
+  <section class="home-section">
+    <div><button type="button" class="newClass" onclick="createClass()">新分類</button></div>
+    <div class="text" id="demo"></div>
+    <div id="showarea" ></div>
+  </section>
+
+  <script src="/js/sidebar.js"></script>
 </body>
+</html>

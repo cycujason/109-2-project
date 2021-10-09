@@ -11,6 +11,10 @@ router.get('/', (req, res) => {
     res.render('indexT');
 });
 
+router.get('/testDashboard', (req, res) => {
+  res.render('dashboard',{user:'10727233', keyword:undefined});
+});
+
 /*
 router.get('/test', (req, res) => {
     res.render('dashboardT',{user:"test",allnotes:[]});
