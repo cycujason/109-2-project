@@ -386,25 +386,6 @@ router.post('/search_group', async (req, res) => {
       });//not consider the query fail 
     } // else
   });
-  /*
-  var found = false ;
-  for ( var i = 0 ; i < temp.group_name.length ; i++ ) {
-      if (search_group == temp.group_name[i] ) {
-        found = true ;
-        break ;
-      } // if
-
-  } // for
-
-  if ( found == true ) {
-    pool.query(`select * from group_module
-    where group_name = &1`, [user], (err, results)=>{
-      res.render('dashboardT_multi', { user: user, allnotes : results.rows });
-    });
-  } else {
-    console.log("Search group not found!");
-  } // else
-  */
 });
 
 
@@ -412,44 +393,52 @@ router.post('/new_group', async (req, res) => {
   const user = req.user.user_name;
   let { new_group } = req.body;
 
-  pool.query(`insert into group_module
-  values ($1, $2, $3)`,[new_group, null, null], (err, results)=>{
-    pool.query(`UPDATE login_module
-    SET group_name = array_append(group_name, $1)
-    where user_name = $2`,[new_group, user], (err, results)=>{
-      const name = req.body.new_group;
-      pool.query(`select * from group_module
-      where group_name = $1`, [name], (err, results)=>{
-      res.render('dashboardT_multi', { user: user, allnotes : results.rows });
-      });
-      
-    });
-      
-  });
-  /*
-  pool.query(`UPDATE login_module
-  SET group_name = array_append(group_name, $1)
-  where user_name = $2`,[new_group, user], (err, results)=>{
-      ;
-  });
-
-  const name = req.params.id;
-  pool.query(`select * from group_module
-  where group_name = $1`, [name], (err, results)=>{
-    res.render('dashboardT_multi', { user: user, allnotes : results.rows });
-  });
+  /*  建新的組：
+      1. 我們先看組名有沒有出現
+      2. if 有，不加入且跳出Alert視窗
+        else, 建立新的組並進入dashboardT_multi
   */
+  pool.query(`select * from login_module
+  where EXISTS (SELECT FROM unnest(group_name) elem 
+                WHERE elem like '%$1%')`,[new_group], (err, results)=>{
+  
+    if (results.rows.length > 0) { // 此組名已存在
+      console.log("New group name exists!");
+
+      pool.query(`select group_name from login_module
+                  where user_name=$1`,[user],(err,results)=>{
+        res.render('group_page', { user: user, allgroups: results.rows, Alert:true });
+      });
+
+    } 
+    else {
+      pool.query(`UPDATE login_module
+      SET group_name = array_append(group_name, $1)
+      where user_name = $2`,[new_group, user], (err, results)=>{
+    
+        pool.query(`select * from note_content
+                    where multi_user is true 
+                    and create_user = $1 and group_name = $2`, [user, new_group], (err, results)=>{
+          res.render('dashboardT_multi', { user: user, allnotes : results.rows });
+        });
+
+      });
+   }
+  });
 });
 
 
 router.get('/group_page/:id', Auth.checkNotAuthenticated, (req, res) => {
   const name = req.params.id;
   const user = req.user.user_name;
-  pool.query(`select * from group_module
-  where group_name = $1`, [name], (err, results)=>{
-    console.log("rows: " + results.rows[0].group_name) ;
+
+  pool.query(`select * from note_content
+              where multi_user is true 
+              and create_user = $1 and group_name = $2`, [user, name], (err, results)=>{
+    // console.log("rows: " + results.rows[0].group_name) ;
     res.render('dashboardT_multi', { user: user, allnotes : results.rows });
   });
+
 });
 
 
