@@ -372,6 +372,7 @@ router.post('/search_group', async (req, res) => {
         found = true ;
         break ;
       } // if
+<<<<<<< HEAD
     } // for
     if ( found == true ) {
       pool.query(`select * from group_module
@@ -386,6 +387,20 @@ router.post('/search_group', async (req, res) => {
       });//not consider the query fail 
     } // else
   });
+=======
+
+  } // for
+
+  if ( found == true ) {
+    pool.query(`select * from group_module
+    where group_name = $1`, [user], (err, results)=>{
+      res.render('dashboardT_multi', { user: user, allnotes : results.rows });
+    });
+  } else {
+    console.log("Search group not found!");
+  } // else
+
+>>>>>>> 66ef131e9af539c3658e2c834d70ea19117ecc85
 });
 
 
