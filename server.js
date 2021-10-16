@@ -26,8 +26,8 @@ require('dotenv').config();
  //io.adapter(createAdapter(pool));
  io.on("connection",socket => {
    console.log("connected:"+socket.id);
-   socket.on("getdoc", async (textid,user,multiuser)=>{
-     const data = await findDocumentOrCreate(textid,user,multiuser);
+   socket.on("getdoc", async (textid,user,multiuser,group_name)=>{
+     const data = await findDocumentOrCreate(textid,user,multiuser,group_name);
      socket.join(textid);
      socket.emit("loadin",data);
      socket.on("note-text",(editorData)=>{
@@ -50,6 +50,12 @@ require('dotenv').config();
        TagsAnalyse(text,id);
     });
    });
+   socket.on("classification", (name, id) =>{
+    pool.query(`insert into user_classify (id,classification) values ($1,$2)`,[id,name],()=>{
+       socket.emit("newClassDone",true,name);
+       console.log("created new classify");
+    });
+  });
  });
  
 
@@ -115,7 +121,7 @@ function normalizePort(val) {
   }
 
 
-  async function findDocumentOrCreate(id,user,multiuser){
+  async function findDocumentOrCreate(id,user,multiuser,group_name){
     if(id == null)return
     const {rows} = await pool.query(`SELECT note_delta_content,create_user FROM note_content
     WHERE note_id = $1`,[id]);
@@ -127,9 +133,16 @@ function normalizePort(val) {
         return rows[0].note_delta_content;
     }//if
     else{
-      await pool.query( `INSERT INTO note_content (note_id,multi_user,created_at,update_at,create_user,note_title)
-      VALUES ($1, $2, $3, $4, $5, $6)`,[id,multi,new Date(Date.now()),new Date(Date.now()),user,'Untitled'])
-      return "";
+      if(group_name == null){
+          await pool.query( `INSERT INTO note_content (note_id,multi_user,created_at,update_at,create_user,note_title)
+          VALUES ($1, $2, $3, $4, $5, $6)`,[id,multi,new Date(Date.now()),new Date(Date.now()),user,'Untitled'])
+          return "";
+      }//if
+      else{
+        await pool.query( `INSERT INTO note_content (note_id,multi_user,created_at,update_at,create_user,note_title,group_name)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)`,[id,multi,new Date(Date.now()),new Date(Date.now()),user,'Untitled',group_name])
+        return "";
+      }//else
     }//else
   }
 
@@ -141,7 +154,7 @@ function normalizePort(val) {
      let options = {
       mode:'text',
       encoding:'utf-8',
-      pythonPath:'C:\\Users\\kikoflame\\anaconda3\\envs\\grad_project\\python.exe', // if heroku then this config no need to set
+      pythonPath:'C:\\Users\\kikoflame\\anaconda3\\envs\\project\\python.exe', // if heroku then this config no need to set
       args:
         [
           textContent,

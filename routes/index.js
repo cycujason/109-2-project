@@ -12,7 +12,10 @@ router.get('/', (req, res) => {
 });
 
 router.get('/testDashboard', (req, res) => {
-  res.render('dashboard',{user:'10727233', keyword:undefined});
+  pool.query(`select from user_classify where id = $1`,[10],(err,results)=>{
+    res.render('dashboard',{user:'10727233', id:10, allclassify:results.rows,keyword:undefined});
+  })
+  
 });
 
 /*
