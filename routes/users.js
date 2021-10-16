@@ -138,6 +138,32 @@ router.get('/note_delete/:id', Auth.checkNotAuthenticated, (req, res) => {
 });
 
 
+router.get('/note_delete_page_multi', Auth.checkNotAuthenticated, (req, res) => {
+  const user = req.user.user_name;
+  pool.query(`select note_title,note_id,created_at from note_content
+  where create_user=$1 and multi_user = true`,[user],(err,results)=>{
+    res.render('note_delete_page_multi', { user: user, allnotes : results.rows });
+  });//not consider the query fail 
+  
+});
+
+
+// use for deleting a note in single mode
+router.get('/note_delete_page_multi/:id', Auth.checkNotAuthenticated, (req, res) => {
+  const note = req.params.id;
+
+  pool.query(`delete from note_content
+  where note_id = $1`,[note],(err,results)=>{
+    // res.render('note_delete_page', { user: user, allnotes : results.rows });
+  });// delete one note
+
+  const user = req.user.user_name;
+  pool.query(`select note_title,note_id,created_at from note_content
+  where create_user=$1 and multi_user = true`,[user],(err,results)=>{
+    res.render('dashboardT_multi', { user: user, allnotes : results.rows, keyword:'', limit:false });
+  });//not consider the query fail 
+});
+
 
 
 router.get('/login', Auth.checkAuthenticated, (req, res) => {
@@ -372,7 +398,6 @@ router.post('/search_group', async (req, res) => {
         found = true ;
         break ;
       } // if
-<<<<<<< HEAD
     } // for
     if ( found == true ) {
       pool.query(`select * from group_module
@@ -387,20 +412,6 @@ router.post('/search_group', async (req, res) => {
       });//not consider the query fail 
     } // else
   });
-=======
-
-  } // for
-
-  if ( found == true ) {
-    pool.query(`select * from group_module
-    where group_name = $1`, [user], (err, results)=>{
-      res.render('dashboardT_multi', { user: user, allnotes : results.rows });
-    });
-  } else {
-    console.log("Search group not found!");
-  } // else
-
->>>>>>> 66ef131e9af539c3658e2c834d70ea19117ecc85
 });
 
 
