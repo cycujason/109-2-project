@@ -23,7 +23,8 @@
       </li>
 
       <li>
-        <a href="/users/edit_multi">
+        <% var newInmultiLink = "/users/"+group_name+"/edit_multi" %> 
+        <a href=<%= newInmultiLink %> >
             <i class='bx bx-book-add' ></i>
           <span class="links_name">新增筆記</span>
         </a>
@@ -83,7 +84,7 @@
       <div>
       <table class="list-note">
           <% for(var i=0; i < allnotes.length; i++) { %>
-            <% var link = "/users/edit_multi/"+allnotes[i].note_id; %> 
+            <% var link = "/users/" + group_name + "/edit_multi/" + allnotes[i].note_id; %> 
             <tr>
                 <div class="overview-card" onclick="location.href='<%= link %>';">
                   <!--a class="note-linker" href="link" ></a-->

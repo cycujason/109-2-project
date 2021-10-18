@@ -8,6 +8,10 @@ var textid = document.getElementById('textid').innerText;
 var user = document.getElementById('user').innerText;
 var multiuser = document.getElementById('multi').innerText;
 
+if(multiuser === 'true'){
+    group_name = document.getElementById('group_name').innerText;
+}//if
+
 var md = window.markdownit();
 md.set({
   html: true

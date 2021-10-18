@@ -11,8 +11,6 @@ var initializePassport = require('../pswConfig');
 initializePassport(passport);
 var { v4: uuidv4 } = require('uuid');
 
-
-
 router.use(
     session({
       secret: 'secret',
@@ -26,7 +24,118 @@ router.use(flash());
 router.use(passport.initialize());
 router.use(passport.session());
 
+/* 
+  called by: loginT.ejs
+  to: loginT.ejs
+*/
+router.post('/register', async (req, res) => {
+  let { name, password, password_confirm } = req.body;
+  let errors = [];
 
+  console.log({
+    name,
+    password,
+    password_confirm,
+  });
+
+  if (!name || !password || !password_confirm) {
+    errors.push({ message: '請確定填完所有資料!' });
+  } // if
+
+  if (password.length < 6) {
+    errors.push({ message: '密碼必須大於6個字元!' });
+  } // if
+
+  if (password.length > 20) {
+    errors.push({ message: '密碼請小於20個字元!' });
+  } // if
+
+  if (password !== password_confirm) {
+    errors.push({ message: '密碼確認不符合!' });
+  } // if
+
+  if (errors.length > 0) {
+    res.render('loginT', { errors, name, password, password_confirm });
+  } else {
+    hashedPassword = await bcrypt.hash(password, 10);
+
+    pool.query(
+      `SELECT user_name FROM login_module
+        WHERE user_name = $1`,
+      [name],
+      (err, results) => {
+        if (err) {
+          console.log("err from app.js: " + err);
+        } // if
+
+      console.log("results.rows from app.js 1: " + results.command);
+      console.log("results.rows from app.js 1: " + results.rowCount);
+      console.log("results.rows from app.js 1: " + results.oid);
+      console.log("results.rows from app.js 1: " + results.rows);
+      console.log("results.rows from app.js 1: " + results.fields);
+      console.log("results.rows from app.js 1: " + results._parsers);
+      console.log("results.rows from app.js 1: " + results._types);
+      console.log("results.rows from app.js 1: " + results.RowCtor);
+      console.log("results.rows from app.js 1: " + results.rowAsArray);
+      
+        if (results.rows.length > 0) { // registered before 
+          errors.push({ message: '你已經註冊過了!' });
+          return res.render('loginT', { errors, name, password, password_confirm });
+        } else { // the first time register
+          pool.query(
+            `INSERT INTO login_module (user_name, user_password)
+            VALUES ($1, $2)`,
+            [name, hashedPassword],
+            (err, results) => {
+              if (err) {
+                throw err;
+              }
+
+              req.flash('success_msg', 'You are successfuly registered!');
+              res.redirect('/users/login');
+            }
+          ); // pool.query()
+        } // else
+      }
+    ); // pool.query()
+  } // else
+});
+
+
+/*
+  render to: loginT.ejs
+*/
+  router.get('/login', Auth.checkAuthenticated, (req, res) => {
+  res.render('loginT');
+});
+
+
+/*
+  success: to /users/dashboard
+  failure: to /users/login
+*/
+router.post('/login',passport.authenticate('local', {
+  successRedirect: '/users/dashboard',
+  failureRedirect: '/users/login',
+  failureFlash: true,
+}));
+
+/*
+  log out: to indexT.ejs (start page)
+*/
+router.get('/logout', (req, res) => {
+  req.logout();
+  res.render('indexT', { message: 'You have logged out successfully!' });
+});
+
+
+/* ****************************** single user ****************************** */
+
+/*
+  user's main page
+  dashboard url with parameters is for searching keywords
+  redirect to: dashboardT.ejs
+*/
 router.get('/dashboard', Auth.checkNotAuthenticated, (req, res) => {
     const user = req.user.user_name;
 
@@ -103,196 +212,75 @@ router.get('/dashboard', Auth.checkNotAuthenticated, (req, res) => {
       res.render('dashboardT', { user: user, allnotes : results.rows ,limit:showSelect,nav:range, keyword:key, all_key:keyword});
       });//not consider the query fail
     }//else title search
-
-
-    
 });
 
+/*
+  redirect to: /edit/:id
+*/
+router.get('/edit', (req, res) => {
+  res.redirect(`/users/edit/${uuidv4()}`);
+});
 
+/*
+  new a note (render to testpage.ejs), the parameter multiuser is false
+  press back will return to back page
+*/
+router.get('/edit/:id',Auth.checkNotAuthenticated, (req, res) => {
+  console.log("open doc uuid: " + req.params.id);
+  res.render('testpage' ,{ textid:req.params.id ,user:req.user.user_name,multiuser:'false', group_name:null});
+});
 
+// /users/group_page_choose is below
 
+/*
+  show the same notes as in /users/dashboard
+  render to note_delete_page.ejs
+*/
 router.get('/note_delete_page', Auth.checkNotAuthenticated, (req, res) => {
   const user = req.user.user_name;
   pool.query(`select note_title,note_id,created_at from note_content
   where create_user=$1 and multi_user = false`,[user],(err,results)=>{
     res.render('note_delete_page', { user: user, allnotes : results.rows });
-  });//not consider the query fail 
+  }); 
   
 });
 
-
-// use for deleting a note in single mode
-router.get('/note_delete/:id', Auth.checkNotAuthenticated, (req, res) => {
+/*
+  called from: /users/note_delete_page when the user clicks what to be deleted
+  Although it will turn back to user's main page(dashboard), the url is still /users/note_delete/:id.
+  (a bug hasn't fixed)
+*/
+router.get('/note_delete_page/:id', Auth.checkNotAuthenticated, (req, res) => {
   const note = req.params.id;
 
   pool.query(`delete from note_content
   where note_id = $1`,[note],(err,results)=>{
-    // res.render('note_delete_page', { user: user, allnotes : results.rows });
-  });// delete one note
+    ;
+  });// delete the specified note
 
   const user = req.user.user_name;
   pool.query(`select note_title,note_id,created_at from note_content
   where create_user=$1 and multi_user = false`,[user],(err,results)=>{
     res.render('dashboardT', { user: user, allnotes : results.rows, keyword:'',limit:false });
-  });//not consider the query fail 
+  }); 
 });
-
-
-router.get('/note_delete_page_multi', Auth.checkNotAuthenticated, (req, res) => {
-  const user = req.user.user_name;
-  pool.query(`select note_title,note_id,created_at from note_content
-  where create_user=$1 and multi_user = true`,[user],(err,results)=>{
-    res.render('note_delete_page_multi', { user: user, allnotes : results.rows });
-  });//not consider the query fail 
-  
-});
-
-
-// use for deleting a note in single mode
-router.get('/note_delete_page_multi/:id', Auth.checkNotAuthenticated, (req, res) => {
-  const note = req.params.id;
-
-  pool.query(`delete from note_content
-  where note_id = $1`,[note],(err,results)=>{
-    // res.render('note_delete_page', { user: user, allnotes : results.rows });
-  });// delete one note
-
-  const user = req.user.user_name;
-  pool.query(`select note_title,note_id,created_at from note_content
-  where create_user=$1 and multi_user = true`,[user],(err,results)=>{
-    res.render('dashboardT_multi', { user: user, allnotes : results.rows, keyword:'', limit:false });
-  });//not consider the query fail 
-});
-
-
-
-router.get('/login', Auth.checkAuthenticated, (req, res) => {
-    res.render('loginT');
-});
-
-
-
-router.post('/login',passport.authenticate('local', {
-      successRedirect: '/users/dashboard',
-      failureRedirect: '/users/login',
-      failureFlash: true,
-    })
-);
-
-
-
-router.get('/logout', (req, res) => {
-    req.logout();
-    res.render('indexT', { message: 'You have logged out successfully!' });
-});
-
 
 /*
-router.get('/register', Auth.checkAuthenticated, (req, res) => {
-    res.render('register');
-});
+  render to setting_page.ejs to update password (/users/update_psw)
 */
-
-router.post('/register', async (req, res) => {
-    let { name, password, password_confirm } = req.body;
-    let errors = [];
-  
-    console.log({
-      name,
-      password,
-      password_confirm,
-    });
-  
-    if (!name || !password || !password_confirm) {
-      errors.push({ message: '請確定填完所有資料!' });
-    } // if
-  
-    if (password.length < 6) {
-      errors.push({ message: '密碼必須大於6個字元!' });
-    } // if
-  
-    if (password.length > 20) {
-      errors.push({ message: '密碼請小於20個字元!' });
-    } // if
-  
-    if (password !== password_confirm) {
-      errors.push({ message: '密碼確認不符合!' });
-    } // if
-  
-    if (errors.length > 0) {
-      res.render('loginT', { errors, name, password, password_confirm });
-    } else {
-      hashedPassword = await bcrypt.hash(password, 10);
-  //   console.log("hashedPassword from app.js: " + hashedPassword);
-      pool.query(
-        `SELECT user_name FROM login_module
-          WHERE user_name = $1`,
-        [name],
-        (err, results) => {
-          if (err) {
-            console.log("err from app.js: " + err);
-          } // if
-
-        console.log("results.rows from app.js 1: " + results.command);
-        console.log("results.rows from app.js 1: " + results.rowCount);
-        console.log("results.rows from app.js 1: " + results.oid);
-        console.log("results.rows from app.js 1: " + results.rows);
-        console.log("results.rows from app.js 1: " + results.fields);
-        console.log("results.rows from app.js 1: " + results._parsers);
-        console.log("results.rows from app.js 1: " + results._types);
-        console.log("results.rows from app.js 1: " + results.RowCtor);
-        console.log("results.rows from app.js 1: " + results.rowAsArray);
-        
-          if (results.rows.length > 0) { // registered before
-      //      console.log("results.rows.length: " + results.rows.length); 
-            errors.push({ message: '你已經註冊過了!' });
-            return res.render('loginT', { errors, name, password, password_confirm });
-          } else { // the first time register
-            pool.query(
-              `INSERT INTO login_module (user_name, user_password)
-              VALUES ($1, $2)`,
-              [name, hashedPassword],
-              (err, results) => {
-                if (err) {
-                  throw err;
-                }
-             //   console.log("results.rows from app.js 2: " + results.rows[0]);
-                req.flash('success_msg', 'You are successfuly registered!');
-                res.redirect('/users/login');
-              }
-            ); // pool.query()
-          } // else
-        }
-      ); // pool.query()
-    } // else
-});
-
-
-router.get('/edit', (req, res) => {
-  res.redirect(`/users/edit/${uuidv4()}`);
-});
-
-
-router.get('/edit/:id',Auth.checkNotAuthenticated, (req, res) => {
-  console.log("open doc uuid: " + req.params.id);
-  res.render('testpage' ,{ textid:req.params.id ,user:req.user.user_name,multiuser:'false'});
-});
-
-router.get('/edit_multi', (req, res) => {
-  res.redirect(`/users/edit_multi/${uuidv4()}`);
-});
-
-
-router.get('/edit_multi/:id',Auth.checkNotAuthenticated, (req, res) => {
-  console.log("open doc uuid: " + req.params.id);
-  res.render('testpage' ,{ textid:req.params.id ,user:req.user.user_name,multiuser:'true'});
-});
-
-
 router.get('/setting_page', Auth.checkNotAuthenticated, (req, res) => {
   res.render('setting_page');
 });
 
+/*
+  press back to the back page
+  
+  if update password successfully:
+    render to indexT.ejs to login with new password
+  else(update password failed):
+    render to indexT.ejs without changing to password
+    (a bug hasn't fixed)
+*/
 router.post('/update_psw', async (req, res) => {
   const user = req.user.user_name;
   let { old_password, new_password, password_confirm } = req.body;
@@ -360,21 +348,24 @@ router.post('/update_psw', async (req, res) => {
     }
   ); // pool query
   
-  /*
-  if (errorlog == 0)
-    alert('密碼已更新!請重新登入');
-  else if (errorlog == 1)
-    alert('密碼確認時發生錯誤!');
-  else if (errorlog == 2)
-    alert('原密碼輸入錯誤!');
-
-  */
-
   req.logout();
   res.render('indexT', { message: 'You have logged out successfully!' });
 }); // router
 
 
+/* ****************************** multi users ****************************** */
+
+/* 
+  render to group_page.ejs
+  press back will return to the back page
+
+  there are three ways to the group mode:
+    1. /users/search_group
+    2. /users/new_group
+    3. /users/group_page/:id
+
+  then render to dashboardT_multi.ejs.
+*/
 router.get('/group_page_choose', Auth.checkNotAuthenticated, (req, res) => {
   const user = req.user.user_name;
   //console.log(user);
@@ -385,6 +376,9 @@ router.get('/group_page_choose', Auth.checkNotAuthenticated, (req, res) => {
 });
 
 
+/*
+  problems!
+*/
 router.post('/search_group', async (req, res) => {
   const user = req.user.user_name;
   let { search_group } = req.body;
@@ -414,7 +408,9 @@ router.post('/search_group', async (req, res) => {
   });
 });
 
+/*
 
+*/
 router.post('/new_group', async (req, res) => {
   const user = req.user.user_name;
   let { new_group } = req.body;
@@ -424,6 +420,7 @@ router.post('/new_group', async (req, res) => {
       2. if 有，不加入且跳出Alert視窗
         else, 建立新的組並進入dashboardT_multi
   */
+  console.log("group_name: " + new_group);
   pool.query(`select * from login_module
   where EXISTS (SELECT FROM unnest(group_name) elem 
                 WHERE elem like '%$1%')`,[new_group], (err, results)=>{
@@ -453,7 +450,9 @@ router.post('/new_group', async (req, res) => {
   });
 });
 
+/*
 
+*/
 router.get('/group_page/:id', Auth.checkNotAuthenticated, (req, res) => {
   const name = req.params.id;
   const user = req.user.user_name;
@@ -462,10 +461,67 @@ router.get('/group_page/:id', Auth.checkNotAuthenticated, (req, res) => {
               where multi_user is true 
               and create_user = $1 and group_name = $2`, [user, name], (err, results)=>{
     // console.log("rows: " + results.rows[0].group_name) ;
-    res.render('dashboardT_multi', { user: user, allnotes : results.rows });
+    res.render('dashboardT_multi', { user: user, allnotes : results.rows, group_name: results.rows[0].group_name });
   });
 
 });
+
+/*
+  to edit page of multi-users
+*/
+router.get('/:group_name/edit_multi', (req, res) => {
+  let group_name = req.params.group_name;
+  res.redirect(`/users/` + group_name + `/edit_multi/${uuidv4()}`);
+});
+
+/*
+
+*/
+router.get('/:group_name/edit_multi/:id',Auth.checkNotAuthenticated, (req, res) => {
+  console.log("open doc uuid: " + req.params.id);
+  let group_name = req.params.group_name;
+  res.render('testpage' ,{ textid:req.params.id ,user:req.user.user_name,multiuser:'true', group_name:group_name});
+});
+
+/*
+  error occured!
+*/
+router.get('/note_delete_page_multi', Auth.checkNotAuthenticated, (req, res) => {
+  const user = req.user.user_name;
+  const group_name = req.user.group_name;
+
+  console.log("user name: " + user);
+  console.log("group_name: " + group_name);
+
+  pool.query(`select note_title,note_id,created_at from note_content
+  where create_user=$1 and multi_user = true and group_name = $2`,[user, group_name],(err,results)=>{
+    console.log("results.rows: " + results.rows); // 加上了
+    res.render('note_delete_page_multi', { user: user, allnotes : results.rows });
+  }); 
+  
+});
+
+/*
+  same as above
+*/
+router.get('/note_delete_page_multi/:id', Auth.checkNotAuthenticated, (req, res) => {
+  const note = req.params.id;
+
+  pool.query(`delete from note_content
+  where note_id = $1`,[note],(err,results)=>{
+    ;
+  });// delete the sepcified note
+
+  const user = req.user.user_name;
+  const group_name = req.user.group_name;
+  pool.query(`select note_title,note_id,created_at from note_content
+  where create_user=$1 and multi_user = true and group_name=$2`,[user, group_name],(err,results)=>{
+    res.render('dashboardT_multi', { user: user, allnotes : results.rows, keyword:'', limit:false });
+  }); 
+});
+
+
+/* ****************************** Other functions ****************************** */
 
 
 router.get('/pict_editor', Auth.checkNotAuthenticated, (req, res) => {
