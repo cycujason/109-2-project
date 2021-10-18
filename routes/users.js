@@ -414,7 +414,7 @@ router.post('/search_group', async (req, res) => {
   if found an group with the same group name: show the alert window and back to group_page.ejs
   else: update this new group name to login_module(DB) and render to dashboardT_multi.ejs
 */
-router.get('/new_group', async (req, res) => {
+router.post('/new_group', async (req, res) => {
   const user = req.user.user_name;
   let { new_group } = req.body;
 
@@ -426,7 +426,7 @@ router.get('/new_group', async (req, res) => {
   console.log("group_name: " + new_group);
   pool.query(`select * from login_module
   where EXISTS (SELECT FROM unnest(group_name) elem 
-                WHERE elem like $1)`,[new_group], (err, results)=>{
+                WHERE elem like '%$1%')`,[new_group], (err, results)=>{
   
     console.log("results.rows: " + results.rows );
     if (results.rows.length > 0) { // 此組名已存在
@@ -446,7 +446,7 @@ router.get('/new_group', async (req, res) => {
         pool.query(`select * from note_content
                     where multi_user is true 
                     and create_user = $1 and group_name = $2`, [user, new_group], (err, results)=>{
-          res.render('dashboardT_multi', { user: user, allnotes : results.rows, group_name: new_group });
+          res.render('dashboardT_multi', { user: user, allnotes : results.rows });
         }); // basically no any notes
 
       });
@@ -456,6 +456,7 @@ router.get('/new_group', async (req, res) => {
 
 /*
   Seems no problems.
+  render to dashboardT_multi.ejs
 */
 router.get('/group_page/:id', Auth.checkNotAuthenticated, (req, res) => {
   const name = req.params.id;
@@ -464,7 +465,7 @@ router.get('/group_page/:id', Auth.checkNotAuthenticated, (req, res) => {
   pool.query(`select * from note_content
               where multi_user is true 
               and create_user = $1 and group_name = $2`, [user, name], (err, results)=>{
-    res.render('dashboardT_multi', { user: user, allnotes : results.rows, group_name: results.rows[0].group_name });
+    res.render('dashboardT_multi', { user: user, allnotes : results.rows, group_name: name });
   });
 
 });
@@ -483,32 +484,33 @@ router.get('/:group_name/edit_multi', (req, res) => {
 router.get('/:group_name/edit_multi/:id',Auth.checkNotAuthenticated, (req, res) => {
   console.log("open doc uuid: " + req.params.id);
   let group_name = req.params.group_name;
-  res.render('testpage' ,{ textid:req.params.id ,user:req.user.user_name,multiuser:'true', group_name:group_name});
+  res.render('testpage' ,{ textid: req.params.id, user: req.user.user_name, multiuser: 'true', group_name: group_name});
 });
 
 /*
-  error occured!
+  Show all group notes for users to delete.
 */
-router.get('/note_delete_page_multi', Auth.checkNotAuthenticated, (req, res) => {
+router.get('/:Uclass/note_delete_page_multi', Auth.checkNotAuthenticated, (req, res) => {
   const user = req.user.user_name;
-  const group_name = req.user.group_name;
+  const group_name = req.params.Uclass;
 
   console.log("user name: " + user);
   console.log("group_name: " + group_name);
 
-  pool.query(`select note_title,note_id,created_at from note_content
-  where multi_user = true and create_user=$1`,[user],(err,results)=>{
-    console.log("results.rows: " + results.rows); // 加上了
-    res.render('note_delete_page_multi', { user: user, allnotes : results.rows });
+  pool.query(`select note_title,note_id,created_at from note_content 
+              where create_user=$1 and multi_user=true and group_name=$2`,[user, group_name],(err,results)=>{
+    console.log("results.rows: " + results.rows);
+    res.render('note_delete_page_multi', { user: user, allnotes : results.rows, group_name: group_name });
   }); 
   
 });
 
 /*
-  same as above
+  Delete the specified note in the group mode.
 */
-router.get('/note_delete_page_multi/:id', Auth.checkNotAuthenticated, (req, res) => {
+router.get('/:Uclass/note_delete_page_multi/:id', Auth.checkNotAuthenticated, (req, res) => {
   const note = req.params.id;
+  const group_name = req.params.Uclass;
 
   pool.query(`delete from note_content
   where note_id = $1`,[note],(err,results)=>{
@@ -516,10 +518,9 @@ router.get('/note_delete_page_multi/:id', Auth.checkNotAuthenticated, (req, res)
   });// delete the sepcified note
 
   const user = req.user.user_name;
-  const group_name = req.user.group_name;
   pool.query(`select note_title,note_id,created_at from note_content
-  where create_user=$1 and multi_user = true and group_name=$2`,[user, group_name],(err,results)=>{
-    res.render('note_delete_page_multi', { user: user, allnotes : results.rows });
+              where create_user=$1 and multi_user = true and group_name=$2`,[user, group_name],(err,results)=>{
+    res.render('note_delete_page_multi', { user: user, allnotes : results.rows, group_name: group_name });
   }); 
 });
 

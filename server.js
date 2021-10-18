@@ -127,9 +127,9 @@ function normalizePort(val) {
         return rows[0].note_delta_content;
     }//if
     else{
-      if(group_name == null){
-        await pool.query( `INSERT INTO note_content (note_id,multi_user,created_at,update_at,create_user,note_title,group_name)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)`,[id,multi,new Date(Date.now()),new Date(Date.now()),user,'Untitled', null])
+      if(multiuser == false){
+        await pool.query( `INSERT INTO note_content (note_id,multi_user,created_at,update_at,create_user,note_title)
+        VALUES ($1, $2, $3, $4, $5, $6)`,[id,multi,new Date(Date.now()),new Date(Date.now()),user,'Untitled'])
         return "";
       }//if
       else{
