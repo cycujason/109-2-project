@@ -26,8 +26,8 @@ require('dotenv').config();
  //io.adapter(createAdapter(pool));
  io.on("connection",socket => {
    console.log("connected:"+socket.id);
-   socket.on("getdoc", async (textid,user,multiuser,group_name)=>{
-     const data = await findDocumentOrCreate(textid,user,multiuser,group_name);
+   socket.on("getdoc", async (textid,user,multiuser,group_name,Uclass)=>{
+     const data = await findDocumentOrCreate(textid,user,multiuser,group_name,Uclass);
      socket.join(textid);
      socket.emit("loadin",data);
      socket.on("note-text",(editorData)=>{
@@ -50,8 +50,8 @@ require('dotenv').config();
        TagsAnalyse(text,id);
     });
    });
-   socket.on("classification", (name, id) =>{
-    pool.query(`insert into user_classify (id,classification) values ($1,$2)`,[id,name],()=>{
+   socket.on("classification", (name, user) =>{
+    pool.query(`insert into user_classify (username,classification) values ($1,$2)`,[user,name],()=>{
        socket.emit("newClassDone",true,name);
        console.log("created new classify");
     });
@@ -121,7 +121,7 @@ function normalizePort(val) {
   }
 
 
-  async function findDocumentOrCreate(id,user,multiuser,group_name){
+  async function findDocumentOrCreate(id,user,multiuser,group_name,Uclass){
     if(id == null)return
     const {rows} = await pool.query(`SELECT note_delta_content,create_user FROM note_content
     WHERE note_id = $1`,[id]);
@@ -134,13 +134,13 @@ function normalizePort(val) {
     }//if
     else{
       if(group_name == null){
-          await pool.query( `INSERT INTO note_content (note_id,multi_user,created_at,update_at,create_user,note_title)
-          VALUES ($1, $2, $3, $4, $5, $6)`,[id,multi,new Date(Date.now()),new Date(Date.now()),user,'Untitled'])
+          await pool.query( `INSERT INTO note_content (note_id,multi_user,created_at,update_at,create_user,note_title,classification)
+          VALUES ($1, $2, $3, $4, $5, $6, $7)`,[id,multi,new Date(Date.now()),new Date(Date.now()),user,'Untitled',Uclass])
           return "";
       }//if
       else{
-        await pool.query( `INSERT INTO note_content (note_id,multi_user,created_at,update_at,create_user,note_title,group_name)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)`,[id,multi,new Date(Date.now()),new Date(Date.now()),user,'Untitled',group_name])
+        await pool.query( `INSERT INTO note_content (note_id,multi_user,created_at,update_at,create_user,note_title,group_name,classification)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,[id,multi,new Date(Date.now()),new Date(Date.now()),user,'Untitled',group_name,Uclass])
         return "";
       }//else
     }//else

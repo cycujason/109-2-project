@@ -29,7 +29,7 @@ router.use(passport.session());
 router.get('/MainDashboard',Auth.checkNotAuthenticated, (req, res) => {
   const user = req.user.user_name;
   const id = parseInt(req.user.id,10);
-  pool.query(`select classification from user_classify where id = $1`,[id],(err,results)=>{
+  pool.query(`select classification from user_classify where username = $1`,[user],(err,results)=>{
     res.render('dashboard',{user:user, id:id, allclassify:results.rows,keyword:undefined});
   })
   
@@ -252,13 +252,15 @@ router.post('/register', async (req, res) => {
 
 
 router.get('/:Uclass/edit', (req, res) => {
-  res.redirect(`/:Uclass/users/edit/${uuidv4()}`);
+  let Uclass = req.params.Uclass;
+  res.redirect(`/`+Uclass+`/users/edit/${uuidv4()}`);
 });
 
 
-router.get('/edit/:id',Auth.checkNotAuthenticated, (req, res) => {
+router.get('/:Uclass/edit/:id',Auth.checkNotAuthenticated, (req, res) => {
+  let Uclass = req.params.Uclass;
   console.log("open doc uuid: " + req.params.id);
-  res.render('testpage' ,{ textid:req.params.id ,user:req.user.user_name,multiuser:'false',group_name:undefined});
+  res.render('testpage' ,{ textid:req.params.id ,user:req.user.user_name,multiuser:'false',group_name:undefined,Uclass:Uclass});
 });
 
 router.get('/:group_name/edit_multi', (req, res) => {

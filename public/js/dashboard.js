@@ -5,17 +5,18 @@ socket.on("connect",()=>{
 
 function createClass(){
     let name = prompt("請輸入新分類");
-    let id = parseInt(document.getElementById("ID").innerText,10);
+    let user = document.getElementById("username").innerText;
     if (name == null || name == "") {
       text = "請輸入合格分類名";
       document.getElementById("demo").innerHTML = text;
     } else {
-      socket.emit("classification",name,id);
+      socket.emit("classification",name,user);
     }
 }//createclass
 
 function addcard(classify){
-  return "<div class=\"overview-card-2\">"+classify+"</div>";
+  var link = "/users/dashboard/"+classify;
+  return "<div class=\"overview-card-2\" onclick=\"location.href='"+link+"';\">"+classify+"</div>";
 }//addcard
 
 

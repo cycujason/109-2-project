@@ -85,7 +85,7 @@
       <table class="list-note">
         <% if(allnotes[0].note_id != null) { %> 
         <% for(var i=0; i < allnotes[0].note_id.length; i++) { %>
-          <% var link = "/users/group_page/"+allnotes[0].note_id[i]; %> 
+          <% var link =   "/users/"+group_name+"/edit_multi/"+allnotes[0].note_id[i]; %> 
           <tr>
               <div class="overview-card" onclick="location.href='<%= link %>';">
                 <!--a class="note-linker" href="link" ></a-->

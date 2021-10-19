@@ -45,7 +45,7 @@
      <li class="profile">
          <div class="profile-details">
            <div class="name_job">
-             <div class="name"><%= user %> </div>
+             <div id="username" class="name"><%= user %> </div>
              <div class="job">&nbsp;&nbsp;&nbsp;&nbsp;</div>
              <div class="name">&nbsp;&nbsp;&nbsp;&nbsp;</div>
              <div id="ID" hidden><%= id %></div> 
@@ -64,7 +64,7 @@
     <div class="text" id="demo"></div>
     <div id="showarea" >
       <% for(var i =0;i<allclassify.length;i++) { %>
-        <% var link = "/users/dashboard/"+allclassify[i].classification; console.log(allclassify[0])%>
+        <% var link = "/users/dashboard/"+allclassify[i].classification; %>
         <div class="overview-card-2" onclick="location.href='<%= link %>';"> <%= allclassify[i].classification %> </div>
       <% } %>
     </div>
