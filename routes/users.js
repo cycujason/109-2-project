@@ -414,7 +414,7 @@ router.post('/search_group', async (req, res) => {
   if found an group with the same group name: show the alert window and back to group_page.ejs
   else: update this new group name to login_module(DB) and render to dashboardT_multi.ejs
 */
-router.post('/new_group', async (req, res) => {
+router.new('/new_group', async (req, res) => {
   const user = req.user.user_name;
   let { new_group } = req.body;
 
@@ -455,7 +455,6 @@ router.post('/new_group', async (req, res) => {
 });
 
 /*
-  Seems no problems.
   render to dashboardT_multi.ejs
 */
 router.get('/group_page/:id', Auth.checkNotAuthenticated, (req, res) => {
@@ -471,7 +470,7 @@ router.get('/group_page/:id', Auth.checkNotAuthenticated, (req, res) => {
 });
 
 /*
-  to edit page of multi-users
+  redirect to /:group_name/edit_multi/:id
 */
 router.get('/:group_name/edit_multi', (req, res) => {
   let group_name = req.params.group_name;
@@ -479,7 +478,8 @@ router.get('/:group_name/edit_multi', (req, res) => {
 });
 
 /*
-
+  new a note (render to testpage.ejs), the parameter multiuser is true
+  press back will return to back page, but sometimes need to refresh the page
 */
 router.get('/:group_name/edit_multi/:id',Auth.checkNotAuthenticated, (req, res) => {
   console.log("open doc uuid: " + req.params.id);

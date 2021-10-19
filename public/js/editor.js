@@ -196,7 +196,7 @@ function socketRoom(){
        $("#preview").html(rendered_markdown);
        quill.enable();                                 // 起初登入畫面時載入筆記資訊和開啟使用者編輯權限
     });
-    socket.emit("getdoc",textid,user,multiuser);
+    socket.emit("getdoc",textid,user,multiuser, group_name);
 }//SocketRoom
 
 function saveContent(){
