@@ -261,7 +261,7 @@ router.get('/note_delete_page/:id', Auth.checkNotAuthenticated, (req, res) => {
   const user = req.user.user_name;
   pool.query(`select note_title,note_id,created_at from note_content
   where create_user=$1 and multi_user = false`,[user],(err,results)=>{
-    res.render('dashboardT', { user: user, allnotes : results.rows, keyword:'',limit:false });
+    res.render('note_delete_page', { user: user, allnotes : results.rows });
   }); 
 });
 
@@ -371,42 +371,43 @@ router.get('/group_page_choose', Auth.checkNotAuthenticated, (req, res) => {
   //console.log(user);
   pool.query(`select group_name from login_module
               where user_name=$1`,[user],(err,results)=>{
-    res.render('group_page', { user: user, allgroups: results.rows ,Alert:false});
+    res.render('group_page', { user: user, allgroups: results.rows ,Alert:0 });
   });//not consider the query fail 
 });
 
 
 /*
-  problems!
+  input a group name.
+  If it exists, then render to dashboardT_multi.ejs
+  else render to the same page (group_page.ejs) with an alert window.
 */
 router.post('/search_group', async (req, res) => {
   const user = req.user.user_name;
   let { search_group } = req.body;
+  // console.log("search_group: ", search_group); // print out 'doom12', but type?
 
-  var temp = "" ;
-  pool.query(`select group_name from login_module`, (err, results)=>{
-    temp = results.rows ;
+  var temp = "\'" + search_group + "\')";
+  pool.query(`select * from login_module
+  where EXISTS (SELECT FROM unnest(group_name) elem 
+                WHERE elem like ` + temp, (err, results)=>{
 
-    var found = false ;
-    for ( var i = 0 ; temp != null && i < temp.length ; i++ ) {
-      if (search_group == temp[i].group_name ) {
-        found = true ;
-        break ;
-      } // if
-    } // for
-
-    if ( found == true ) {
-      pool.query(`select * from group_module
-      where group_name = $1`, [req.body.search_group], (err, results)=>{
-        res.render('dashboardT_multi', { user: user, allnotes : results.rows });
+    // console.log("results.rows: " + results.rows[0].user_name ); // print out 'de'
+    
+    if (results.rows.length > 0) { // maybe more than one user in the group 
+      var str = JSON.stringify(search_group);
+      pool.query(`select * from note_content
+                  where multi_user is true 
+                  and group_name = $1`, [str], (err, results)=>{
+      res.render('dashboardT_multi', { user: user, allnotes : results.rows, group_name: str });
       });
-    } else { // not found
-      console.log("Search group not found!");
+    }
+    else {
       pool.query(`select group_name from login_module
-       where user_name=$1`,[user],(err,results)=>{
-        res.render('group_page', { user: user, allgroups: results.rows, Alert:true });
-      });
-    } // else
+                  where user_name=$1`,[user],(err,results)=>{
+       res.render('group_page', { user: user, allgroups: results.rows, Alert:1 });
+     });
+    }
+
   });
 });
 
@@ -414,7 +415,7 @@ router.post('/search_group', async (req, res) => {
   if found an group with the same group name: show the alert window and back to group_page.ejs
   else: update this new group name to login_module(DB) and render to dashboardT_multi.ejs
 */
-router.new('/new_group', async (req, res) => {
+router.post('/new_group', async (req, res) => {
   const user = req.user.user_name;
   let { new_group } = req.body;
 
@@ -423,34 +424,41 @@ router.new('/new_group', async (req, res) => {
       2. if 有，不加入且跳出Alert視窗
         else, 建立新的組並進入dashboardT_multi
   */
-  console.log("group_name: " + new_group);
+  var temp = "\'" + new_group + "\')";
   pool.query(`select * from login_module
   where EXISTS (SELECT FROM unnest(group_name) elem 
-                WHERE elem like '%$1%')`,[new_group], (err, results)=>{
+                WHERE elem like ` + temp, (err, results)=>{
   
-    console.log("results.rows: " + results.rows );
     if (results.rows.length > 0) { // 此組名已存在
-      console.log("New group name exists!");
-
       pool.query(`select group_name from login_module
                   where user_name=$1`,[user],(err,results)=>{
-        res.render('group_page', { user: user, allgroups: results.rows, Alert:true });
+        res.render('group_page', { user: user, allgroups: results.rows, Alert:2 });
       });
-
     } 
     else {
-      pool.query(`UPDATE login_module
-      SET group_name = array_append(group_name, $1)
-      where user_name = $2`,[new_group, user], (err, results)=>{
-    
-        pool.query(`select * from note_content
-                    where multi_user is true 
-                    and create_user = $1 and group_name = $2`, [user, new_group], (err, results)=>{
-          res.render('dashboardT_multi', { user: user, allnotes : results.rows });
-        }); // basically no any notes
-
+      pool.query(`select * from login_module
+                  where user_name = $1`, [new_group], (err, results)=>{
+        if ( results.rows.length > 0 ) { // same as an existed user's name
+          pool.query(`select group_name from login_module
+          where user_name=$1`,[user],(err,results)=>{
+            res.render('group_page', { user: user, allgroups: results.rows, Alert:3 });
+          });
+        }
+        else {
+          pool.query(`UPDATE login_module
+          SET group_name = array_append(group_name, $1)
+          where user_name = $2`,[new_group, user], (err, results)=>{
+        
+            pool.query(`select * from note_content
+                        where multi_user is true 
+                        and group_name = $1`, [new_group], (err, results)=>{
+              res.render('dashboardT_multi', { user: user, allnotes : results.rows, group_name: new_group });
+            });
+  
+          });
+        }
       });
-   }
+    }
   });
 });
 
@@ -458,12 +466,12 @@ router.new('/new_group', async (req, res) => {
   render to dashboardT_multi.ejs
 */
 router.get('/group_page/:id', Auth.checkNotAuthenticated, (req, res) => {
-  const name = req.params.id;
-  const user = req.user.user_name;
+  const name = req.params.id; // group_ name chosen by user
+  const user = req.user.user_name; // user's name
 
   pool.query(`select * from note_content
               where multi_user is true 
-              and create_user = $1 and group_name = $2`, [user, name], (err, results)=>{
+              and group_name = $1`, [name], (err, results)=>{
     res.render('dashboardT_multi', { user: user, allnotes : results.rows, group_name: name });
   });
 

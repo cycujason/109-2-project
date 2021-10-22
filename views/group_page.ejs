@@ -7,12 +7,23 @@
     </head>
 
     <body>
-        <% if(Alert == true) { %> 
+        <% if(Alert == 1) { %> 
             <script>
-              window.alert("search group not found!");
+              window.alert("Search group not found!");
             </script>
         <% } %> 
 
+        <% if(Alert == 2) { %> 
+            <script>
+              window.alert("New group name exists!");
+            </script>
+        <% } %> 
+
+        <% if(Alert == 3) { %> 
+            <script>
+              window.alert("New group name cannot be the same as existed user's name!");
+            </script>
+        <% } %> 
 
         <div class="button back-box">
             <a href="javascript:history.back()">
@@ -44,8 +55,7 @@
             
             <h1></h1>
                 
-                
-            <form action="/users/new_group" method="GET">
+            <form action="/users/new_group" method="POST">
                 <div class="input-boxes">
 
                     <div class="input-box">
