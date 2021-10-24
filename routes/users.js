@@ -495,6 +495,7 @@ router.post('/new_group', async (req, res) => {
 /*
   render to dashboardT_multi.ejs
 */
+/*
 router.get('/group_page/:id', Auth.checkNotAuthenticated, (req, res) => {
   const name = req.params.id; // group_ name chosen by user
   const user = req.user.user_name; // user's name
@@ -506,41 +507,45 @@ router.get('/group_page/:id', Auth.checkNotAuthenticated, (req, res) => {
   });
 
 });
-
-/*
-  redirect to /:group_name/edit_multi/:id
 */
-router.get('/:group_name/edit_multi', (req, res) => {
-  let group_name = req.params.group_name;
-  res.redirect(`/users/` + group_name + `/edit_multi/${uuidv4()}`);
+router.get('/:group/:Uclass/edit_multi', (req, res) => {
+  let group_name = req.params.group;
+  const Uclass = req.params.Uclass;
+  res.redirect(`/users/` + group_name + `/`+ Uclass + `/edit_multi/${uuidv4()}`);
 });
 
 router.get('/group_page/:group', Auth.checkNotAuthenticated, (req, res) => {
-  const user = req.params.group;
+  const user = req.user.user_name;
+  const group = req.params.group;
   const id = parseInt(req.user.id,10);
-  pool.query(`select classification from user_classify where username = $1`,[user],(err,results)=>{
-    res.render('dashboardM',{user:user, id:id, allclassify:results.rows,keyword:undefined});
+  pool.query(`select classification from user_classify where username = $1`,[group],(err,results)=>{
+    res.render('dashboardM_multi',{user:user, id:id, allclassify:results.rows, keyword:undefined, group_name:group});
   })
 });
+/*
+  redirect to /:group_name/edit_multi/:id(below)
+*/
 
 router.get('/group_page/:group/:Uclass', Auth.checkNotAuthenticated, (req, res) => {
+  const user = req.user.user_name;
   const name = req.params.group;
   const Uclass = req.params.Uclass;
   pool.query(`select * from note_content
               where multi_user is true 
               and create_user = $1 and group_name = $2 and classification = $3`, [user, name , Uclass], (err, results)=>{
     // console.log("rows: " + results.rows[0].group_name) ;
-    res.render('dashboardT_multi', { user: user, allnotes : results.rows, group_name: results.rows[0].group_name });
+    res.render('dashboardT_multi', { user: user, allnotes : results.rows, group_name:name, Uclass:Uclass });
   });
 });
 /*
   new a note (render to testpage.ejs), the parameter multiuser is true
   press back will return to back page, but sometimes need to refresh the page
 */
-router.get('/:group_name/edit_multi/:id',Auth.checkNotAuthenticated, (req, res) => {
+router.get('/:group_name/:Uclass/edit_multi/:id',Auth.checkNotAuthenticated, (req, res) => {
   console.log("open doc uuid: " + req.params.id);
   let group_name = req.params.group_name;
-  res.render('testpage' ,{ textid: req.params.id, user: req.user.user_name, multiuser: 'true', group_name: group_name});
+  const Uclass = req.params.Uclass;
+  res.render('testpage' ,{ textid: req.params.id, user: req.user.user_name, multiuser: 'true', group_name: group_name, Uclass:Uclass});
 });
 
 /*
