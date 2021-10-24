@@ -52,7 +52,7 @@ router.get('/MainDashboard',Auth.checkNotAuthenticated, (req, res) => {
   failure: to /users/login
 */
 router.post('/login',passport.authenticate('local', {
-  successRedirect: '/users/dashboard',
+  successRedirect: '/users/MainDashboard',
   failureRedirect: '/users/login',
   failureFlash: true,
 }));

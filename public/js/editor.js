@@ -120,7 +120,7 @@ function imageHandler() {
         fetch("https://api.imgur.com/3/image/", {
             method: "post",
             headers: {
-                Authorization: "Client-ID 718b4512df0d2f5"
+                Authorization: "Client-ID abbb71f0b656d3c"
             },
             body: formdata
         }).then(data => data.json()).then(data => {
@@ -142,7 +142,7 @@ function imageHandler2() {
         fetch("https://api.imgur.com/3/image/", {
             method: "post",
             headers: {
-                Authorization: "Client-ID 718b4512df0d2f5"
+                Authorization: "Client-ID abbb71f0b656d3c"
             },
             body: formdata
         }).then(data => data.json()).then(data => {
@@ -267,5 +267,5 @@ send();
 recieve();
 socketRoom();
 saveContent();
-// computeTag();
+computeTag();
 
