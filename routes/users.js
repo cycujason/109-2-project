@@ -56,7 +56,7 @@ router.get('/dashboard/:Uclass', Auth.checkNotAuthenticated, (req, res) => {
     if(typeof range === 'undefined' && typeof keyword === 'undefined' ) showSelect=false;
     if(typeof keyword === 'undefined' ){
       pool.query(`select note_title,note_id,created_at,note_paragraph from note_content
-      where create_user=$1 and multi_user = false `,[user],(err,results)=>{
+      where create_user=$1 and multi_user = false  and classification = $2`,[user,Uclass],(err,results)=>{
       res.render('dashboardT', { user: user, allnotes : results.rows ,limit:showSelect,nav:range, keyword:'undefined',Uclass:Uclass});
       });//not consider the query fail 
     }//if
@@ -69,7 +69,7 @@ router.get('/dashboard/:Uclass', Auth.checkNotAuthenticated, (req, res) => {
       }//for concat the query string
       all_condi = all_condi+")";
       pool.query(`select note_title,note_id,created_at,note_paragraph from note_content
-      where create_user=$1 and  multi_user = false and `+all_condi,[user],(err,results)=>{
+      where create_user=$1 and  multi_user = false and classification = $2 and `+all_condi,[user,Uclass],(err,results)=>{
       res.render('dashboardT', { user: user, allnotes : results.rows ,limit:showSelect,nav:range, keyword:key, all_key:keyword,Uclass:Uclass});
       });//not consider the query fail
     }//else if
@@ -82,7 +82,7 @@ router.get('/dashboard/:Uclass', Auth.checkNotAuthenticated, (req, res) => {
       }//for concat the query string
       all_condi = all_condi+")";
       pool.query(`select note_title,note_id,created_at,note_paragraph from note_content
-      where create_user=$1  and multi_user = false and `+all_condi,[user],(err,results)=>{
+      where create_user=$1  and multi_user = false and classification=$2 and `+all_condi,[user,Uclass],(err,results)=>{
       res.render('dashboardT', { user: user, allnotes : results.rows ,limit:showSelect,nav:range, keyword:key, all_key:keyword,Uclass:Uclass});
       });//not consider the query fail
     }//else if
@@ -94,8 +94,8 @@ router.get('/dashboard/:Uclass', Auth.checkNotAuthenticated, (req, res) => {
         if(num+1!=keyword.length) {all_condi = all_condi+" OR "; user_tags = user_tags + " OR "}//for
       }//for concat the query string
       all_condi = all_condi+"((    EXISTS (SELECT  FROM   unnest(tags) elem WHERE"+user_tags+")) or (    EXISTS (SELECT  FROM   unnest(user_tags) elem WHERE"+user_tags+")))";
-      pool.query(`select note_title,note_id,created_at,note_paragraph from note_content where create_user = $1  and multi_user = false and `+all_condi,
-      [user],(err,results)=>{
+      pool.query(`select note_title,note_id,created_at,note_paragraph from note_content where create_user = $1  and multi_user = false and classification= $2 and `+all_condi,
+      [user,Uclass],(err,results)=>{
       res.render('dashboardT', { user: user, allnotes : results.rows ,limit:showSelect,nav:range, keyword:key, all_key:keyword,Uclass:Uclass});
       });//not consider the query fail
     }//else if
@@ -108,7 +108,7 @@ router.get('/dashboard/:Uclass', Auth.checkNotAuthenticated, (req, res) => {
       }//for concat the query string
       all_condi = all_condi+")";
       pool.query(`select note_title,note_id,created_at,note_paragraph from note_content
-      where create_user=$1  and multi_user = false and `+all_condi,[user],(err,results)=>{
+      where create_user=$1  and multi_user = false and classification=$2 and `+all_condi,[user,Uclass],(err,results)=>{
       res.render('dashboardT', { user: user, allnotes : results.rows ,limit:showSelect,nav:range, keyword:key, all_key:keyword,Uclass:Uclass});
       });//not consider the query fail
     }//else title search
@@ -455,13 +455,22 @@ router.post('/new_group', async (req, res) => {
 });
 
 
-router.get('/group_page/:id', Auth.checkNotAuthenticated, (req, res) => {
-  const name = req.params.id;
-  const user = req.user.user_name;
-  pool.query(`select * from group_module
-  where group_name = $1`, [name], (err, results)=>{
-    console.log("rows: " + results.rows[0].group_name) ;
-    res.render('dashboardT_multi', { user: user, allnotes : results.rows, group_name:results.rows[0].group_name });
+router.get('/group_page/:group', Auth.checkNotAuthenticated, (req, res) => {
+  const user = req.params.group;
+  const id = parseInt(req.user.id,10);
+  pool.query(`select classification from user_classify where username = $1`,[user],(err,results)=>{
+    res.render('dashboardM',{user:user, id:id, allclassify:results.rows,keyword:undefined});
+  })
+});
+
+router.get('/group_page/:group/:Uclass', Auth.checkNotAuthenticated, (req, res) => {
+  const name = req.params.group;
+  const Uclass = req.params.Uclass;
+  pool.query(`select * from note_content
+              where multi_user is true 
+              and create_user = $1 and group_name = $2 and classification = $3`, [user, name , Uclass], (err, results)=>{
+    // console.log("rows: " + results.rows[0].group_name) ;
+    res.render('dashboardT_multi', { user: user, allnotes : results.rows, group_name: results.rows[0].group_name });
   });
 });
 

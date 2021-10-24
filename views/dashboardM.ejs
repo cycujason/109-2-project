@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!-- Created by CodingLab |www.youtube.com/CodingLabYT-->
+<html  dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <title>Main Dashboard</title>
+    <link rel="stylesheet" href="/css/sidebar.css">
+    <!-- Boxicons CDN Link -->
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <script src="/js/socket.io.js"></script>
+   </head>
+<body>
+  <div class="sidebar">
+    <div class="logo-details">
+        <div class="logo_name">Project</div>
+        <i class='bx bx-menu' id="btn" ></i>
+    </div>
+    <ul class="nav-list">
+
+      <li hidden>
+        <form action="/users/dashboard" method="GET" id="search">
+          <i class='bx bx-search' ></i>
+         <input type="text" name="keyword" placeholder="請輸入關鍵字..." <% if(keyword !== 'undefined') { %> value='<%= keyword %>' <% } %>   >
+         <span class="tooltip">搜尋</span>
+         </form>
+      </li>
+
+      <li>
+        <a href="/users/dashboard">
+          <i class='bx bx-user' ></i>
+          <span class="links_name">個人筆記</span>
+        </a>
+        <span class="tooltip">個人筆記</span>
+      </li>
+
+     <li>
+      <a href="/users/setting_page">
+        <i class='bx bx-cog' ></i>
+        <span class="links_name">設定</span>
+      </a>
+      <span class="tooltip">設定</span>
+    </li>
+
+     <li class="profile">
+         <div class="profile-details">
+           <div class="name_job">
+             <div id="username" class="name"><%= user %> </div>
+             <div class="job">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+             <div class="name">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+             <div id="ID" hidden><%= id %></div> 
+           </div>
+         </div>
+         <a href="/users/logout">
+           <i class='bx bx-log-out' id="log_out" ></i>
+        </a>
+        
+     </li>
+    </ul>
+  </div>
+  
+  <section class="home-section">
+    <div><button type="button" class="newClass" onclick="createClass()">新分類</button></div>
+    <div class="text" id="demo"></div>
+    <div id="showarea" >
+      <% for(var i =0;i<allclassify.length;i++) { %>
+        <% var link = "/users/dashboard/"+allclassify[i].classification; %>
+        <div class="overview-card-2" onclick="location.href='<%= link %>';"> <%= allclassify[i].classification %> </div>
+      <% } %>
+    </div>
+  </section>
+
+  <script src="/js/sidebar.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

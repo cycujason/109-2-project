@@ -83,7 +83,6 @@
   </div>
 
   <section class="home-section">
-    <div class="text"><%= keyword %></div>
       <div class="text">ALL Notes</div>
       <% if(limit == false) { %> 
         <div>
@@ -107,6 +106,7 @@
         </div>
       <% } %> 
       <% if(limit == true) { %>
+      <div class="text">目前關鍵字: <%= keyword %></div>
       <div>
         <label class="text-search" for="range">搜尋範圍:</label>
         <select id="range" name="range" form="search" onchange="this.form.submit()">
