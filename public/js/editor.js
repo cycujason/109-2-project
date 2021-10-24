@@ -13,6 +13,10 @@ if(multiuser === 'true'){
   group_name = document.getElementById('group_name').innerText;
 }//if
 
+if(multiuser === 'true'){
+    group_name = document.getElementById('group_name').innerText;
+}//if
+
 var md = window.markdownit();
 md.set({
   html: true
@@ -263,5 +267,5 @@ send();
 recieve();
 socketRoom();
 saveContent();
-computeTag();
+// computeTag();
 

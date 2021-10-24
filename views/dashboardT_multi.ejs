@@ -48,7 +48,8 @@
       </li>
 
      <li>
-       <a href="/users/note_delete_page">
+      <% var newInmultiDLink = "/users/"+group_name+"/note_delete_page_multi" %> 
+      <a href=<%= newInmultiDLink %> >
          <i class='bx bx-folder' ></i>
          <span class="links_name">筆記刪除</span>
        </a>
@@ -83,22 +84,24 @@
       <div class="text">ALL Notes (multi-user)</div>
       <div>
       <table class="list-note">
-        <% if(allnotes[0].note_id != null) { %> 
-        <% for(var i=0; i < allnotes[0].note_id.length; i++) { %>
-          <% var link =   "/users/"+group_name+"/edit_multi/"+allnotes[0].note_id[i]; %> 
-          <tr>
-              <div class="overview-card" onclick="location.href='<%= link %>';">
-                <!--a class="note-linker" href="link" ></a-->
-                <div class="item1">
-                  <%= allnotes[0].note_id[i] %>
+          <% for(var i=0; i < allnotes.length; i++) { %>
+            <% var link = "/users/" + group_name + "/edit_multi/" + allnotes[i].note_id; %> 
+            <tr>
+                <div class="overview-card" onclick="location.href='<%= link %>';">
+                  <!--a class="note-linker" href="link" ></a-->
+                  <div class="item1">
+                    <%= allnotes[i].note_title %>
+                  </div>
+                  
+                  <div class="item2">
+                    created at: <%= allnotes[i].created_at%>
+                  </div>
+                  <!--/a-->
                 </div>
-                <!--/a-->
-              </div>
-          </tr>
-         <% } %>
-         <% } %> 
+            </tr>
+          <% } %>
         </table>
-        </div>
+      </div>
   </section>
 
   <script src="/js/sidebar.js"></script>

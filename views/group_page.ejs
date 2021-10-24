@@ -7,11 +7,32 @@
     </head>
 
     <body>
-        <% if(Alert == true) { %> 
+        <% if(Alert == 1) { %> 
             <script>
-              window.alert("search group not found!");
+              window.alert("Search group not found!");
             </script>
         <% } %> 
+
+        <% if(Alert == 2) { %> 
+            <script>
+              window.alert("New group name exists!");
+            </script>
+        <% } %> 
+
+        <% if(Alert == 3) { %> 
+            <script>
+              window.alert("New group name cannot be the same as existed user's name!");
+            </script>
+        <% } %> 
+
+        <div class="button back-box">
+            <a href="javascript:history.back()">
+                <input type="button" value="返回" />
+            </a>
+        </div>
+
+        <h1></h1>
+
         <div class="forms">
             
             <form action="/users/search_group" method="POST">
@@ -34,7 +55,6 @@
             
             <h1></h1>
                 
-                
             <form action="/users/new_group" method="POST">
                 <div class="input-boxes">
 
@@ -56,7 +76,7 @@
             <h1></h1>
 
         <section class="home-section">
-            <div class="text">All Groups</div>
+            <div class="text"><h1>All Groups:</h1></div>
 
             <div>
                 <table class="list-note">

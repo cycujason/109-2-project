@@ -11,8 +11,6 @@ var initializePassport = require('../pswConfig');
 initializePassport(passport);
 var { v4: uuidv4 } = require('uuid');
 
-
-
 router.use(
     session({
       secret: 'secret',
@@ -34,6 +32,47 @@ router.get('/MainDashboard',Auth.checkNotAuthenticated, (req, res) => {
   })
   
 });
+
+/* 
+  called by: loginT.ejs
+  to: loginT.ejs
+*/
+
+
+/*
+  render to: loginT.ejs
+*/
+  router.get('/login', Auth.checkAuthenticated, (req, res) => {
+  res.render('loginT');
+});
+
+
+/*
+  success: to /users/dashboard
+  failure: to /users/login
+*/
+router.post('/login',passport.authenticate('local', {
+  successRedirect: '/users/dashboard',
+  failureRedirect: '/users/login',
+  failureFlash: true,
+}));
+
+/*
+  log out: to indexT.ejs (start page)
+*/
+router.get('/logout', (req, res) => {
+  req.logout();
+  res.render('indexT', { message: 'You have logged out successfully!' });
+});
+
+
+/* ****************************** single user ****************************** */
+
+/*
+  user's main page
+  dashboard url with parameters is for searching keywords
+  redirect to: dashboardT.ejs
+*/
 
 
 router.get('/dashboard/:Uclass', Auth.checkNotAuthenticated, (req, res) => {
@@ -112,68 +151,61 @@ router.get('/dashboard/:Uclass', Auth.checkNotAuthenticated, (req, res) => {
       res.render('dashboardT', { user: user, allnotes : results.rows ,limit:showSelect,nav:range, keyword:key, all_key:keyword,Uclass:Uclass});
       });//not consider the query fail
     }//else title search
-
-
-    
 });
 
+/*
+  redirect to: /edit/:id
+*/
+router.get('/edit', (req, res) => {
+  res.redirect(`/users/edit/${uuidv4()}`);
+});
 
+/*
+  new a note (render to testpage.ejs), the parameter multiuser is false
+  press back will return to back page
+*/
+router.get('/edit/:id',Auth.checkNotAuthenticated, (req, res) => {
+  console.log("open doc uuid: " + req.params.id);
+  res.render('testpage' ,{ textid:req.params.id ,user:req.user.user_name,multiuser:'false', group_name:null});
+});
 
+// /users/group_page_choose is below
 
+/*
+  show the same notes as in /users/dashboard
+  render to note_delete_page.ejs
+*/
 router.get('/note_delete_page', Auth.checkNotAuthenticated, (req, res) => {
   const user = req.user.user_name;
   pool.query(`select note_title,note_id,created_at from note_content
   where create_user=$1 and multi_user = false`,[user],(err,results)=>{
     res.render('note_delete_page', { user: user, allnotes : results.rows });
-  });//not consider the query fail 
+  }); 
   
 });
 
-
-// use for deleting a note in single mode
-router.get('/note_delete/:id', Auth.checkNotAuthenticated, (req, res) => {
+/*
+  called from: /users/note_delete_page when the user clicks what to be deleted
+  Although it will turn back to user's main page(dashboard), the url is still /users/note_delete/:id.
+  (a bug hasn't fixed)
+*/
+router.get('/note_delete_page/:id', Auth.checkNotAuthenticated, (req, res) => {
   const note = req.params.id;
 
   pool.query(`delete from note_content
   where note_id = $1`,[note],(err,results)=>{
-    // res.render('note_delete_page', { user: user, allnotes : results.rows });
-  });// delete one note
+    ;
+  });// delete the specified note
 
   const user = req.user.user_name;
   pool.query(`select note_title,note_id,created_at from note_content
   where create_user=$1 and multi_user = false`,[user],(err,results)=>{
-    res.render('dashboardT', { user: user, allnotes : results.rows, keyword:'',limit:false });
-  });//not consider the query fail 
+    res.render('note_delete_page', { user: user, allnotes : results.rows });
+  }); 
 });
-
-
-
-
-router.get('/login', Auth.checkAuthenticated, (req, res) => {
-    res.render('loginT');
-});
-
-
-
-router.post('/login',passport.authenticate('local', {
-      successRedirect: '/users/MainDashboard',
-      failureRedirect: '/users/login',
-      failureFlash: true,
-    })
-);
-
-
-
-router.get('/logout', (req, res) => {
-    req.logout();
-    res.render('indexT', { message: 'You have logged out successfully!' });
-});
-
 
 /*
-router.get('/register', Auth.checkAuthenticated, (req, res) => {
-    res.render('register');
-});
+  render to setting_page.ejs to update password (/users/update_psw)
 */
 
 router.post('/register', async (req, res) => {
@@ -263,23 +295,22 @@ router.get('/:Uclass/edit/:id',Auth.checkNotAuthenticated, (req, res) => {
   res.render('testpage' ,{ textid:req.params.id ,user:req.user.user_name,multiuser:'false',group_name:undefined,Uclass:Uclass});
 });
 
-router.get('/:group_name/edit_multi', (req, res) => {
-  let group_name = req.params.group_name;
-  res.redirect(`/users/`+group_name+`/edit_multi/${uuidv4()}`);
-});
 
-
-router.get('/:group_name/edit_multi/:id',Auth.checkNotAuthenticated, (req, res) => {
-  console.log("open doc uuid: " + req.params.id);
-  let group_name = req.params.group_name;
-  res.render('testpage' ,{ textid:req.params.id ,user:req.user.user_name,multiuser:'true',group_name:group_name});
-});
 
 
 router.get('/setting_page', Auth.checkNotAuthenticated, (req, res) => {
   res.render('setting_page');
 });
 
+/*
+  press back to the back page
+  
+  if update password successfully:
+    render to indexT.ejs to login with new password
+  else(update password failed):
+    render to indexT.ejs without changing to password
+    (a bug hasn't fixed)
+*/
 router.post('/update_psw', async (req, res) => {
   const user = req.user.user_name;
   let { old_password, new_password, password_confirm } = req.body;
@@ -347,113 +378,142 @@ router.post('/update_psw', async (req, res) => {
     }
   ); // pool query
   
-  /*
-  if (errorlog == 0)
-    alert('密碼已更新!請重新登入');
-  else if (errorlog == 1)
-    alert('密碼確認時發生錯誤!');
-  else if (errorlog == 2)
-    alert('原密碼輸入錯誤!');
-
-  */
-
   req.logout();
   res.render('indexT', { message: 'You have logged out successfully!' });
 }); // router
 
 
+/* ****************************** multi users ****************************** */
+
+/* 
+  render to group_page.ejs
+  press back will return to the back page
+
+  there are three ways to the group mode:
+    1. /users/search_group
+    2. /users/new_group
+    3. /users/group_page/:id
+
+  then render to dashboardT_multi.ejs.
+*/
 router.get('/group_page_choose', Auth.checkNotAuthenticated, (req, res) => {
   const user = req.user.user_name;
   //console.log(user);
   pool.query(`select group_name from login_module
-  where user_name=$1`,[user],(err,results)=>{
-    res.render('group_page', { user: user, allgroups: results.rows ,Alert:false});
+              where user_name=$1`,[user],(err,results)=>{
+    res.render('group_page', { user: user, allgroups: results.rows ,Alert:0 });
   });//not consider the query fail 
 });
 
 
+/*
+  input a group name.
+  If it exists, then render to dashboardT_multi.ejs
+  else render to the same page (group_page.ejs) with an alert window.
+*/
 router.post('/search_group', async (req, res) => {
   const user = req.user.user_name;
   let { search_group } = req.body;
+  // console.log("search_group: ", search_group); // print out 'doom12', but type?
 
-  var temp = "" ;
-  pool.query(`select group_name from login_module`, (err, results)=>{
-    temp = results.rows ;
-    var found = false ;
-    for ( var i = 0 ; temp != null && i < temp.length ; i++ ) {
-      if (search_group == temp[i].group_name ) {
-        found = true ;
-        break ;
-      } // if
-    } // for
-    if ( found == true ) {
-      pool.query(`select * from group_module
-      where group_name = $1`, [req.body.search_group], (err, results)=>{
-        res.render('dashboardT_multi', { user: user, allnotes : results.rows });
+  var temp = "\'" + search_group + "\')";
+  pool.query(`select * from login_module
+  where EXISTS (SELECT FROM unnest(group_name) elem 
+                WHERE elem like ` + temp, (err, results)=>{
+
+    // console.log("results.rows: " + results.rows[0].user_name ); // print out 'de'
+    
+    if (results.rows.length > 0) { // maybe more than one user in the group 
+      var str = JSON.stringify(search_group);
+      pool.query(`select * from note_content
+                  where multi_user is true 
+                  and group_name = $1`, [str], (err, results)=>{
+      res.render('dashboardT_multi', { user: user, allnotes : results.rows, group_name: str });
       });
-    } else {
-      console.log("Search group not found!");
+    }
+    else {
       pool.query(`select group_name from login_module
-       where user_name=$1`,[user],(err,results)=>{
-        res.render('group_page', { user: user, allgroups: results.rows, Alert:true });
-      });//not consider the query fail 
-    } // else
+                  where user_name=$1`,[user],(err,results)=>{
+       res.render('group_page', { user: user, allgroups: results.rows, Alert:1 });
+     });
+    }
+
   });
-  /*
-  var found = false ;
-  for ( var i = 0 ; i < temp.group_name.length ; i++ ) {
-      if (search_group == temp.group_name[i] ) {
-        found = true ;
-        break ;
-      } // if
-
-  } // for
-
-  if ( found == true ) {
-    pool.query(`select * from group_module
-    where group_name = &1`, [user], (err, results)=>{
-      res.render('dashboardT_multi', { user: user, allnotes : results.rows });
-    });
-  } else {
-    console.log("Search group not found!");
-  } // else
-  */
 });
 
-
+/*
+  if found an group with the same group name: show the alert window and back to group_page.ejs
+  else: update this new group name to login_module(DB) and render to dashboardT_multi.ejs
+*/
 router.post('/new_group', async (req, res) => {
   const user = req.user.user_name;
   let { new_group } = req.body;
 
-  pool.query(`insert into group_module
-  values ($1, $2, $3)`,[new_group, null, null], (err, results)=>{
-    pool.query(`UPDATE login_module
-    SET group_name = array_append(group_name, $1)
-    where user_name = $2`,[new_group, user], (err, results)=>{
-      const name = req.body.new_group;
-      pool.query(`select * from group_module
-      where group_name = $1`, [name], (err, results)=>{
-      res.render('dashboardT_multi', { user: user, allnotes : results.rows });
-      });
-      
-    });
-      
-  });
-  /*
-  pool.query(`UPDATE login_module
-  SET group_name = array_append(group_name, $1)
-  where user_name = $2`,[new_group, user], (err, results)=>{
-      ;
-  });
-
-  const name = req.params.id;
-  pool.query(`select * from group_module
-  where group_name = $1`, [name], (err, results)=>{
-    res.render('dashboardT_multi', { user: user, allnotes : results.rows });
-  });
+  /*  建新的組：
+      1. 我們先看組名有沒有出現
+      2. if 有，不加入且跳出Alert視窗
+        else, 建立新的組並進入dashboardT_multi
   */
+  var temp = "\'" + new_group + "\')";
+  pool.query(`select * from login_module
+  where EXISTS (SELECT FROM unnest(group_name) elem 
+                WHERE elem like ` + temp, (err, results)=>{
+  
+    if (results.rows.length > 0) { // 此組名已存在
+      pool.query(`select group_name from login_module
+                  where user_name=$1`,[user],(err,results)=>{
+        res.render('group_page', { user: user, allgroups: results.rows, Alert:2 });
+      });
+    } 
+    else {
+      pool.query(`select * from login_module
+                  where user_name = $1`, [new_group], (err, results)=>{
+        if ( results.rows.length > 0 ) { // same as an existed user's name
+          pool.query(`select group_name from login_module
+          where user_name=$1`,[user],(err,results)=>{
+            res.render('group_page', { user: user, allgroups: results.rows, Alert:3 });
+          });
+        }
+        else {
+          pool.query(`UPDATE login_module
+          SET group_name = array_append(group_name, $1)
+          where user_name = $2`,[new_group, user], (err, results)=>{
+        
+            pool.query(`select * from note_content
+                        where multi_user is true 
+                        and group_name = $1`, [new_group], (err, results)=>{
+              res.render('dashboardT_multi', { user: user, allnotes : results.rows, group_name: new_group });
+            });
+  
+          });
+        }
+      });
+    }
+  });
 });
 
+/*
+  render to dashboardT_multi.ejs
+*/
+router.get('/group_page/:id', Auth.checkNotAuthenticated, (req, res) => {
+  const name = req.params.id; // group_ name chosen by user
+  const user = req.user.user_name; // user's name
+
+  pool.query(`select * from note_content
+              where multi_user is true 
+              and group_name = $1`, [name], (err, results)=>{
+    res.render('dashboardT_multi', { user: user, allnotes : results.rows, group_name: name });
+  });
+
+});
+
+/*
+  redirect to /:group_name/edit_multi/:id
+*/
+router.get('/:group_name/edit_multi', (req, res) => {
+  let group_name = req.params.group_name;
+  res.redirect(`/users/` + group_name + `/edit_multi/${uuidv4()}`);
+});
 
 router.get('/group_page/:group', Auth.checkNotAuthenticated, (req, res) => {
   const user = req.params.group;
@@ -473,6 +533,55 @@ router.get('/group_page/:group/:Uclass', Auth.checkNotAuthenticated, (req, res) 
     res.render('dashboardT_multi', { user: user, allnotes : results.rows, group_name: results.rows[0].group_name });
   });
 });
+/*
+  new a note (render to testpage.ejs), the parameter multiuser is true
+  press back will return to back page, but sometimes need to refresh the page
+*/
+router.get('/:group_name/edit_multi/:id',Auth.checkNotAuthenticated, (req, res) => {
+  console.log("open doc uuid: " + req.params.id);
+  let group_name = req.params.group_name;
+  res.render('testpage' ,{ textid: req.params.id, user: req.user.user_name, multiuser: 'true', group_name: group_name});
+});
+
+/*
+  Show all group notes for users to delete.
+*/
+router.get('/:Uclass/note_delete_page_multi', Auth.checkNotAuthenticated, (req, res) => {
+  const user = req.user.user_name;
+  const group_name = req.params.Uclass;
+
+  console.log("user name: " + user);
+  console.log("group_name: " + group_name);
+
+  pool.query(`select note_title,note_id,created_at from note_content 
+              where create_user=$1 and multi_user=true and group_name=$2`,[user, group_name],(err,results)=>{
+    console.log("results.rows: " + results.rows);
+    res.render('note_delete_page_multi', { user: user, allnotes : results.rows, group_name: group_name });
+  }); 
+  
+});
+
+/*
+  Delete the specified note in the group mode.
+*/
+router.get('/:Uclass/note_delete_page_multi/:id', Auth.checkNotAuthenticated, (req, res) => {
+  const note = req.params.id;
+  const group_name = req.params.Uclass;
+
+  pool.query(`delete from note_content
+  where note_id = $1`,[note],(err,results)=>{
+    ;
+  });// delete the sepcified note
+
+  const user = req.user.user_name;
+  pool.query(`select note_title,note_id,created_at from note_content
+              where create_user=$1 and multi_user = true and group_name=$2`,[user, group_name],(err,results)=>{
+    res.render('note_delete_page_multi', { user: user, allnotes : results.rows, group_name: group_name });
+  }); 
+});
+
+
+/* ****************************** Other functions ****************************** */
 
 
 router.get('/pict_editor', Auth.checkNotAuthenticated, (req, res) => {

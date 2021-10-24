@@ -3,7 +3,7 @@
 <html  dir="ltr">
   <head>
     <meta charset="UTF-8">
-    <title> Dashboard </title>
+    <title> Dashboard T</title>
     <link rel="stylesheet" href="/css/sidebar.css">
     <!-- Boxicons CDN Link -->
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
@@ -23,7 +23,8 @@
       </li>
 
       <li>
-        <a href="/users/edit">
+        <% var newInmultiLink = "/users/"+group_name+"/edit_multi" %> 
+        <a href=<%= newInmultiLink %> >
             <i class='bx bx-book-add' ></i>
           <span class="links_name">新增筆記</span>
         </a>
@@ -47,7 +48,8 @@
       </li>
 
      <li>
-       <a href="#">
+      <% var newInmultiDLink = "/users/"+group_name+"/note_delete_page_multi" %> 
+      <a href=<%= newInmultiDLink %> >
          <i class='bx bx-folder' ></i>
          <span class="links_name">筆記刪除</span>
        </a>
@@ -79,11 +81,11 @@
   </div>
 
   <section class="home-section">
-      <div class="text">Delete Notes?</div>
+      <div class="text">Delete Notes? (multi-user)</div>
       <div>
       <table class="list-note">
         <% for(var i=0; i < allnotes.length; i++) { %>
-          <% var link = "/users/note_delete_multi/"+allnotes[i].note_id; %> 
+          <% var link = "/users/" + group_name + "/note_delete_page_multi/" + allnotes[i].note_id; %> 
           <tr>
               <div class="overview-card" onclick="location.href='<%= link %>';">
                 <!--a class="note-linker" href="link" ></a-->
