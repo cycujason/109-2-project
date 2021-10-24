@@ -198,13 +198,15 @@ html[lang=zh-tw] .CodeMirror {
 }
 
 .ui-view-area .view-area p{
-  height: 3px;
+    display: block;
+    margin-block-start: -1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
 }
-.ui-view-area .view-area h1{
-  height: 35px;
-}
-.ui-view-area .view-area h2{
-  height: 11px;
+
+.ql-syntax{
+  background: #a8a8f9;
 }
 
 .ui-scrollable {
@@ -367,4 +369,5 @@ body {
 }
     
     
+  
   

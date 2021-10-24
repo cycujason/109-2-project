@@ -3,12 +3,11 @@
 <html  dir="ltr">
   <head>
     <meta charset="UTF-8">
-    <title>Main Dashboard</title>
+    <title> Dashboard </title>
     <link rel="stylesheet" href="/css/sidebar.css">
     <!-- Boxicons CDN Link -->
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <script src="/js/socket.io.js"></script>
    </head>
 <body>
   <div class="sidebar">
@@ -17,14 +16,27 @@
         <i class='bx bx-menu' id="btn" ></i>
     </div>
     <ul class="nav-list">
-
-      <li hidden>
-        <form action="/users/dashboard" method="GET" id="search">
+      <li>
           <i class='bx bx-search' ></i>
-         <input type="text" name="keyword" placeholder="請輸入關鍵字..." <% if(keyword !== 'undefined') { %> value='<%= keyword %>' <% } %>   >
+         <input type="text" placeholder="請輸入關鍵字...">
          <span class="tooltip">搜尋</span>
-         </form>
       </li>
+
+      <li>
+        <a href="/users/edit">
+            <i class='bx bx-book-add' ></i>
+          <span class="links_name">新增筆記</span>
+        </a>
+        <span class="tooltip">新增筆記</span>
+    </li>
+
+      <li>
+       <a href="/users/dashboard">
+         <i class='bx bx-user' ></i>
+         <span class="links_name">個人筆記</span>
+       </a>
+       <span class="tooltip">個人筆記</span>
+     </li>
 
      <li>
         <a href="/users/group_page_choose">
@@ -32,7 +44,15 @@
           <span class="links_name">多人筆記</span>
         </a>
         <span class="tooltip">多人筆記</span>
-      </li>
+    </li>
+
+     <li>
+       <a href="/users/note_delete_page">
+         <i class='bx bx-folder' ></i>
+         <span class="links_name">筆記刪除</span>
+       </a>
+       <span class="tooltip">筆記刪除</span>
+     </li>
 
      <li>
       <a href="/users/setting_page">
@@ -45,32 +65,42 @@
      <li class="profile">
          <div class="profile-details">
            <div class="name_job">
-             <div id="username" class="name"><%= user %> </div>
+             <div class="name"><%= user %> </div>
              <div class="job">&nbsp;&nbsp;&nbsp;&nbsp;</div>
              <div class="name">&nbsp;&nbsp;&nbsp;&nbsp;</div>
-             <div id="ID" hidden><%= id %></div> 
            </div>
          </div>
          <a href="/users/logout">
            <i class='bx bx-log-out' id="log_out" ></i>
         </a>
-        
      </li>
+
     </ul>
   </div>
-  
+
   <section class="home-section">
-    <div><button type="button" class="newClass" onclick="createClass()">新分類</button></div>
-    <div class="text" id="demo"></div>
-    <div id="showarea" >
-      <% for(var i =0;i<allclassify.length;i++) { %>
-        <% var link = "/users/dashboard/"+allclassify[i].classification; %>
-        <div class="overview-card-2" onclick="location.href='<%= link %>';"> <%= allclassify[i].classification %> </div>
-      <% } %>
-    </div>
+      <div class="text">Delete Notes?</div>
+      <div>
+      <table class="list-note">
+        <% for(var i=0; i < allnotes.length; i++) { %>
+          <% var link = "/users/note_delete/"+allnotes[i].note_id; %> 
+          <tr>
+              <div class="overview-card" onclick="location.href='<%= link %>';">
+                <!--a class="note-linker" href="link" ></a-->
+                <div class="item1">
+                  <%= allnotes[i].note_title %>
+                </div>
+                <div class="item2">
+                  created at: <%= allnotes[i].created_at%>
+                </div>
+                <!--/a-->
+              </div>
+          </tr>
+         <% } %>
+        </table>
+        </div>
   </section>
 
   <script src="/js/sidebar.js"></script>
-  <script src="/js/dashboard.js"></script>
 </body>
 </html>

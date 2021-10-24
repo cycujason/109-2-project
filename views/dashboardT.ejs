@@ -3,7 +3,7 @@
 <html  dir="ltr">
   <head>
     <meta charset="UTF-8">
-    <title> Dashboard </title>
+    <title> Dashboard T</title>
     <link rel="stylesheet" href="/css/sidebar.css">
     <!-- Boxicons CDN Link -->
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
@@ -20,45 +20,52 @@
       <li>
         <form action="/users/dashboard" method="GET" id="search">
           <i class='bx bx-search' ></i>
-         <input type="text" name="keyword" placeholder="請輸入關鍵字..." <% if(keyword !== 'undefined') { %> value=<%= keyword %> <% } %>   >
+         <input type="text" name="keyword" placeholder="請輸入關鍵字..." <% if(keyword !== 'undefined') { %> value='<%= keyword %>' <% } %>   >
          <span class="tooltip">搜尋</span>
          </form>
       </li>
+
       <li>
-        <a href="/users/edit">
+        <% var editlink = "/"+Uclass+ "/users/edit" %> 
+        <a href=<%= editlink %> >
             <i class='bx bx-book-add' ></i>
           <span class="links_name">新增筆記</span>
         </a>
         <span class="tooltip">新增筆記</span>
       </li>
+
       <li>
-       <a href="https://github.com/kikoflame">
+       <a href="/users/dashboard">
          <i class='bx bx-user' ></i>
          <span class="links_name">個人筆記</span>
        </a>
        <span class="tooltip">個人筆記</span>
      </li>
+
      <li>
-        <a href="#">
+        <a href="/users/group_page_choose">
           <i class='bx bx-group'></i>
           <span class="links_name">多人筆記</span>
         </a>
         <span class="tooltip">多人筆記</span>
       </li>
+
      <li>
-       <a href="#">
+       <a href="/users/note_delete_page">
          <i class='bx bx-folder' ></i>
-         <span class="links_name">筆記管理</span>
+         <span class="links_name">筆記刪除</span>
        </a>
-       <span class="tooltip">筆記管理</span>
+       <span class="tooltip">筆記刪除</span>
      </li>
+
      <li>
-       <a href="#">
-         <i class='bx bx-cog' ></i>
-         <span class="links_name">設定</span>
-       </a>
-       <span class="tooltip">設定</span>
-     </li>
+      <a href="/users/setting_page">
+        <i class='bx bx-cog' ></i>
+        <span class="links_name">設定</span>
+      </a>
+      <span class="tooltip">設定</span>
+    </li>
+
      <li class="profile">
          <div class="profile-details">
            <div class="name_job">
@@ -74,48 +81,80 @@
      </li>
     </ul>
   </div>
+
   <section class="home-section">
     <div class="text"><%= keyword %></div>
       <div class="text">ALL Notes</div>
+      <% if(limit == false) { %> 
+        <div>
+        <table class="list-note">
+          <% for(var i=0; i < allnotes.length; i++) { %>
+            <% var link = "/users/"+Uclass+"/edit/"+allnotes[i].note_id; %> 
+            <tr>
+                <div class="overview-card" onclick="location.href='<%= link %>';">
+                  <!--a class="note-linker" href="link" ></a-->
+                  <div class="item1">
+                    <%= allnotes[i].note_title %>
+                  </div>
+                  <div class="item2">
+                    created at: <%= allnotes[i].created_at%>
+                  </div>
+                  <!--/a-->
+                </div>
+            </tr>
+           <% } %>
+        </table>
+        </div>
+      <% } %> 
       <% if(limit == true) { %>
+      <div class="text">目前關鍵字: <%= keyword %></div>
       <div>
         <label class="text-search" for="range">搜尋範圍:</label>
         <select id="range" name="range" form="search" onchange="this.form.submit()">
-          <option value="all" <% if (nav=="all") { %> selected="selected" <% } %> >全部</option>
+          <option value="all" <% if (nav=="all") { %> selected="selected" <% } %> >內文及標題</option>
           <option value="content" <% if (nav=="content") { %> selected="selected" <% } %> >內文</option>
           <option value="title" <% if (nav=="title") { %> selected="selected" <% } %> >標題</option>
+          <option value="tags" <% if (nav=="tags") { %> selected="selected" <% } %> >標籤</option>
         </select>
       </div>
-      <% } %>
       <div>
-      <table class="list-note">
-        <% for(var i=0; i < allnotes.length; i++) { %>
-          <% var link = "/users/edit/"+allnotes[i].note_id; %> 
-          <tr>
-              <div class="overview-card" onclick="location.href='<%= link %>';">
-                <!--a class="note-linker" href="link" ></a-->
-                <div class="item1">
-                  <%= allnotes[i].note_title %>
+        <table class="list-note">
+          <% for(var i=0; i < allnotes.length; i++) { %>
+            <% var link = "/users/edit/"+allnotes[i].note_id; %> 
+            <tr>
+                <div class="overview-card" onclick="location.href='<%= link %>';">
+                  <div class="item1">
+                    <%= allnotes[i].note_title %>
+                  </div>
+                  <div class="item2">
+                    <% if(nav != 'tags') {%> 
+                      <% for( var k = 0;k<all_key.length;k++ ) { %>
+                        <% var key_pos = allnotes[i].note_paragraph.indexOf(all_key[k]); %> 
+                        <% var start = key_pos; %> 
+                        <% var end = start+all_key[k].length; %> 
+                        <% if(start != -1) {%> 
+                            <% if(start < 1)  start = 0; else start= start-6;%> 
+                            <% if(end+all_key[k].length+6 > allnotes[i].note_paragraph.length-1 ) end = allnotes[i].note_paragraph.length-1; else end = end+all_key[k].length+6; %> 
+                            ...<%= allnotes[i].note_paragraph.slice(start,key_pos)%> <font color= "red"> <%= allnotes[i].note_paragraph.slice(key_pos,key_pos+all_key[k].length) %></font> <%= allnotes[i].note_paragraph.slice(key_pos+all_key[k].length,end) %>...
+                        <% break; } %> 
+                      <% } // for find out fit what tag or content%>  
+                    <% } else { %>
+                      <% for( var k = 0;k<all_key.length;k++ ) { %>
+                        <% if(allnotes[i].note_paragraph.indexOf(all_key[k]) != -1) {%> 
+                            tag:<%= all_key[k] %> 
+                        <% break; } %> 
+                      <% } // for find out fit what tag or content%>  
+                    <% }//else tags situation%> 
+                  </div>
                 </div>
-                <div class="item2">
-                  created at: <%= allnotes[i].created_at%>
-                </div>
-                <!--/a-->
-              </div>
-          </tr>
-         <% } %>
+            </tr>
+           <% }//for showing all notes card and it's imformation %>
         </table>
         </div>
+      <% } //if %>
+     
   </section>
+
   <script src="/js/sidebar.js"></script>
 </body>
 </html>
-
-
-<!--<a class="note-linker" href="https://github.com/cycujason/109-2-project"></a>
-            <div class="item1">
-             12345612345
-            </div>
-            <div class="item2">
-              456
-            </div>-->

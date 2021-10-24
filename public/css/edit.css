@@ -9,6 +9,10 @@ body {
     border: 1px solid #ccc;
   }
   
+  #preview{
+    word-wrap: break-word;
+    word-break: break-all;
+  }
   
   #lineNumber {
     position: absolute;
@@ -21,5 +25,10 @@ body {
     line-height: 1.42;
     vertical-align: middle;
     padding-bottom: 14px;
+}
+
+.view-area{
+  word-break: break-all;
+  word-wrap: break-word;
 }
   

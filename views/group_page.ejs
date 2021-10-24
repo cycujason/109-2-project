@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html dir="ltr">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Group page</title> 
+    </head>
+
+    <body>
+        <% if(Alert == true) { %> 
+            <script>
+              window.alert("search group not found!");
+            </script>
+        <% } %> 
+        <div class="forms">
+            
+            <form action="/users/search_group" method="POST">
+                <div class="input-boxes">
+
+                    <div class="input-box">
+                        <input type="text"
+                        name ="search_group"
+                        id ="search_group"
+                        placeholder="查詢組名"
+                        required>
+                    </div>
+    
+                    <div class="button input-box">
+                        <input type="submit" value="查詢組名">
+                    </div>
+                    
+                </div>
+            </form>
+            
+            <h1></h1>
+                
+                
+            <form action="/users/new_group" method="POST">
+                <div class="input-boxes">
+
+                    <div class="input-box">
+                        <input type="text"
+                            name ="new_group"
+                            id ="new_group"
+                            placeholder="新增組名"
+                            required>
+                    </div>
+
+                    <div class="button input-box">
+                        <input type="submit" value="新增組名">
+                    </div>
+
+                </div>
+            </form>           
+                
+            <h1></h1>
+
+        <section class="home-section">
+            <div class="text">All Groups</div>
+
+            <div>
+                <table class="list-note">
+                    <% for(var i=0; i < allgroups[0].group_name.length; i++) { %>
+                    <% var link = "/users/group_page/"+allgroups[0].group_name[i]; %> 
+                    <tr>
+                        <div class="overview-card" onclick="location.href='<%= link %>';">
+                            <div class="item1">
+                            <%= allgroups[0].group_name[i] %>
+                            </div>
+                        </div>
+                    </tr>
+                    <% } %>
+                </table>
+            </div>
+        </section>
+                
+        </div>
+    </body>
+
+</html>
