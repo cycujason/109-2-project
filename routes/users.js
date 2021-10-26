@@ -384,20 +384,27 @@ router.get('/group_page_choose', Auth.checkNotAuthenticated, (req, res) => {
 router.post('/search_group', async (req, res) => {
   const user = req.user.user_name;
   let { search_group } = req.body;
-  // console.log("search_group: ", search_group); // print out 'doom12', but type?
+  // console.log("search_group: ", search_group); // print out 'doom12'
+  console.log(typeof search_group); // print out type: string
 
-  var temp = "\'" + search_group + "\')";
+  var temp = "\'" + search_group + "\')"; // 'doom12')
+  console.log(temp);
+
   pool.query(`select * from login_module
   where EXISTS (SELECT FROM unnest(group_name) elem 
                 WHERE elem like ` + temp, (err, results)=>{
-
+    // console.log(typeof results); // object
+    // console.log(typeof results.rows); // object
     // console.log("results.rows: " + results.rows[0].user_name ); // print out 'de'
     
     if (results.rows.length > 0) { // maybe more than one user in the group 
       var str = JSON.stringify(search_group);
+      console.log(typeof str);
+      console.log(str);
       pool.query(`select * from note_content
                   where multi_user is true 
                   and group_name = $1`, [str], (err, results)=>{
+                    console.log(results.rows);
       res.render('dashboardT_multi', { user: user, allnotes : results.rows, group_name: str });
       });
     }
@@ -425,10 +432,12 @@ router.post('/new_group', async (req, res) => {
         else, 建立新的組並進入dashboardT_multi
   */
   var temp = "\'" + new_group + "\')";
+  var str = JSON.stringify(new_group);
   pool.query(`select * from login_module
   where EXISTS (SELECT FROM unnest(group_name) elem 
                 WHERE elem like ` + temp, (err, results)=>{
   
+    // console.log(results.rows);
     if (results.rows.length > 0) { // 此組名已存在
       pool.query(`select group_name from login_module
                   where user_name=$1`,[user],(err,results)=>{
@@ -437,7 +446,7 @@ router.post('/new_group', async (req, res) => {
     } 
     else {
       pool.query(`select * from login_module
-                  where user_name = $1`, [new_group], (err, results)=>{
+                  where user_name = $1`, [str], (err, results)=>{
         if ( results.rows.length > 0 ) { // same as an existed user's name
           pool.query(`select group_name from login_module
           where user_name=$1`,[user],(err,results)=>{
@@ -447,12 +456,12 @@ router.post('/new_group', async (req, res) => {
         else {
           pool.query(`UPDATE login_module
           SET group_name = array_append(group_name, $1)
-          where user_name = $2`,[new_group, user], (err, results)=>{
+          where user_name = $2`,[str, user], (err, results)=>{
         
             pool.query(`select * from note_content
                         where multi_user is true 
-                        and group_name = $1`, [new_group], (err, results)=>{
-              res.render('dashboardT_multi', { user: user, allnotes : results.rows, group_name: new_group });
+                        and group_name = $1`, [str], (err, results)=>{
+              res.render('dashboardT_multi', { user: user, allnotes : results.rows, group_name: str });
             });
   
           });
