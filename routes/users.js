@@ -381,6 +381,8 @@ router.get('/group_page_choose', Auth.checkNotAuthenticated, (req, res) => {
   If it exists, then render to dashboardT_multi.ejs
   else render to the same page (group_page.ejs) with an alert window.
 */
+
+/*
 router.post('/search_group', async (req, res) => {
   const user = req.user.user_name;
   let { search_group } = req.body;
@@ -417,11 +419,47 @@ router.post('/search_group', async (req, res) => {
 
   });
 });
+*/
+router.get('/search_group', Auth.checkNotAuthenticated, (req, res) => {
+  const user = req.user.user_name;
+  var search_group  = req.query.search_group;
+  console.log(typeof search_group); // print out type: string
+
+  var temp = "\'" + search_group + "\')"; // 'doom12')
+  console.log(temp);
+
+  pool.query(`select * from login_module
+  where EXISTS (SELECT FROM unnest(group_name) elem 
+                WHERE elem like ` + temp, (err, results)=>{
+    // console.log(typeof results); // object
+    // console.log(typeof results.rows); // object
+    // console.log("results.rows: " + results.rows[0].user_name ); // print out 'de'
+    
+    if (results.rows.length > 0) { // maybe more than one user in the group 
+      console.log("這波有囉!");
+      pool.query(`select * from note_content
+                  where multi_user is true 
+                  and group_name = $1`, [search_group], (err, results)=>{
+        console.log(results);
+        console.log(results.rows);
+        res.render('dashboardT_multi', { user: user, allnotes : results.rows, group_name: search_group });
+      });
+    }
+    else {
+      console.log("太無情啦!");
+      pool.query(`select group_name from login_module
+                  where user_name=$1`,[user],(err,results)=>{
+      res.render('group_page', { user: user, allgroups: results.rows, Alert:1 });
+     });
+    }
+  });
+});
 
 /*
   if found an group with the same group name: show the alert window and back to group_page.ejs
   else: update this new group name to login_module(DB) and render to dashboardT_multi.ejs
 */
+
 router.post('/new_group', async (req, res) => {
   const user = req.user.user_name;
   let { new_group } = req.body;
@@ -471,6 +509,53 @@ router.post('/new_group', async (req, res) => {
   });
 });
 
+router.get('/new_group', Auth.checkNotAuthenticated, (req, res) => {
+  const user = req.user.user_name;
+  var new_group = req.query.new_group;
+
+  /*  建新的組：
+      1. 我們先看組名有沒有出現
+      2. if 有，不加入且跳出Alert視窗
+        else, 建立新的組並進入dashboardT_multi
+  */
+  var temp = "\'" + new_group + "\')";
+  pool.query(`select * from login_module
+  where EXISTS (SELECT FROM unnest(group_name) elem 
+                WHERE elem like ` + temp, (err, results)=>{
+  
+    // console.log(results.rows);
+    if (results.rows.length > 0) { // 此組名已存在
+      pool.query(`select group_name from login_module
+                  where user_name=$1`,[user],(err,results)=>{
+        res.render('group_page', { user: user, allgroups: results.rows, Alert:2 });
+      });
+    } 
+    else {
+      pool.query(`select * from login_module
+                  where user_name = $1`, [new_group], (err, results)=>{
+        if ( results.rows.length > 0 ) { // same as an existed user's name
+          pool.query(`select group_name from login_module
+          where user_name=$1`,[user],(err,results)=>{
+            res.render('group_page', { user: user, allgroups: results.rows, Alert:3 });
+          });
+        }
+        else {
+          pool.query(`UPDATE login_module
+          SET group_name = array_append(group_name, $1)
+          where user_name = $2`,[new_group, user], (err, results)=>{
+        
+            pool.query(`select * from note_content
+                        where multi_user is true 
+                        and group_name = $1`, [new_group], (err, results)=>{
+              res.render('dashboardT_multi', { user: user, allnotes : results.rows, group_name: new_group });
+            });
+  
+          });
+        }
+      });
+    }
+  });
+});
 /*
   render to dashboardT_multi.ejs
 */
