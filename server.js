@@ -123,7 +123,7 @@ function normalizePort(val) {
     if(multiuser == 'true')
       multi = true;
     const data_num= rows.length;
-    if(data_num > 0 && rows[0].create_user == user ) {
+    if(data_num > 0  ) { // && rows[0].create_user == user
         return rows[0].note_delta_content;
     }//if
     else{
