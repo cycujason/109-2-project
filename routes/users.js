@@ -469,13 +469,18 @@ router.get('/search_group', Auth.checkNotAuthenticated, (req, res) => {
     
     if (results.rows.length > 0) { // maybe more than one user in the group 
       console.log("這波有囉!");
+      /*
       pool.query(`select * from note_content
                   where multi_user is true 
                   and group_name = $1`, [search_group], (err, results)=>{
         console.log(results);
         console.log(results.rows);
         res.render('dashboardT_multi', { user: user, allnotes : results.rows, group_name: search_group });
+        
       });
+      */
+      
+     res.redirect(`/users/group_page/`+search_group);
     }
     else {
       console.log("太無情啦!");
