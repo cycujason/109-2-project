@@ -619,7 +619,7 @@ router.get('/group_page/:group', Auth.checkNotAuthenticated, (req, res) => {
 /*
   redirect to /:group_name/edit_multi/:id(below)
 */
-
+/* temp replace
 router.get('/group_page/:group/:Uclass', Auth.checkNotAuthenticated, (req, res) => {
   const user = req.user.user_name;
   const name = req.params.group;
@@ -631,6 +631,90 @@ router.get('/group_page/:group/:Uclass', Auth.checkNotAuthenticated, (req, res) 
     res.render('dashboardT_multi', { user: user, allnotes : results.rows, group_name:name, Uclass:Uclass });
   });
 });
+*/
+/*
+multi search
+*/
+router.get('/group_page/:group/:Uclass', Auth.checkNotAuthenticated, (req, res) => {
+  const user = req.user.user_name;
+  const Uclass = req.params.Uclass;
+  const name = req.params.group;
+  var keyword = req.query.keyword;
+  const key = keyword;
+  if(typeof key !== 'undefined'){
+    keyword = key.split(" ");
+    const total_length = keyword.length;
+    for(i = 0;i<total_length;i++ ){
+      if(keyword[i] == ""){
+         keyword.splice(i,1);
+       }//if
+    }//for to split users mutiple keyword
+    if(keyword.length!=1) keyword.push('%'+key+"%");
+  }//if
+  var range = req.query.range;
+  var showSelect = true;
+  if(typeof range === 'undefined' && typeof keyword === 'undefined' ) showSelect=false;
+  if(typeof keyword === 'undefined' ){
+    pool.query(`select * from note_content
+    where multi_user is true 
+    and create_user = $1 and group_name = $2 and classification = $3`, [user, name , Uclass],(err,results)=>{
+    res.render('dashboardT_multi', { user: user, allnotes : results.rows ,group_name:name,limit:showSelect,nav:range, keyword:'undefined',Uclass:Uclass});
+    });//not consider the query fail 
+  }//if
+  else if( (range === "all" || typeof range === 'undefined') ){ // need concat the search keyword
+    var all_condi = "(";
+    for(num =0;num<keyword.length;num++){
+      var condi = "(note_title like '%"+keyword[num]+"%' OR note_paragraph like '%"+keyword[num]+"%' )";
+      all_condi = all_condi+condi;
+      if(num+1!=keyword.length) all_condi = all_condi+" OR ";
+    }//for concat the query string
+    all_condi = all_condi+")";
+    pool.query(`select note_title,note_id,created_at,note_paragraph from note_content
+    where create_user=$1 and  multi_user = true and group_name = $2 and classification = $3 and `+all_condi,[user,name ,Uclass],(err,results)=>{
+    res.render('dashboardT_multi', { user: user, allnotes : results.rows ,limit:showSelect,group_name:name,nav:range, keyword:key, all_key:keyword,Uclass:Uclass});
+    });//not consider the query fail
+  }//else if
+  else if(range === "content"){  // need concat the search keyword
+    var all_condi = "(";
+    for(num =0;num<keyword.length;num++){
+      var condi = "note_paragraph like '%"+keyword[num]+"%'";
+      all_condi = all_condi+condi;
+      if(num+1!=keyword.length) all_condi = all_condi+" OR ";
+    }//for concat the query string
+    all_condi = all_condi+")";
+    pool.query(`select note_title,note_id,created_at,note_paragraph from note_content
+    where create_user=$1  and multi_user = true and group_name = $2 and classification = $3 and `+all_condi,[user,name,Uclass],(err,results)=>{
+    res.render('dashboardT_multi', { user: user, allnotes : results.rows ,group_name:name,limit:showSelect,nav:range, keyword:key, all_key:keyword,Uclass:Uclass});
+    });//not consider the query fail
+  }//else if
+  else if(range === "tags"){  // need concat the search keyword(tag)
+    var all_condi = "";
+    var user_tags ="";
+    for(num =0;num<keyword.length;num++){
+      user_tags = user_tags+" elem like '%"+keyword[num]+"%'";
+      if(num+1!=keyword.length) {all_condi = all_condi+" OR "; user_tags = user_tags + " OR "}//for
+    }//for concat the query string
+    all_condi = all_condi+"((    EXISTS (SELECT  FROM   unnest(tags) elem WHERE"+user_tags+")) or (    EXISTS (SELECT  FROM   unnest(user_tags) elem WHERE"+user_tags+")))";
+    pool.query(`select note_title,note_id,created_at,note_paragraph from note_content where create_user = $1  and multi_user = true and group_name = $2 and classification= $3 and `+all_condi,
+    [user,name,Uclass],(err,results)=>{
+    res.render('dashboardT_multi', { user: user, allnotes : results.rows ,group_name:name,limit:showSelect,nav:range, keyword:key, all_key:keyword,Uclass:Uclass});
+    });//not consider the query fail
+  }//else if
+  else {  // need concat the search keyword (title)
+    var all_condi = "(";
+    for(num =0;num<keyword.length;num++){
+      var condi = "note_title like '%"+keyword[num]+"%'";
+      all_condi = all_condi+condi;
+      if(num+1!=keyword.length) all_condi = all_condi+" OR ";
+    }//for concat the query string
+    all_condi = all_condi+")";
+    pool.query(`select note_title,note_id,created_at,note_paragraph from note_content
+    where create_user=$1  and multi_user = true and group_name = $2 and classification = $3 and `+all_condi,[user,name,Uclass],(err,results)=>{
+    res.render('dashboardT_multi', { user: user, allnotes : results.rows ,group_name:name,limit:showSelect,nav:range, keyword:key, all_key:keyword,Uclass:Uclass});
+    });//not consider the query fail
+  }//else title search
+});
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*
   new a note (render to testpage.ejs), the parameter multiuser is true
   press back will return to back page, but sometimes need to refresh the page

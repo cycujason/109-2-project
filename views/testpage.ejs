@@ -33,8 +33,8 @@
                 <a class="navbar-brand" href="javascript:history.back()">BACK</a>
  
 
-                <input type=”button” onclick="openwin()" value=”開啟視窗”>
-                <script src="/js/picture.js"></script>  
+                <button id="open" onclick="openwin()" >開啟視窗</button><script> $('#open').click(function () { 
+                    window.open('/users/pict_editor') })</script>
             </div>
         </nav>
           <div hidden id="group_name"><%= group_name %></div>

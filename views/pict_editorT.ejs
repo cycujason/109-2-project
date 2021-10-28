@@ -1,40 +1,47 @@
 <!DOCTYPE html>
-<html >
+<html>
+
   <head>
     <meta charset="UTF-8">
     <title> picture </title>
-   </head>
-   <body>
-    <div   style="position: absolute;" width="1100px" height="1100px"> 
-        <canvas id="layer_pict"  width="1100px" height="1100px"
-            style="position: absolute; left: 0; top: 0; z-index: 0 border: 1px solid red;"></canvas> 
-        <canvas id="layer_draw"  width="1100px" height="1100px"
-            style="position: absolute; left: 0; top: 0 border: 1px solid red; z-index: 0;"></canvas> 
-        
-        <input type="button" id="粗細" value="粗細" class="bold btn" onclick="DisplayAndHiddenBtn()" style="position:fixed; left:0px; bottom: 0px; " />
-        
-        <input type="button" id='0' value="10" class="bold btn" onclick="checkpen(1)" style="position:fixed; left:0px; bottom: 20px; " />
-        <input type="button" id='10' value="20" class="bold btn" onclick="checkpen(10)" style="position:fixed; left:0px; bottom: 40px; " />
-        <input type="button" id='20' value="30" class="bold btn" onclick="checkpen(20)" style="position:fixed; left:0px; bottom: 60px; " />
-        <input type="button" id='30' value="40" class="bold btn" onclick="checkpen(30)" style="position:fixed; left:0px; bottom: 80px; " />
-        <input type="button" id='40' value="50" class="bold btn" onclick="checkpen(40)" style="position:fixed; left:0px; bottom: 100px; " />
-        
-        <!-- <input type="button" value="紅" class="red item" onclick="changecolor('red')" style="background-color:red; position:fixed; left:30px; bottom: 0px; "/>-->
-        <input type="color" id='colorful' value="#ff0000"  style="position:fixed; left:45px; bottom: 0px; ">
-        <input type="button" value="橡皮擦" class="eraser btn" id="eraser" onclick="mode('destination-out')" style="position:fixed; left:150px; bottom: 0px; " />
-        
-        <input type="button" value="清除畫布" class="clear fun" onclick="clearb()" style="position:fixed; left:220px; bottom: 0px; "/>
-        <input type="button" value="pen" class="bold btn" onclick="mode('source-over')" style="position:fixed; left:100px; bottom: 0px; " />
-        <input type="button" id="downloadImageBtn" value="download" class="bold btn" onclick="mode('source-over')" style="position:fixed; left:0px; top: 0px; " />
+  </head>
+
+  <body>
+    <div style="position: absolute;" width="1100px" height="1100px">
+      <canvas id="layer_pict" width="1100px" height="1100px" style="position: absolute; left: 0; top: 0; z-index: 0 border: 1px solid red;"></canvas>
+      <canvas id="layer_draw" width="1100px" height="1100px" style="position: absolute; left: 0; top: 0 border: 1px solid red; z-index: 0;"></canvas>
+
+      <input type="button" id="粗細" value="粗細" class="bold btn" onclick="DisplayAndHiddenBtn()" style="position:fixed; left:0px; bottom: 0px; " />
+
+      <input type="button" id='0' value="10" class="bold btn" onclick="checkpen(1)" style="position:fixed; left:0px; bottom: 20px; " />
+      <input type="button" id='10' value="20" class="bold btn" onclick="checkpen(10)" style="position:fixed; left:0px; bottom: 40px; " />
+      <input type="button" id='20' value="30" class="bold btn" onclick="checkpen(20)" style="position:fixed; left:0px; bottom: 60px; " />
+      <input type="button" id='30' value="40" class="bold btn" onclick="checkpen(30)" style="position:fixed; left:0px; bottom: 80px; " />
+      <input type="button" id='40' value="50" class="bold btn" onclick="checkpen(40)" style="position:fixed; left:0px; bottom: 100px; " />
+
+      <!-- <input type="button" value="紅" class="red item" onclick="changecolor('red')" style="background-color:red; position:fixed; left:30px; bottom: 0px; "/>-->
+      <input type="color" id='colorful' value="#ff0000" style="position:fixed; left:45px; bottom: 0px; ">
+      <input type="button" value="橡皮擦" class="eraser btn" id="eraser" onclick="mode('destination-out')" style="position:fixed; left:150px; bottom: 0px; " />
+
+      <input type="button" value="清除畫布" class="clear fun" onclick="clearb()" style="position:fixed; left:220px; bottom: 0px; " />
+      <input type="button" value="pen" class="bold btn" onclick="mode('source-over')" style="position:fixed; left:100px; bottom: 0px; " />
+      <input hidden type="button" value="pen2" class="bold btn" onclick="mode('lighter')" style="position:fixed; left:100px; bottom: 20px; " />
+
+
+      <input type="url" name="name" id="input_url" placeholder="輸入網址" autocomplete="off" style="position:fixed; left:0px; top: 0px; ">
+      <button ondblclick="myGeeks()" id="send_button" style="position:fixed; left:0px; top: 20px; ">Click Here!</button>
       
-      <input type="url" name="name" id="input_url" placeholder="輸入網址" autocomplete="off" style="position:fixed; left:0px; top: 0px; " >
-        <button onclick="myGeeks()" style="position:fixed; left:0px; top: 20px; " >Click Here!</button>  
-        <script src="/js/pict_editor.js"></script>
-        <script src="/js/editor.js"></script>
-   <input type="button" id="downloadImageBtn" value="download" class="bold btn" onclick="saveAsLocalImage()" style="position:fixed; left:0px; top: 50px; " />  
-   <input type="button" id="send" value="save" class="bold btn" onclick="save()" style="position:fixed; left:90px; top: 30px; " /> 
-   <input type="button" id="send" value="ok2" class="bold btn" onclick="imageHandler2()" style="position:fixed; left:190px; top: 30px; " /> 
-   <a href="#" download="dl.png" onclick="this.href=layer_pict.toDataURL();" style="position:fixed; left:390px; top: 30px; " >下載</a>
-   <div hidden id = "url" style="position:fixed; left:0px; top: 100px; ">123</div>
-  </div> 
-   </body>
+      <input type="button" id="downloadImageBtn" value="download" class="bold btn" onclick="saveAsLocalImage()" style="position:fixed; left:60px; top: 0px; " />
+      <input type="button" id="save" value="save" class="bold btn" onclick="save()" style="position:fixed; left:0px; top: 0px; " />
+      <input type="button" id="ok2" value="ok2" class="bold btn" onclick="imageHandler2()" style="position:fixed; left:150px; top: 0px; " />
+      <input hidden type="button" value="back" class="bold btn" onclick="back()" style="position:fixed; left:250px; top: 0px; " />
+      <script src="/js/pict_editor.js"></script>
+      <script src="/js/editor.js"></script>
+      <a href="#" id= "download" download="dl.png" onclick="this.href=layer_pict.toDataURL();" style="position:fixed; left:230px; top: 0px; ">下載</a>
+      <div hidden id="url" style="position:fixed; left:0px; top: 100px; ">123</div>
+    </div>
+  </body>
+
+
+
+

@@ -129,9 +129,18 @@ function imageHandler() {
     })
 }//imageHandler
 
-function imageHandler2() {
+function openwin(){
+    var range = this.quill.getSelection();
+    var r_i = range.index ;  // 存油標位置
+    document.getElementById("range_store").innerText = r_i ;
+    //window.open("/users/pict_editor",
+    //"WindowName","width=750,height=400,top=90,left=90,right=90,bottom=90" )
+}
 
+function imageHandler2() {
     console.log("imageHandler");
+    var content = window.opener.document.getElementById("range_store").innerHTML; alert(content);
+
     var url  = document.getElementById("url");
     
     var str = url.innerText;
@@ -142,11 +151,12 @@ function imageHandler2() {
         fetch("https://api.imgur.com/3/image/", {
             method: "post",
             headers: {
-                Authorization: "Client-ID abbb71f0b656d3c"
+                Authorization: "Client-ID 718b4512df0d2f5"
             },
             body: formdata
         }).then(data => data.json()).then(data => {
-           this.quill.insertText(`![](${data.data.link})`, 'user' );
+           //this.quill.insertText(content,`![](${data.data.link})`, 'user' );
+           console.log(data.data.link);
         })
     
 }//imageHandler

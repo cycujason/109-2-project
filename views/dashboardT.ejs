@@ -18,7 +18,8 @@
     <ul class="nav-list">
      
       <li>
-        <form action="/users/dashboard" method="GET" id="search">
+        <% var searchlink = "/users/dashboard/"+Uclass %>
+        <form action=<%= searchlink %> method="GET" id="search">
           <i class='bx bx-search' ></i>
          <input type="text" name="keyword" placeholder="請輸入關鍵字..." <% if(keyword !== 'undefined') { %> value='<%= keyword %>' <% } %>   >
          <span class="tooltip">搜尋</span>

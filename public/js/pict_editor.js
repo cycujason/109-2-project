@@ -1,7 +1,6 @@
 
 
 
-
 var canvas = document.getElementById('layer_draw');
 var cvs = canvas.getContext('2d');
 var ctx = document.getElementById('layer_pict').getContext('2d');
@@ -17,27 +16,19 @@ var str_link = ''
 
 function myGeeks() {
   var img = new Image();
-
   let str_link = document.getElementById("input_url").value;
  // str_link = 'https://cdn.discordapp.com/attachments/737673751495442494/880755211000504330/image0.jpg' ;
 //let str_link = "https://i.imgur.com/4fMp4ft.jpg";
 
-  
   downloadedImg = new Image();
   downloadedImg.crossOrigin = "Anonymous";
   downloadedImg.addEventListener("load", imageReceived, false);
   downloadedImg.src = str_link;
-console.log("load");
-
-
-
-console.log(downloadedImg.width);
+  console.log("load");
+  console.log(downloadedImg.width);
 
   //img.setAttribute("crossOrigin",'Anonymous');
-  
   //img.setAttribute("crossOrigin",'Anonymous');
-
-
   var img_width = downloadedImg.width;
   var img_height = downloadedImg.height;
 
@@ -56,7 +47,15 @@ function imageReceived() {
   canvas.height = downloadedImg.height;
   console.log(downloadedImg.src);
 
-  context.drawImage(downloadedImg, 0, 0);
+  context.drawImage(downloadedImg, 10, 30);
+
+  document.getElementById('input_url').style.display = "none";
+  document.getElementById('send_button').style.display = "none";
+
+  document.getElementById('downloadImageBtn').style.display = "block";
+  document.getElementById('save').style.display = "block";
+  document.getElementById('ok2').style.display = "block";
+  document.getElementById('download').style.display = "block";
   //imageBox.appendChild(canvas);
 
   /*try {
@@ -71,6 +70,9 @@ function imageReceived() {
   }*/
 }
 
+document.getElementById('downloadImageBtn').style.display = "none";
+document.getElementById('save').style.display = "none";
+document.getElementById('ok2').style.display = "none";
 
 document.getElementById('0').style.display = "none";
 document.getElementById('10').style.display = "none";
@@ -249,7 +251,7 @@ var com=document.getElementById('layer_pict');
     var data_url=canvas.toDataURL("image/png");
     console.log(data_url);
     url.innerText = data_url ;
-    window.location.href = data_url;
+    //window.location.href = data_url;
   }
   catch(err) {
     console.log("Error: " + err);
@@ -266,6 +268,13 @@ ctx.globalCompositeOperation='source-over';
 
 // draw the img to the canvas (behind existing lines) 
 ctx.drawImage(myCanvas,0,0); 
+ctx.save();
+}
+
+function back() {
+  ctx.restore();
+
+
 }
 
 function imageHandler3() {
