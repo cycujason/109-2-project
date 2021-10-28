@@ -156,19 +156,21 @@ router.get('/dashboard/:Uclass', Auth.checkNotAuthenticated, (req, res) => {
 /*
   redirect to: /edit/:id
 */
+/*
 router.get('/edit', (req, res) => {
   res.redirect(`/users/edit/${uuidv4()}`);
 });
-
+*/
 /*
   new a note (render to testpage.ejs), the parameter multiuser is false
   press back will return to back page
 */
+/*
 router.get('/edit/:id',Auth.checkNotAuthenticated, (req, res) => {
   console.log("open doc uuid: " + req.params.id);
   res.render('testpage' ,{ textid:req.params.id ,user:req.user.user_name,multiuser:'false', group_name:null});
 });
-
+*/
 // /users/group_page_choose is below
 
 /*
@@ -285,7 +287,7 @@ router.post('/register', async (req, res) => {
 
 router.get('/:Uclass/edit', (req, res) => {
   let Uclass = req.params.Uclass;
-  res.redirect(`/`+Uclass+`/users/edit/${uuidv4()}`);
+  res.redirect(`/users/`+Uclass+`/edit/${uuidv4()}`);
 });
 
 
