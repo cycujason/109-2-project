@@ -154,9 +154,9 @@ function imageHandler2() {
     }).then(data => data.json()).then(data => {
         //this.quill.insertText(content,`![](${data.data.link})`, 'user' );
         console.log(data.data.link);
+        document.getElementById("url_new").innerText = '請將以下指令貼回筆記頁\n'+'![]('+ data.data.link +')' ;
         //alert(`'![](${data.data.link})`);
     })
-    document.getElementById("url_new").innerText = '請將以下指令貼回筆記頁\n'+'![]('+ data.data.link +')' ;
     
     //alert('請貼回筆記頁\n'+'![]('+ data.data.link +')');
     //window.close();

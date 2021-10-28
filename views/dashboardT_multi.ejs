@@ -17,7 +17,7 @@
     </div>
     <ul class="nav-list">
       <li>
-        <% var newSearchLink = "/users/"+group_name+"/"+Uclass %>
+        <% var newSearchLink = "/users/group_page/"+group_name+"/"+Uclass %>
         <form action=<%= newSearchLink %> method="GET" id="search">
           <i class='bx bx-search' ></i>
          <input type="text" name="keyword" placeholder="請輸入關鍵字..." <% if(keyword !== 'undefined') { %> value='<%= keyword %>' <% } %>   >
