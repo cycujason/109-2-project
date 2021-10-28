@@ -47,7 +47,7 @@ function imageReceived() {
   canvas.height = downloadedImg.height;
   console.log(downloadedImg.src);
 
-  context.drawImage(downloadedImg, 10, 30);
+  context.drawImage(downloadedImg, 0, 0);
 
   document.getElementById('input_url').style.display = "none";
   document.getElementById('send_button').style.display = "none";
@@ -72,6 +72,7 @@ function imageReceived() {
 
 document.getElementById('downloadImageBtn').style.display = "none";
 document.getElementById('save').style.display = "none";
+//document.getElementById('downloadimg').style.display = "none";
 document.getElementById('ok2').style.display = "none";
 
 document.getElementById('0').style.display = "none";

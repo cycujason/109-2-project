@@ -138,27 +138,28 @@ function openwin(){
 }
 
 function imageHandler2() {
-    console.log("imageHandler");
-    var content = window.opener.document.getElementById("range_store").innerHTML; alert(content);
-
+    console.log("imageHandler2");
     var url  = document.getElementById("url");
-    
     var str = url.innerText;
     str = str.slice(22);
     console.log(str);
-        const formdata = new FormData()
-        formdata.append("image", str)
-        fetch("https://api.imgur.com/3/image/", {
-            method: "post",
-            headers: {
-                Authorization: "Client-ID 718b4512df0d2f5"
-            },
-            body: formdata
-        }).then(data => data.json()).then(data => {
-           //this.quill.insertText(content,`![](${data.data.link})`, 'user' );
-           console.log(data.data.link);
-        })
+    const formdata = new FormData()
+    formdata.append("image", str)
+    fetch("https://api.imgur.com/3/image/", {
+        method: "post",
+        headers: {
+            Authorization: "Client-ID 718b4512df0d2f5"
+        },
+        body: formdata
+    }).then(data => data.json()).then(data => {
+        //this.quill.insertText(content,`![](${data.data.link})`, 'user' );
+        console.log(data.data.link);
+        //alert(`'![](${data.data.link})`);
+    })
+    document.getElementById("url_new").innerText = '請將以下指令貼回筆記頁\n'+'![]('+ data.data.link +')' ;
     
+    //alert('請貼回筆記頁\n'+'![]('+ data.data.link +')');
+    //window.close();
 }//imageHandler
 
 

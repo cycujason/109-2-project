@@ -31,14 +31,15 @@
       <input type="url" name="name" id="input_url" placeholder="輸入網址" autocomplete="off" style="position:fixed; left:0px; top: 0px; ">
       <button ondblclick="myGeeks()" id="send_button" style="position:fixed; left:0px; top: 20px; ">Click Here!</button>
       
-      <input type="button" id="downloadImageBtn" value="download" class="bold btn" onclick="saveAsLocalImage()" style="position:fixed; left:60px; top: 0px; " />
-      <input type="button" id="save" value="save" class="bold btn" onclick="save()" style="position:fixed; left:0px; top: 0px; " />
-      <input type="button" id="ok2" value="ok2" class="bold btn" onclick="imageHandler2()" style="position:fixed; left:150px; top: 0px; " />
+      <input type="button" id="downloadImageBtn" value="完成" class="bold btn" onclick="saveAsLocalImage()" style="position:fixed; top:30px; right: 0px; " />
+      <input type="button" id="save" value="保存" class="bold btn" onclick="save()" style="position:fixed; right: 0px; top: 0px; " />
+      <input type="button" id="ok2" value="生成指令" class="bold btn" onclick="imageHandler2()" style="position:fixed; top:60px; right: 0px; " />
       <input hidden type="button" value="back" class="bold btn" onclick="back()" style="position:fixed; left:250px; top: 0px; " />
       <script src="/js/pict_editor.js"></script>
       <script src="/js/editor.js"></script>
-      <a href="#" id= "download" download="dl.png" onclick="this.href=layer_pict.toDataURL();" style="position:fixed; left:230px; top: 0px; ">下載</a>
+      <a href="#" id= "downloadimg" download="dl.png" onclick="this.href=layer_pict.toDataURL();" style="position:fixed; top:90px; right: 0px; ">下載</a>
       <div hidden id="url" style="position:fixed; left:0px; top: 100px; ">123</div>
+      <div  id="url_new" style="position:fixed;  font-size: 50px;  left:0px; bottom: 30px; "></div>
     </div>
   </body>
 
