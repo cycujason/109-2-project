@@ -88,7 +88,7 @@ router.get('/dashboard/:Uclass', Auth.checkNotAuthenticated, (req, res) => {
            keyword.splice(i,1);
          }//if
       }//for to split users mutiple keyword
-      if(keyword.length!=1) keyword.push('%'+key+"%");
+      if(keyword.length!=1) keyword.push(key);
     }//if
     var range = req.query.range;
     var showSelect = true;
@@ -130,7 +130,7 @@ router.get('/dashboard/:Uclass', Auth.checkNotAuthenticated, (req, res) => {
       var user_tags ="";
       for(num =0;num<keyword.length;num++){
         user_tags = user_tags+" elem like '%"+keyword[num]+"%'";
-        if(num+1!=keyword.length) {all_condi = all_condi+" OR "; user_tags = user_tags + " OR "}//for
+        if(num+1!=keyword.length) { user_tags = user_tags + " OR "}//for  all_condi = all_condi+" OR ";
       }//for concat the query string
       all_condi = all_condi+"((    EXISTS (SELECT  FROM   unnest(tags) elem WHERE"+user_tags+")) or (    EXISTS (SELECT  FROM   unnest(user_tags) elem WHERE"+user_tags+")))";
       pool.query(`select note_title,note_id,created_at,note_paragraph from note_content where create_user = $1  and multi_user = false and classification= $2 and `+all_condi,
@@ -656,7 +656,7 @@ router.get('/group_page/:group/:Uclass', Auth.checkNotAuthenticated, (req, res) 
          keyword.splice(i,1);
        }//if
     }//for to split users mutiple keyword
-    if(keyword.length!=1) keyword.push('%'+key+"%");
+    if(keyword.length!=1) keyword.push(key);
   }//if
   var range = req.query.range;
   var showSelect = true;
@@ -699,7 +699,7 @@ router.get('/group_page/:group/:Uclass', Auth.checkNotAuthenticated, (req, res) 
     var user_tags ="";
     for(num =0;num<keyword.length;num++){
       user_tags = user_tags+" elem like '%"+keyword[num]+"%'";
-      if(num+1!=keyword.length) {all_condi = all_condi+" OR "; user_tags = user_tags + " OR "}//for
+      if(num+1!=keyword.length) {user_tags = user_tags + " OR "}//for
     }//for concat the query string
     all_condi = all_condi+"((    EXISTS (SELECT  FROM   unnest(tags) elem WHERE"+user_tags+")) or (    EXISTS (SELECT  FROM   unnest(user_tags) elem WHERE"+user_tags+")))";
     pool.query(`select note_title,note_id,created_at,note_paragraph from note_content where create_user = $1  and multi_user = true and group_name = $2 and classification= $3 and `+all_condi,
