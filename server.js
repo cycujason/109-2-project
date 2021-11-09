@@ -51,11 +51,35 @@ require('dotenv').config();
     });
    });
    socket.on("classification", (name, user) =>{
-    pool.query(`insert into user_classify (username,classification) values ($1,$2)`,[user,name],()=>{
-       socket.emit("newClassDone",true,name);
-       console.log("created new classify");
-    });
-  });
+     pool.query(`select * from user_classify where classification = $1 and username = $2 `,[name,user],(err,results)=>{
+       if(results.rows.length == 0){
+        pool.query(`insert into user_classify (username,classification) values ($1,$2)`,[user,name],()=>{
+          socket.emit("newClassDone",true,name);
+          console.log("created new classify");
+        });
+       }//if results.rows.length == 0
+       else{
+        socket.emit("newClassDone",false,name);
+       }//else
+     });
+    
+  });//classification;
+  socket.on("deleteClass", (name, user, group)=>{
+      pool.query(`delete from user_classify where classification = $1 and username = $2`,[name,user],()=>{
+        if(group == false){
+          pool.query("delete from note_content where classification = $1 and create_user = $2 ",[name,user],()=>{
+            socket.emit("deleteClassDone",true,name);
+          });
+        }//if
+        else{
+          pool.query("delete from note_content where classification = $1 and group_name = $2 ",[name,user],()=>{
+            socket.emit("deleteClassDone",true,name);
+          });
+        }//else
+      });
+   
+    
+  });//deleteClass;
  });
  
 

@@ -18,8 +18,9 @@
     </div>
     <ul class="nav-list">
 
-      <li hidden>
-        <form action="/users/dashboard" method="GET" id="search">
+      <li>
+        <% var nowPagelink = "/users/group_page"+group_name %> 
+        <form action=<%= nowPagelink %>  method="GET" id="search">
           <i class='bx bx-search' ></i>
          <input type="text" name="keyword" placeholder="請輸入關鍵字..." <% if(keyword !== 'undefined') { %> value='<%= keyword %>' <% } %>   >
          <span class="tooltip">搜尋</span>
@@ -65,7 +66,8 @@
     <div id="showarea" >
       <% for(var i =0;i<allclassify.length;i++) { %>
         <% var link = "/users/group_page/"+group_name+"/"+allclassify[i].classification; %>
-        <div class="overview-card-2" onclick="location.href='<%= link %>';"> <%= allclassify[i].classification %> </div>
+        <div class="overview-card-2" onclick="location.href='<%= link %>';" > <%= allclassify[i].classification %> <button id="delete" type="button" onclick="event.stopPropagation();deleteClass('<%= allclassify[i].classification %>','<%= group_name %>');" ><img src="/images/trash-solid-24.png"></button>
+        </div>
       <% } %>
     </div>
   </section>

@@ -27,9 +27,18 @@ router.use(passport.session());
 router.get('/MainDashboard',Auth.checkNotAuthenticated, (req, res) => {
   const user = req.user.user_name;
   const id = parseInt(req.user.id,10);
-  pool.query(`select classification from user_classify where username = $1`,[user],(err,results)=>{
-    res.render('dashboard',{user:user, id:id, allclassify:results.rows,keyword:undefined});
-  })
+  const keyword = req.query.keyword;
+  if(keyword == undefined || keyword == ''){
+    pool.query(`select classification from user_classify where username = $1`,[user],(err,results)=>{
+      res.render('dashboard',{user:user, id:id, allclassify:results.rows,keyword:undefined});
+    });
+  }//if
+  else{
+    var query = '%'+keyword+'%';
+    pool.query(`select classification from user_classify where username = $1 and classification like $2`,[user,query],(err,results)=>{
+      res.render('dashboard',{user:user, id:id, allclassify:results.rows,keyword:keyword});
+    });
+  }//else
   
 });
 
@@ -618,10 +627,19 @@ router.get('/:group/:Uclass/edit_multi', (req, res) => {
 router.get('/group_page/:group', Auth.checkNotAuthenticated, (req, res) => {
   const user = req.user.user_name;
   const group = req.params.group;
+  const keyword= req.query.keyword;
   const id = parseInt(req.user.id,10);
-  pool.query(`select classification from user_classify where username = $1`,[group],(err,results)=>{
-    res.render('dashboardM_multi',{user:user, id:id, allclassify:results.rows, keyword:undefined, group_name:group});
-  })
+  if(keyword == undefined){
+    pool.query(`select classification from user_classify where username = $1`,[group],(err,results)=>{
+      res.render('dashboardM_multi',{user:user, id:id, allclassify:results.rows, keyword:undefined, group_name:group});
+    });
+  }//
+  else{
+    var query = '%'+keyword+'%';
+    pool.query(`select classification from user_classify where username = $1 and calssification like $2`,[group,query],(err,results)=>{
+      res.render('dashboardM_multi',{user:user, id:id, allclassify:results.rows, keyword:keyword, group_name:group});
+    });
+  }//else
 });
 /*
   redirect to /:group_name/edit_multi/:id(below)
