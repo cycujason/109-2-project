@@ -17,14 +17,15 @@ body {
   #lineNumber {
     position: absolute;
     text-align: end;
-    top: 45px;
-    margin-top: 36px;
-    left: -30px;
+    top: 50px;
+    margin-top: 4rem;
+    left: -34px;
     font-size: 13px;
-    /*padding: 48px 5px;*/
+    /* padding: 48px 5px; */
     line-height: 1.42;
     vertical-align: middle;
     padding-bottom: 14px;
+    width: 4rem;
 }
 
 .view-area{

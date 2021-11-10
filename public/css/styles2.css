@@ -194,6 +194,7 @@ html[lang=zh-tw] .CodeMirror {
   padding-right: 10px;
   color: black;
   height: 100%;
+  padding-top: 3rem;
   /*background: #babaee;*/
 }
 
@@ -210,8 +211,8 @@ html[lang=zh-tw] .CodeMirror {
 }
 
 .ui-scrollable {
-  height: 549px;
-  overflow-x: hidden;
+  height: 786px;
+  overflow-x: auto;
   overflow-y: auto;
 }
 
@@ -353,7 +354,7 @@ body {
 
                 
 #mainNav {    /*mainNav!*/  
-  border-bottom: 3px solid #ea7878;
+  border-bottom: 3px solid #d73606;
   background-color: rgb(253, 161, 161);
   transition: background-color 0.2s;
   /* Force Hardware Acceleration in WebKit */

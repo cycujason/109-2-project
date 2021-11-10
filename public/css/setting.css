@@ -1,0 +1,37 @@
+.center {
+  height: 291px;
+
+  padding-top: 20%;
+  padding-bottom:  20%;
+  padding-left: 29%;   
+  padding-right: 10%;
+  background-color: #f1d8b8;
+  position: relative;
+  background-image:url('/images/book.jpg');
+}
+
+
+.draw {
+  background-image:url('/images/17.jpg');
+  background-color: #f1d8b8;
+  height: 100%;
+  width: 100%;
+
+
+
+
+
+
+
+
+}
+
+.element {
+  display: grid;
+  
+  grid-gap: 16px; /* 為行和列都增加了16px的間隙。*/
+}
+
+
+
+

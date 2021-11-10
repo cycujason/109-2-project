@@ -4,21 +4,18 @@
     <head>
         <meta charset="UTF-8">
         <title>Setting page</title> 
-        <link rel="stylesheet" href="/css/style.css">
-    <!-- Fontawesome CDN Link -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="/css/setting.css" rel="stylesheet">
     </head>
 
     <body>
-        <div class="forms">
-            <div class="login-form" >
+        <div class="forms center">
+            <div class="login-form">
                 <form action="/users/update_psw" method="POST">
-                    <div class="input-boxes">
+                    <div class="input-boxes element">
 
                         <div class="input-box">
                             <i class="fas fa-lock"></i>
-                            <input class ="typein" type="password"
+                            <input type="password"
                             name ="old_password"
                             id ="old_password"
                             placeholder="請輸入舊密碼"
@@ -27,7 +24,7 @@
 
                         <div class="input-box">
                         <i class="fas fa-lock"></i>
-                        <input class ="typein" type="password"
+                        <input type="password"
                         name ="new_password"
                         id ="new_password"
                         placeholder="請輸入新密碼"
@@ -36,21 +33,22 @@
 
                         <div class="input-box">
                         <i class="fas fa-lock"></i>
-                        <input class ="typein" type="password"
+                        <input type="password"
                         name ="password_confirm"
                         id ="password_confirm"
                         placeholder="請再次輸入新密碼"
                         required>
                         </div>             
-                        
-                        <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
                         <div class="button input-box">
-                            <input class="button-30" type="submit" value="確認">
-                            <a href="javascript:history.back()">
-                                <input class="button-30" type="button" value="返回" />
-                            </a>
+                            <input type="submit" value="確認">
                         </div>
                         
+                        <div class="button back-box">
+                            <a href="javascript:history.back()">
+                                <input type="button" value="返回" />
+                            </a>
+                        </div>
                     </div>
                 </form>
             </div>

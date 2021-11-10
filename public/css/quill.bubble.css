@@ -36,7 +36,8 @@
   line-height: 1.42;
   height: 100%;
   outline: none;
-  padding: 12px 15px;
+  padding-top: 44px;
+  padding-right: 15px;
   tab-size: 4;
   -moz-tab-size: 4;
   text-align: left;
