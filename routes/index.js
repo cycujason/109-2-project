@@ -24,7 +24,9 @@ router.get('/test', (req, res) => {
 });
 
 router.get('/test1', (req, res) => {
-    res.render('dashboardT',{user:'test', allnotes:[]});
+
+res.render('setting_page');
+
 });
 
 */
