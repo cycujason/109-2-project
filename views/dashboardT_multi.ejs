@@ -84,7 +84,6 @@
   </div>
 
   <section class="home-section">
-    <div class="text"><%= keyword %></div>
       <div class="text">ALL Notes</div>
       <% if(limit == false) { %> 
         <div>
@@ -110,13 +109,16 @@
       <% if(limit == true) { %>
       <div class="text">目前關鍵字: <%= keyword %></div>
       <div>
-        <label class="text-search" for="range">搜尋範圍:</label>
-        <select id="range" name="range" form="search" onchange="this.form.submit()">
-          <option value="all" <% if (nav=="all") { %> selected="selected" <% } %> >內文及標題</option>
-          <option value="content" <% if (nav=="content") { %> selected="selected" <% } %> >內文</option>
-          <option value="title" <% if (nav=="title") { %> selected="selected" <% } %> >標題</option>
-          <option value="tags" <% if (nav=="tags") { %> selected="selected" <% } %> >標籤</option>
-        </select>
+        <form  class="text-search" id="range" name="range" form="search" onchange="submit()">
+          搜尋範圍:
+          <input type="checkbox" id="content" name="content" value="true" <% if (nav== 1 || nav == 2 || nav == 5|| nav == 7) { %> checked="checked" <% } %> >
+          <label for="content">內文</label>
+          <input type="checkbox" id="title" name="title" value="true" <% if (nav==3 || nav == 2 || nav == 5 || nav == 6) { %> checked="checked" <% } %> >
+          <label for="title">標題</label>
+          <input type="checkbox" id="tags" name="tags" value="true" <% if (nav==4 || nav == 5 || nav == 6|| nav == 7) { %> checked="checked" <% } %> >
+          <label for="tags">標籤</label>
+          <input style="display:none" type="text" name="keyword"  <% if(keyword !== 'undefined') { %> value='<%= keyword %>' <% } %>   >
+        </form>
       </div>
       <div>
         <table class="list-note">
@@ -128,24 +130,31 @@
                     <%= allnotes[i].note_title %>
                   </div>
                   <div class="item2">
-                    <% if(nav != 'tags') {%> 
-                      <% for( var k = 0;k<all_key.length;k++ ) { %>
-                        <% var key_pos = allnotes[i].note_paragraph.indexOf(all_key[k]); %> 
-                        <% var start = key_pos; %> 
-                        <% var end = start+all_key[k].length; %> 
-                        <% if(start != -1) {%> 
-                            <% if(start < 1)  start = 0; else start= start-6;%> 
-                            <% if(end+all_key[k].length+6 > allnotes[i].note_paragraph.length-1 ) end = allnotes[i].note_paragraph.length-1; else end = end+all_key[k].length+6; %> 
-                            ...<%= allnotes[i].note_paragraph.slice(start,key_pos)%> <font color= "red"> <%= allnotes[i].note_paragraph.slice(key_pos,key_pos+all_key[k].length) %></font> <%= allnotes[i].note_paragraph.slice(key_pos+all_key[k].length,end) %>...
-                        <% break; } %> 
-                      <% } // for find out fit what tag or content%>  
-                    <% } else { %>
-                      <% for( var k = 0;k<all_key.length;k++ ) { %>
-                        <% if(allnotes[i].note_paragraph.indexOf(all_key[k]) != -1) {%> 
-                            tag:<%= all_key[k] %> 
-                        <% break; } %> 
-                      <% } // for find out fit what tag or content%>  
-                    <% }//else tags situation%> 
+                    <% for( var k = 0;k<all_key.length;k++ ) { %>
+                      <% var key_pos = allnotes[i].note_paragraph.indexOf(all_key[k]); %> 
+                      <% var start = key_pos; %> 
+                      <% var end = start+all_key[k].length; %> 
+                      <% if(start != -1) {%> 
+                          <% if(start < 1)  start = 0; else start= start-6;%> 
+                          <% if(end+all_key[k].length+6 > allnotes[i].note_paragraph.length-1 ) end = allnotes[i].note_paragraph.length-1; else end = end+all_key[k].length+6; %> 
+                          ...<%= allnotes[i].note_paragraph.slice(start,key_pos)%> <font color= "red"> <%= allnotes[i].note_paragraph.slice(key_pos,key_pos+all_key[k].length) %></font> <%= allnotes[i].note_paragraph.slice(key_pos+all_key[k].length,end) %>...
+                      <% break; %> 
+                      <% } else { %>
+                        <% var found = false; %>
+                        <% for( var search_tags = 0;search_tags<allnotes[i].tags.length;search_tags++ ) { %>  
+                          <% if(all_key[k]== allnotes[i].tags[search_tags]) {%>
+                            tags:<%= allnotes[i].tags[search_tags] %> 
+                            <% found = true; break; %> 
+                          <% }//if %>
+                        <% }//for %> 
+                        <% for( var search_tags = 0;search_tags<allnotes[i].user_tags.length && found == false;search_tags++ ) { %>  
+                          <% if(all_key[k]== allnotes[i].user_tags[search_tags]) {%>
+                            tags:<%= allnotes[i].user_tags[search_tags] %> 
+                            <% break; %> 
+                          <% }//if %>
+                        <% }//for %> 
+                      <% }//else %>  
+                    <% } // for find out fit what tag or content%>  
                   </div>
                 </div>
             </tr>
