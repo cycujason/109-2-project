@@ -17,35 +17,27 @@ var str_link = ''
 function myGeeks() {
   var img = new Image();
   let str_link = document.getElementById("input_url").value;
- // str_link = 'https://cdn.discordapp.com/attachments/737673751495442494/880755211000504330/image0.jpg' ;
 //let str_link = "https://i.imgur.com/4fMp4ft.jpg";
 
   downloadedImg = new Image();
   downloadedImg.crossOrigin = "Anonymous";
   downloadedImg.addEventListener("load", imageReceived, false);
   downloadedImg.src = str_link;
-  console.log("load");
+  console.log(downloadedImg.src);
   console.log(downloadedImg.width);
 
-  //img.setAttribute("crossOrigin",'Anonymous');
-  //img.setAttribute("crossOrigin",'Anonymous');
-  var img_width = downloadedImg.width;
-  var img_height = downloadedImg.height;
-
-  document.getElementById('layer_pict').width = img_width;
-  document.getElementById('layer_pict').height = img_height;
-  document.getElementById('layer_draw').width = img_width;
-  document.getElementById('layer_draw').height = img_height;
 }
 
 
 function imageReceived() {
   let canvas = document.getElementById("layer_pict");
+  let canvas2 = document.getElementById("layer_draw");
   let context = canvas.getContext("2d");
 
   canvas.width = downloadedImg.width;
   canvas.height = downloadedImg.height;
-  console.log(downloadedImg.src);
+  canvas2.width = downloadedImg.width;
+  canvas2.height = downloadedImg.height;
 
   context.drawImage(downloadedImg, 0, 0);
 
@@ -221,38 +213,13 @@ function bindButtonEvent(element, type, handler) {
 }
 
 function saveAsLocalImage() {
-
-  /*var myCanvas = document.getElementById("layer_draw");
-
-// causes new drawings to be drawn behind existing drawings 
-ctx.globalCompositeOperation='source-over'; 
-
-// draw the img to the canvas (behind existing lines) 
-ctx.drawImage(myCanvas,0,0); 
-//ctx.save();
-// always clean up! Reset to default. 
-//ctx.globalCompositeOperation='source-over'; 
-var com=document.getElementById('layer_pict');
-
-  var image = com.toDataURL("image/png").replace("image/png", "image/octet-stream");
-
-  window.location.href = image;*/
-  
-  
   let canvas = document.getElementById("layer_pict");
-  let context = canvas.getContext("2d");
-
-  //canvas.width = downloadedImg.width;
-  //canvas.height = downloadedImg.height;
   var url  = document.getElementById("url");
   
   try {
-  console.log("jj");
-    //localStorage.setItem("saved-image-example", canvas.toDataURL("image/png"));
     var data_url=canvas.toDataURL("image/png");
     console.log(data_url);
     url.innerText = data_url ;
-    //window.location.href = data_url;
   }
   catch(err) {
     console.log("Error: " + err);
@@ -262,14 +229,14 @@ var com=document.getElementById('layer_pict');
 
 function save() {
 
- var myCanvas = document.getElementById("layer_draw");
+  var myCanvas = document.getElementById("layer_draw");
 
-// causes new drawings to be drawn behind existing drawings 
-ctx.globalCompositeOperation='source-over'; 
+  // causes new drawings to be drawn behind existing drawings 
+  ctx.globalCompositeOperation='source-over'; 
 
-// draw the img to the canvas (behind existing lines) 
-ctx.drawImage(myCanvas,0,0); 
-ctx.save();
+  // draw the img to the canvas (behind existing lines) 
+  ctx.drawImage(myCanvas,0,0); 
+  ctx.save();
 }
 
 function back() {

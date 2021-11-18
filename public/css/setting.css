@@ -12,19 +12,225 @@
 
 
 .draw {
-  background-image:url('/images/17.jpg');
-  background-color: #f1d8b8;
+  /*background-image:url('/images/17.jpg');*/
+  background-color: #a4e8ec;
   height: 100%;
   width: 100%;
 
 
 
 
-
-
-
-
 }
+
+.bold_btn3 {
+  background: linear-gradient(to bottom right, #EF4765, #FF9A5A);
+  border: 0;
+  border-radius: 12px;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: inline-block;
+  font-family: -apple-system,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 2.5;
+  outline: transparent;
+  padding: 0 1rem;
+  text-align: center;
+  text-decoration: none;
+  transition: box-shadow .2s ease-in-out;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+}
+
+.bold_btn3:not([disabled]):focus {
+  box-shadow: 0 0 .25rem rgba(0, 0, 0, 0.5), -.125rem -.125rem 1rem rgba(239, 71, 101, 0.5), .125rem .125rem 1rem rgba(255, 154, 90, 0.5);
+}
+
+.bold_btn3:not([disabled]):hover {
+  box-shadow: 0 0 .25rem rgba(0, 0, 0, 0.5), -.125rem -.125rem 1rem rgba(239, 71, 101, 0.5), .125rem .125rem 1rem rgba(255, 154, 90, 0.5);
+}
+
+.button-64 {
+  align-items: center;
+  background-image: linear-gradient(144deg,#AF40FF, #5B42F3 50%,#00DDEB);
+  border: 0;
+  border-radius: 8px;
+  box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  display: flex;
+  font-family: Phantomsans, sans-serif;
+  font-size: 20px;
+  justify-content: center;
+  line-height: 1em;
+  max-width: 100%;
+  min-width: 140px;
+  padding: 3px;
+  block-size: 4rem;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.button-64:active,
+.button-64:hover {
+  outline: 0;
+}
+
+.button-64 span {
+  background-color: rgb(5, 6, 45);
+  padding: 16px 24px;
+  border-radius: 6px;
+  width: 100%;
+  height: 100%;
+  transition: 300ms;
+}
+
+.button-64:hover span {
+  background: none;
+}
+
+.button-64:focus {
+  color: rgba(57, 245, 10, 0.952);
+  font-size: 26px;
+  
+  transform: scale(1.05) rotate(-1deg);
+}
+
+@media (min-width: 768px) {
+  .button-64 {
+    font-size: 24px;
+    min-width: 123px;
+  }
+}
+
+
+
+
+
+
+
+.bold_btn {
+  align-items: center;
+  background-color: #fff;
+  border: 2px solid #000;
+  box-sizing: border-box;
+  color: #000;
+  cursor: pointer;
+  display: inline-flex;
+  fill: #000;
+  font-family: Inter,sans-serif;
+  font-size: 52px;
+  block-size: 75px;
+  font-weight: 600;
+  height: 48px;
+  justify-content: center;
+  letter-spacing: -.8px;
+  line-height: 24px;
+  min-width: 140px;
+  outline: 0;
+  padding: 0 17px;
+  text-align: center;
+  text-decoration: none;
+  transition: all .3s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.bold_btn:focus {
+  border-color: rgba(9, 241, 1, 0.966);
+  color: rgba(49, 241, 1, 0.952);
+  fill: rgba(21, 241, 1, 0.952);
+}
+
+.bold_btn:hover {
+  border-color: #06f;
+  color: #06f;
+  fill: #06f;
+  transform: scale(1.05);
+}
+
+.bold_btn:active {
+  border-color: rgba(241, 69, 1, 0.952);
+  color: rgba(241, 69, 1, 0.952);
+  fill: rgba(241, 69, 1, 0.952);
+}
+
+@media (min-width: 768px) {
+  .bold_btn {
+    min-width: 170px;
+  }
+}
+
+
+
+
+.button-54 {
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  letter-spacing: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: #000;
+  cursor: pointer;
+  border: 3px solid;
+  padding: 0.25em 0.5em;
+  box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-54:active {
+  box-shadow: 0px 0px 0px 0px;
+  top: 5px;
+  left: 5px;
+}
+
+@media (min-width: 768px) {
+  .button-54 {
+    padding: 0.25em 0.75em;
+  }
+}
+
+
+
+
+.button-33 {
+  background-color: #f3bb21;
+  border-radius: 100px;
+  box-shadow: rgba(234, 250, 6, 0.815) 0 -25px 18px -14px inset,rgba(173, 187, 44, 0.911) 0 1px 2px,rgba(241, 245, 9, 0.25) 0 2px 4px,rgba(240, 225, 12, 0.25) 0 4px 8px,rgba(248, 224, 10, 0.25) 0 8px 16px,rgba(243, 227, 6, 0.25) 0 16px 32px;
+  color: rgb(6, 63, 185);
+  cursor: pointer;
+  display: inline-block;
+  font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif;
+  padding: 7px 20px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 250ms;
+  border: 0;
+  font-size: 40px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-33:hover {
+  box-shadow: rgba(234, 250, 6, 0.815) 0 -25px 18px -14px inset,rgba(173, 187, 44, 0.911) 0 1px 2px,rgba(241, 245, 9, 0.25) 0 2px 4px,rgba(240, 225, 12, 0.25) 0 4px 8px,rgba(248, 224, 10, 0.25) 0 8px 16px,rgba(243, 227, 6, 0.25) 0 16px 32px;
+  transform: scale(1.05) rotate(-1deg);
+}
+
+
+
+
+
 
 .element {
   display: grid;
@@ -32,6 +238,11 @@
   grid-gap: 16px; /* 為行和列都增加了16px的間隙。*/
 }
 
+.input {
+  height: 25px;
 
+
+
+}
 
 

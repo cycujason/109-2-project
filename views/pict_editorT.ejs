@@ -9,38 +9,38 @@
 
   <body>
     <div class='draw'  style="position: absolute;" >
-      <canvas id="layer_pict" width="100px" height="100px" style="position: absolute; left: 20%; top: 5%; z-index: 0 ;border: 15px solid black;"></canvas>
-      <canvas id="layer_draw" width="100px" height="100px" style="position: absolute; left: 20%; top: 5%;  z-index: 0; border: 15px solid black;"></canvas>
+      <canvas id="layer_pict" width="100px" height="100px" style="position: absolute; left: 20%; top: 5%; z-index: 0 ;border: 5px solid black;"></canvas>
+      <canvas id="layer_draw" width="100px" height="100px" style="position: absolute; left: 20%; top: 5%;  z-index: 0; border: 5px solid black;"></canvas>
 
-      <input type="button" id="粗細" value="粗細" class="bold btn" onclick="DisplayAndHiddenBtn()" style="position:fixed; left:0px; bottom: 0px; " />
+      <input type="button" id="粗細" value="粗細" class="button-64" onclick="DisplayAndHiddenBtn()" style="position:fixed; left:0px; bottom: 0px; " />
 
-      <input type="button" id='0' value="10" class="bold btn" onclick="checkpen(1)" style="position:fixed; left:0px; bottom: 20px; " />
-      <input type="button" id='10' value="20" class="bold btn" onclick="checkpen(10)" style="position:fixed; left:0px; bottom: 40px; " />
-      <input type="button" id='20' value="30" class="bold btn" onclick="checkpen(20)" style="position:fixed; left:0px; bottom: 60px; " />
-      <input type="button" id='30' value="40" class="bold btn" onclick="checkpen(30)" style="position:fixed; left:0px; bottom: 80px; " />
-      <input type="button" id='40' value="50" class="bold btn" onclick="checkpen(40)" style="position:fixed; left:0px; bottom: 100px; " />
+      <input type="button" id='0' value="10" class="button-64" onclick="checkpen(1)" style="position:fixed; left:0px; bottom: 70px; " />
+      <input type="button" id='10' value="20" class="button-64" onclick="checkpen(10)" style="position:fixed; left:0px; bottom: 140px; " />
+      <input type="button" id='20' value="30" class="button-64" onclick="checkpen(20)" style="position:fixed; left:0px; bottom: 210px; " />
+      <input type="button" id='30' value="40" class="button-64" onclick="checkpen(30)" style="position:fixed; left:0px; bottom: 280px; " />
+      <input type="button" id='40' value="50" class="button-64" onclick="checkpen(40)" style="position:fixed; left:0px; bottom: 350px; " />
 
       <!-- <input type="button" value="紅" class="red item" onclick="changecolor('red')" style="background-color:red; position:fixed; left:30px; bottom: 0px; "/>-->
-      <input type="color" id='colorful' value="#ff0000" style="position:fixed; left:45px; bottom: 0px; ">
-      <input type="button" value="橡皮擦" class="eraser btn" id="eraser" onclick="mode('destination-out')" style="position:fixed; left:150px; bottom: 0px; " />
+      <input type="color" id='colorful'class="button-64" value="#ff0000" style="position:fixed; left:130px; bottom: 0px; ">
+      <input type="button" value="畫筆" class="button-64" onclick="mode('source-over')" style="position:fixed; left:260px; bottom: 0px; " />
+      <input type="button" value="橡皮擦" class="button-64" id="eraser" onclick="mode('destination-out')" style="position:fixed; left:390px; bottom: 0px; " />
+      <input type="button" value="清除畫布" class="button-64" onclick="clearb()" style="position:fixed; left:520px; bottom: 0px; " />
 
-      <input type="button" value="清除畫布" class="clear fun" onclick="clearb()" style="position:fixed; left:220px; bottom: 0px; " />
-      <input type="button" value="畫筆" class="bold btn" onclick="mode('source-over')" style="position:fixed; left:100px; bottom: 0px; " />
-      <input hidden type="button" value="pen2" class="bold btn" onclick="mode('lighter')" style="position:fixed; left:100px; bottom: 20px; " />
+      <input hidden type="button" value="pen2" class="bold_btn9" onclick="mode('lighter')" style="position:fixed; left:100px; bottom: 20px; " />
 
-
-      <input type="url" name="name" id="input_url" placeholder="輸入圖片網址" autocomplete="off" style="position:fixed; left:0px; top: 0px; ">
-      <button onclick="myGeeks()" id="send_button" style="position:fixed; left:0px; top: 20px; ">Click Here!</button>
-      
-      <input type="button" id="downloadImageBtn" value="完成" class="bold btn" onclick="saveAsLocalImage()" style="position:fixed; top:30px; right: 0px; " />
-      <input type="button" id="save" value="保存" class="bold btn" onclick="save()" style="position:fixed; right: 0px; top: 0px; " />
-      <input type="button" id="ok2" value="生成指令" class="bold btn" onclick="imageHandler2()" style="position:fixed; top:60px; right: 0px; " />
-      <input hidden type="button" value="back" class="bold btn" onclick="back()" style="position:fixed; left:250px; top: 0px; " />
+      <div class='input'>
+        <input type="url" name="name" id="input_url" placeholder="請輸入圖片網址" autocomplete="off" style="position:fixed; left:0px; top: 0px; block-size:3rem; font-size:3rem;">
+        <button onclick="myGeeks()" id="send_button" class="button-33" style="position:fixed; left:0px; top: 61px; ">確認</button>
+      </div>
+      <input type="button" id="save" value="保存" class="bold_btn" onclick="save()" style="position:fixed; right: 8px; top: 5px; " />
+      <input type="button" id="downloadImageBtn" value="完成" class="bold_btn" onclick="saveAsLocalImage()" style="position:fixed; top:90px; right: 8px; " />
+      <input type="button" id="ok2" value="生成指令" class="bold_btn" onclick="imageHandler2()" style="position:fixed; top:180px; right: 8px; " />
+      <input hidden type="button" value="back" class="bold_btn11" onclick="back()" style="position:fixed; left:250px; top: 0px; " />
       <script src="/js/pict_editor.js"></script>
       <script src="/js/editor.js"></script>
-      <a href="#" id= "downloadimg" download="dl.png" onclick="this.href=layer_pict.toDataURL();" style="position:fixed; top:90px; right: 0px; ">下載</a>
+      <a href="#" id= "downloadimg" download="dl.png" onclick="this.href=layer_pict.toDataURL();" style="position:fixed; top:350px; right: 0px; font-size: 3rem;">下載</a>
       <div hidden id="url" style="position:fixed; left:0px; top: 100px; ">123</div>
-      <div  id="url_new" style="position:fixed;  font-size: 50px;  left:0px; bottom: 30px; "></div>
+      <div  id="url_new" style="position:fixed;  font-size: 50px;  left:0px; bottom: 80px; "></div>
     </div>
   </body>
 

@@ -9,6 +9,10 @@ var user = document.getElementById('user').innerText;
 var multiuser = document.getElementById('multi').innerText;
 var Uclass = document.getElementById('Uclass').innerText;
 var group_name = null;
+
+document.getElementById("paste_url_button").style.display = "none";  // 進入筆記先隱藏
+document.getElementById("paste_instr").style.display = "none";
+
 if(multiuser === 'true'){
   group_name = document.getElementById('group_name').innerText;
 }//if
@@ -134,7 +138,12 @@ function openwin(){
     //"WindowName","width=750,height=400,top=90,left=90,right=90,bottom=90" )
 }
 
-function imageHandler2() {
+function imageHandler2() {   // 圖像編輯後 上傳到imgur
+
+    //var testurl= "" ;
+    //opener.document.getElementById("paste_url").innerText = testurl ;
+
+                    
     console.log("imageHandler2");
     var url  = document.getElementById("url");
     var str = url.innerText;
@@ -151,7 +160,12 @@ function imageHandler2() {
     }).then(data => data.json()).then(data => {
         //this.quill.insertText(content,`![](${data.data.link})`, 'user' );
         console.log(data.data.link);
-        document.getElementById("url_new").innerText = '請將以下指令貼回筆記頁\n'+'![]('+ data.data.link +')' ;
+        document.getElementById("url_new").innerText = '請回去筆記頁，在左方游標點選圖片要貼回的位置\n並按貼上按紐' ;
+        opener.document.getElementById("paste_url").innerText = '![]('+ data.data.link +')' ;
+        opener.document.getElementById("paste_url").style.display = "none";
+        opener.document.getElementById("paste_url_button").style.display = "block";
+        opener.document.getElementById("paste_instr").innerText = "游標點選圖片要加到哪個位置" ;
+        opener.document.getElementById("paste_instr").style.display = "block";
         //alert(`'![](${data.data.link})`);
     })
     
@@ -159,7 +173,37 @@ function imageHandler2() {
     //window.close();
 }//imageHandler
 
+function paste(){
+    var range = this.quill.getSelection();
+    console.log(range) ;
 
+    var input = document.getElementById("paste_url").innerText ;
+
+    var s = false ;
+    
+    try {
+        this.quill.insertText(range.index, input, 'user' );
+        console.log(range.index) ;
+        document.getElementById("paste_url").innerText = "" ;
+        document.getElementById("paste_url_button").style.display = "none";
+        document.getElementById("paste_instr").innerText = "新圖片已加到筆記" ;
+    }
+    catch(err) {
+        alert("請游標點選要貼入的位置") ;
+        console.log("Error: " + err);
+    }
+            
+        
+
+
+    
+
+
+
+    
+
+    
+}
 
 quill.disable();
 quill.setText("Loading............");
@@ -275,5 +319,5 @@ send();
 recieve();
 socketRoom();
 saveContent();
-computeTag();
+//computeTag();
 
