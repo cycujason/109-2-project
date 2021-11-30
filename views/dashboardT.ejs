@@ -141,13 +141,13 @@
                         <% break; %> 
                         <% } else { %>
                           <% var found = false; %>
-                          <% for( var search_tags = 0;search_tags<allnotes[i].tags.length;search_tags++ ) { %>  
+                          <% for( var search_tags = 0;allnotes[i].tags!=null&&search_tags<allnotes[i].tags.length;search_tags++ ) { %>  
                             <% if(all_key[k]== allnotes[i].tags[search_tags]) {%>
                               tags:<%= allnotes[i].tags[search_tags] %> 
                               <% found = true; break; %> 
                             <% }//if %>
                           <% }//for %> 
-                          <% for( var search_tags = 0;search_tags<allnotes[i].user_tags.length && found == false;search_tags++ ) { %>  
+                          <% for( var search_tags = 0;allnotes[i].user_tags!=null&&search_tags<allnotes[i].user_tags.length && found == false;search_tags++ ) { %>  
                             <% if(all_key[k]== allnotes[i].user_tags[search_tags]) {%>
                               tags:<%= allnotes[i].user_tags[search_tags] %> 
                               <% break; %> 

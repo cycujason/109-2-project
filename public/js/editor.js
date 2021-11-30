@@ -319,5 +319,5 @@ send();
 recieve();
 socketRoom();
 saveContent();
-//computeTag();
+computeTag();
 
