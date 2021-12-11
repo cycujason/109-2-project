@@ -377,6 +377,58 @@ body {
   color: rgba(24, 45, 238, 0.8);
 }
     
-    
+.bold_btn2 {
+  align-items: center;
+  background-color: #fff;
+  border: 2px solid #000;
+  box-sizing: border-box;
+  color: #000;
+  cursor: pointer;
+  display: inline-flex;
+  fill: #000;
+  font-family: Inter,sans-serif;
+  font-size: 34px;
+  block-size: 75px;
+  font-weight: 600;
+  height: 48px;
+  justify-content: center;
+  letter-spacing: -.8px;
+  line-height: 24px;
+  min-width: 140px;
+  outline: 0;
+  padding: 0 17px;
+  text-align: center;
+  text-decoration: none;
+  transition: all .3s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.bold_btn2:focus {
+  border-color: rgba(9, 241, 1, 0.966);
+  color: rgba(49, 241, 1, 0.952);
+  fill: rgba(21, 241, 1, 0.952);
+}
+
+.bold_btn2:hover {
+  border-color: #06f;
+  color: #06f;
+  fill: #06f;
+  transform: scale(1.05);
+}
+
+.bold_btn2:active {
+  border-color: rgba(241, 69, 1, 0.952);
+  color: rgba(241, 69, 1, 0.952);
+  fill: rgba(241, 69, 1, 0.952);
+}
+
+@media (min-width: 768px) {
+  .bold_btn2 {
+    min-width: 170px;
+  }
+}
+
   
   
