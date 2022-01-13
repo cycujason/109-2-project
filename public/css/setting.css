@@ -245,4 +245,25 @@
 
 }
 
+.tooltiptext {
+  visibility: hidden;
+  width: 32rem;
+  height: 10rem;
+  background-color: #ef6fdf;
+  color: #fff;
+  border-radius: 26px;
+  padding: 13px 7px;
+  position: absolute;
+  z-index: 1;
+  top: -5px;
+  text-align: left;
+  right: 105%;
+  line-height: 53px;
+}
+
+.bold_btn:hover .tooltiptext {
+  visibility: visible;
+}
+
+
 

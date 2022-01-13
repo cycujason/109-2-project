@@ -32,13 +32,17 @@
         <input type="url" name="name" id="input_url" placeholder="請輸入圖片網址" autocomplete="off" style="position:fixed; left:0px; top: 0px; block-size:3rem; font-size:3rem;">
         <button onclick="myGeeks()" id="send_button" class="button-33" style="position:fixed; left:0px; top: 61px; ">確認</button>
       </div>
-      <input type="button" id="save" value="保存" class="bold_btn" onclick="save()" style="position:fixed; right: 8px; top: 5px; " />
-      <input type="button" id="downloadImageBtn" value="完成" class="bold_btn" onclick="saveAsLocalImage()" style="position:fixed; top:90px; right: 8px; " />
-      <input type="button" id="ok2" value="生成指令" class="bold_btn" onclick="imageHandler2()" style="position:fixed; top:180px; right: 8px; " />
+      
+      <button  id="save" value="保存" class="bold_btn" onclick="save()" style="position:fixed; right: 8px; top: 5px; ">保存
+        <span class="tooltiptext">將目前當下的繪畫痕跡全部保存，保存後的痕跡就不會再被更改</span></button>
+      <button id="downloadImageBtn" value="完成" class="bold_btn" onclick="saveAsLocalImage()" style="position:fixed; top:130px; right: 8px; ">完成
+        <span class="tooltiptext">當你完成所有的圖片編輯，確定好要傳回去筆記，按下按鈕表示完成</span></button>
+      <button id="ok2" value="生成指令" class="bold_btn" onclick="imageHandler2()" style="position:fixed; top:330px; right: 8px; ">生成指令
+        <span class="tooltiptext">按下完成按鈕後，按下此按鈕會產生出編輯完成後的新圖片</span></button>
       <input hidden type="button" value="back" class="bold_btn11" onclick="back()" style="position:fixed; left:250px; top: 0px; " />
       <script src="/js/pict_editor.js"></script>
       <script src="/js/editor.js"></script>
-      <a href="#" id= "downloadimg" download="dl.png" onclick="this.href=layer_pict.toDataURL();" style="position:fixed; top:350px; right: 0px; font-size: 3rem;">下載</a>
+      <a href="#" id= "downloadimg" download="dl.png" onclick="this.href=layer_pict.toDataURL();" style="position:fixed; top:490px; right: 0px; font-size: 3rem;">下載</a>
       <div hidden id="url" style="position:fixed; left:0px; top: 100px; ">123</div>
       <div  id="url_new" style="position:fixed;  font-size: 50px;  left:0px; bottom: 80px; "></div>
     </div>
